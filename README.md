@@ -21,6 +21,7 @@ Five invariants are machine-checked, because each fails silently otherwise:
 | `check:manifest` | `content/manifest.ts` drifting from the real content | Wrong lesson counts and durations across the shell |
 | `check:quiz` | Correct answers clustered at one position; out-of-range indices | A reader can score 100% by pattern-matching instead of learning |
 | `check:bundle` | Eager JS over 200kB gzipped, or lesson prose in the entry chunk | Guards the content-splitting win from silently regressing |
+| `check:prerender` | Pages rendering as the bare shell, or non-per-route titles | The site silently becomes invisible to crawlers again |
 | `typecheck` | A `Block` variant with no `BlockRenderer` case | The block renders as nothing |
 
 CI (`.github/workflows/ci.yml`) runs all of them on push and pull request.
@@ -127,6 +128,7 @@ TypeScript's exhaustiveness guard fails the build until step 2 is done. If the b
 | **SEO** | Per-route meta, Open Graph, canonical URLs. JSON-LD on every page type (`EducationalOrganization`, `Course`, `LearningResource` + `BreadcrumbList`). `sitemap.xml` and `robots.txt` generated at build time from the content registry. |
 | **A11y** | Skip link, focus rings, `prefers-reduced-motion`. Search is a proper combobox/listbox with `aria-activedescendant`; dialogs restore focus and close on Escape; quiz results and search counts are live regions; accent colours meet WCAG AA. |
 | **Resilience** | Error boundaries at app and route level. Lazy-chunk failures after a redeploy show a "needs refreshing" prompt instead of a blank page. |
+| **Prerendered** | Every route is rendered to static HTML at build time, then hydrated. Crawlers and social scrapers get real content and per-route meta, not an empty root div. |
 
 ## Configuration
 

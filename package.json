@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run verify && npm run generate:seo && tsc -b && vite build && npm run check:bundle",
+    "build": "npm run verify && npm run generate:seo && tsc -b && vite build && npm run prerender && npm run check:bundle",
+    "prerender": "vite build --config vite.config.server.ts && node scripts/prerender.mjs && node scripts/clean-server-build.mjs && node scripts/check-prerender.mjs",
     "check:bundle": "node scripts/check-bundle-size.mjs",
     "verify": "npm run check:manifest && npm run check:imports && npm run check:quiz && npm run typecheck && npm run lint",
     "typecheck": "tsc -b --force",

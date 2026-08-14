@@ -160,11 +160,23 @@ All opt-in via env vars. **With no `.env`, the site is fully functional and make
 
 ---
 
+## Prerendering
+
+`npm run build` renders every route to static HTML in `dist/`, so crawlers get real content rather than an empty root div. The client hydrates on top.
+
+Two things to know before touching it:
+
+- **`renderToString` cannot wait for `React.lazy`.** It emits the Suspense fallback instead, which silently prerenders the bare shell. `scripts/prerender.mjs` calls `warmup()` on *every* route first. Warming one route per lazy chunk is not enough — `lazy()` state lives per wrapper, so `About`, `Privacy`, and `NotFound` each need warming even though all three come from `Static.tsx`.
+- **`vite preview` cannot verify prerendering.** It applies the SPA fallback before looking for nested `index.html` files, so every route serves the root shell and looks broken. Use a plain static server that resolves `<path>/index.html` first — that is what Vercel and Netlify do.
+
+Head tags are built from the content registry in the prerender script, not captured from the render, because `useSEO` writes them in effects that never run server-side. Adding a route means adding it to the `routes` array there.
+
+`check:prerender` fails the build if any page renders under ~800 characters or if titles are not per-route.
+
 ## Known gaps
 
 Do not report these as discoveries; they are known and deliberate.
 
-- **No prerendering.** Client-rendered SPA, so crawlers see an empty root div. All content is static and build-time-known, so `vite-plugin-ssg` would fix it. Largest open item.
-- **No test suite.** Verification has been done with throwaway Playwright scripts. Making them permanent is worth doing.
+- **No test suite.** Verification has been done with throwaway Playwright scripts. Making them permanent is the largest open item.
 - **Heading hierarchy.** `keyPoints`, `steps`, and `comparison` hardcode `<h4>` regardless of context, which can skip levels. Needs a content-model decision, not a patch.
 - **Markup duplication.** The rounded-card shell is repeated across pages; a shared `<Card>` primitive would help.

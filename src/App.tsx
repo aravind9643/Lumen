@@ -101,18 +101,31 @@ function Shell() {
   )
 }
 
-export default function App() {
+/**
+ * Everything below the router.
+ *
+ * Split out so the prerenderer can mount the same tree inside a StaticRouter
+ * at build time, while the browser uses BrowserRouter. Nothing here may touch
+ * `window` during render — only inside effects, which do not run on the server.
+ */
+export function AppRoutes() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
         <ProgressProvider>
           <TTSProvider>
-            <BrowserRouter>
-              <Shell />
-            </BrowserRouter>
+            <Shell />
           </TTSProvider>
         </ProgressProvider>
       </ThemeProvider>
     </ErrorBoundary>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }
