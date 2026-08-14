@@ -146,7 +146,16 @@ Both a client ID *and* the relevant slot ID are required for an ad unit to rende
 
 ## Deployment
 
-Static SPA — `dist/` works on any host. `public/_redirects` (Netlify) and `vercel.json` are included so deep links don't 404. For other hosts, rewrite all paths to `/index.html`.
+Static SPA — `dist/` works on any host. Deep-link rewrites and headers are configured for both major hosts:
+
+- **Vercel** — `vercel.json`
+- **Netlify** — `public/_redirects` and `public/_headers`
+
+For other hosts, rewrite all paths to `/index.html` and mirror the headers from `public/_headers`.
+
+Both set the same policy: security headers site-wide, `immutable` year-long caching for `/assets/*` (filenames are content-hashed, so a change produces a new URL), and `must-revalidate` on `index.html` (it is *not* hashed — a stale copy would request chunks that no longer exist after a redeploy).
+
+> `vercel.json` is validated against a strict schema that rejects any unrecognised key — including `comment`. Keep explanatory notes in `public/_headers`, which is a plain-text format, or in this README.
 
 ## Content included
 
