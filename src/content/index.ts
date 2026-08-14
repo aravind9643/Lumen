@@ -3,9 +3,18 @@ import type { IconName } from '../lib/icons'
 import { aiFundamentals } from './tutorials/ai-fundamentals'
 import { llmEngineering } from './tutorials/llm-engineering'
 import { promptEngineering } from './tutorials/prompt-engineering'
+import { webFundamentals } from './tutorials/web-fundamentals'
 
-/** The registry. Adding a course means adding one import and one entry. */
-export const tutorials: Tutorial[] = [aiFundamentals, promptEngineering, llmEngineering]
+/**
+ * The registry. Adding a course means adding one import and one entry —
+ * and a matching entry in `manifest.ts`, which `check:manifest` enforces.
+ */
+export const tutorials: Tutorial[] = [
+  aiFundamentals,
+  promptEngineering,
+  llmEngineering,
+  webFundamentals,
+]
 
 export const getTutorial = (slug: string) => tutorials.find((t) => t.slug === slug)
 

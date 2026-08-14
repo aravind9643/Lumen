@@ -154,6 +154,31 @@ export const tutorialsMeta: TutorialMeta[] = [
       },
     ],
   },
+  {
+    slug: 'web-fundamentals',
+    title: 'How the Web Works: From URL to Pixels',
+    shortTitle: 'Web Fundamentals',
+    description:
+      'What actually happens between typing an address and seeing a page. No prior knowledge assumed — every term defined, every step traced.',
+    category: 'Web Development',
+    difficulty: 'beginner',
+    icon: 'code',
+    tags: ['Web', 'HTTP', 'Browsers', 'Foundations'],
+    color: '#0d9488',
+    updated: '2026-08-15',
+    chapters: [
+      {
+        title: 'Chapter 1 — The Journey of a Request',
+        lessons: [
+          {
+            slug: 'what-happens-when-you-visit-a-page',
+            title: 'What Happens When You Visit a Page',
+            duration: 11,
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 export const getTutorialMeta = (slug: string) => tutorialsMeta.find((t) => t.slug === slug)

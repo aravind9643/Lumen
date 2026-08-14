@@ -1,6 +1,6 @@
-# Lumen — AI Tutorial Platform
+# Lumen — Tutorial Platform
 
-A production-ready React tutorial site. Content lives as typed data; one renderer draws it everywhere.
+A production-ready React tutorial site for **any subject**. Content lives as typed data; one renderer draws it everywhere. Courses are grouped by `category`, so adding a new field — web development, design, business, anything — is a content addition rather than a rebuild.
 
 ```bash
 npm install
@@ -150,7 +150,9 @@ Static SPA — `dist/` works on any host. `public/_redirects` (Netlify) and `ver
 
 ## Content included
 
-Three AI courses, **20 lessons**, written zero-to-hero: no coding or maths background is assumed, and every technical term is defined the first time it appears.
+Four courses across two subjects, **21 lessons**, written zero-to-hero: no background is assumed, and every technical term is defined the first time it appears.
+
+The Web Development course is deliberately included as a second subject — it proves the platform is not AI-specific, and serves as a worked reference for adding a new field.
 
 **AI Fundamentals** (8 lessons) — assumes literally nothing
 1. What AI actually is · 2. Data, features and labels

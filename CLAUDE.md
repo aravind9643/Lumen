@@ -1,6 +1,11 @@
 # Working in this repo
 
-A React tutorial site. Content is data; one renderer draws it. Read this before editing.
+A React tutorial site for **any subject** — not an AI site. Content is data; one renderer draws it. Read this before editing.
+
+> Courses are grouped by their `category` field, which drives the subject filter and the
+> grouped sections on `/tutorials`. Keep UI copy subject-neutral: the hero, taglines, and
+> About page must not assume a topic. Anything topic-specific belongs in a course, not the
+> shell. `config.ts` holds all site-level copy — change it there, not inline.
 
 > This file is the source of truth for **all** agents. `AGENTS.md`, `GEMINI.md`, and
 > `.github/copilot-instructions.md` are identical short pointers to it, because each
@@ -70,6 +75,10 @@ A lesson is a `Block[]`. `BlockRenderer` maps each variant to a component; pages
 ```
 
 Then add the lesson to `manifest.ts`. Routing, search, table of contents, progress, and voice reading all pick it up with no further work.
+
+### Adding a new subject
+
+Set a new `category` on the course. The subject filter, grouped sections, sitemap, and card labels all derive from it — no UI change needed. `src/content/tutorials/web-fundamentals.ts` is a worked reference for a non-AI course.
 
 ### Adding a block type
 
