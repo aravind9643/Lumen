@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Runs the manifest, import-boundary, and quiz guards, then typecheck
+      # and lint. Each of these catches a failure that is otherwise silent.
+      - run: npm run verify
+
+      - run: npm run build
+
+      - name: Check bundle budget
+        run: node scripts/check-bundle-size.mjs
