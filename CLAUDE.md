@@ -124,6 +124,13 @@ These are not optional polish; each was a real defect that got fixed.
 - Never convey state by colour alone. Add `sr-only` text.
 - Reveal toggles need `aria-expanded` and `aria-controls` pointing at a real element id.
 - `<Icon>` defaults to `aria-hidden`. Pass `title` only when the icon is the sole accessible name.
+- A content block's own heading level is decided by the surrounding lesson (via the `heading` block's `level`), not by the block itself. `keyPoints`, `steps`, and `comparison` are section *labels*, not outline headings — they use `role="group"` + `aria-labelledby` on a `<p>`, never a hardcoded `<h4>`, because a fixed heading level can skip levels depending on what precedes it. Follow this pattern for any new block that needs a labelled sub-region.
+
+---
+
+## Shared UI
+
+`lib/card.ts` exports `card()`, a class-builder for the rounded/bordered/elevated shell used across course cards, lesson nav cards, and progress rows. It is a function, not a wrapping component, because call sites vary between `<div>`, `<Link>`, and `<li>` — use it wherever you'd otherwise retype `rounded-2xl border border-border-token bg-bg-elev`. Pass `interactive: true` for the hover-lift variant used on clickable cards. Genuinely distinct visual treatments (accent-tinted variants, different shadow emphasis) should stay as their own literal classes rather than being forced through `card()`'s options.
 
 ---
 
@@ -160,6 +167,27 @@ All opt-in via env vars. **With no `.env`, the site is fully functional and make
 
 ---
 
+## Testing
+
+```bash
+npm run test:unit      # Vitest — fast, run this while working
+npm run test:watch     # same, in watch mode
+npm run test:e2e       # Playwright — needs `npm run build` first
+npm run test:e2e:ui    # interactive debugging
+```
+
+`npm run verify` (and therefore `npm run build`) runs the unit tests. E2E runs separately because it needs built output.
+
+- **Unit tests** (`tests/unit/`) cover pure logic and components in jsdom: content resolution, search, storage, progress, the quiz, and the block renderer.
+- **E2E tests** (`tests/e2e/`) run against `dist/`, not the dev server — prerendering, hydration, and code splitting only exist after a build.
+
+Two things to know:
+
+- **E2E uses `tests/e2e/static-server.mjs`, not `vite preview`.** Preview applies the SPA fallback before looking for nested `index.html` files, so prerendered routes never get served and every page looks broken.
+- **Framer-motion exit animations linger in the DOM.** Asserting an element is gone immediately after a state change is flaky. Assert on interactive state (`aria-disabled`, `aria-expanded`) or use `waitForElementToBeRemoved`.
+
+When adding a `Block` type, add a case to the "gives every block type a renderer" test in `tests/unit/block-renderer.test.tsx` — the exhaustiveness guard catches a missing `case`, but not one that renders nothing.
+
 ## Prerendering
 
 `npm run build` renders every route to static HTML in `dist/`, so crawlers get real content rather than an empty root div. The client hydrates on top.
@@ -175,8 +203,6 @@ Head tags are built from the content registry in the prerender script, not captu
 
 ## Known gaps
 
-Do not report these as discoveries; they are known and deliberate.
+None currently tracked. 102 unit tests cover content resolution, storage, progress, the quiz, the block renderer, TTS (including the session-token race conditions), and analytics; 46 E2E tests (2 viewports) cover prerendering, hydration, search, theming, category browsing, and resilience.
 
-- **No test suite.** Verification has been done with throwaway Playwright scripts. Making them permanent is the largest open item.
-- **Heading hierarchy.** `keyPoints`, `steps`, and `comparison` hardcode `<h4>` regardless of context, which can skip levels. Needs a content-model decision, not a patch.
-- **Markup duplication.** The rounded-card shell is repeated across pages; a shared `<Card>` primitive would help.
+If you find a real gap, add it here rather than fixing it silently — this list is what stops the same thing being "discovered" repeatedly.

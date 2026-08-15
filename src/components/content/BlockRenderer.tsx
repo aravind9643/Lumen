@@ -89,7 +89,7 @@ export function BlockRenderer({
             data-block-index={i}
             className={cn(speakingBlockIndex === i && 'tts-active')}
           >
-            <SingleBlock block={block} tutorialSlug={tutorialSlug} lessonSlug={lessonSlug} />
+            <SingleBlock block={block} tutorialSlug={tutorialSlug} lessonSlug={lessonSlug} blockIndex={i} />
           </div>
           {adAfterBlocks > 0 && i > 0 && (i + 1) % adAfterBlocks === 0 && i < blocks.length - 3 && (
             <AdSlot placement="inArticle" className="my-10" />
@@ -107,8 +107,8 @@ export function BlockRenderer({
  * stable per lesson, so the memo effectively never misses.
  */
 const SingleBlock = memo(function SingleBlock({
-  block, tutorialSlug, lessonSlug,
-}: { block: Block; tutorialSlug: string; lessonSlug: string }) {
+  block, tutorialSlug, lessonSlug, blockIndex,
+}: { block: Block; tutorialSlug: string; lessonSlug: string; blockIndex: number }) {
   switch (block.type) {
     case 'heading': {
       const id = block.id ?? slugifyHeading(block.text)
@@ -189,17 +189,28 @@ const SingleBlock = memo(function SingleBlock({
       )
     }
 
-    case 'keyPoints':
+    case 'keyPoints': {
+      const labelId = `keypoints-${slugifyHeading(block.title ?? 'key points')}-${blockIndex}`
       return (
         <motion.aside
           {...fade}
+          role="group"
+          aria-labelledby={labelId}
           className="my-8 rounded-2xl border border-accent/25 bg-accent-soft/30 p-6"
         >
+          {/*
+            A styled section label, not a document heading: this block can
+            follow any heading level, and forcing it into the outline as a
+            fixed <h4> risked skipping levels (an <h2> directly followed by
+            this would jump straight to h4). role="group" + aria-labelledby
+            gives the same "this text names that region" relationship without
+            claiming an outline position it doesn't have.
+          */}
           <div className="mb-4 flex items-center gap-2">
             <Icon name="keyPoints" size={16} className="text-accent" />
-            <h4 className="text-sm font-bold uppercase tracking-[0.14em] text-accent">
+            <p id={labelId} className="text-sm font-bold uppercase tracking-[0.14em] text-accent">
               {block.title ?? 'Key points'}
-            </h4>
+            </p>
           </div>
           <ul className="space-y-2.5">
             {block.points.map((point, i) => (
@@ -211,6 +222,7 @@ const SingleBlock = memo(function SingleBlock({
           </ul>
         </motion.aside>
       )
+    }
 
     case 'steps':
       return (
@@ -224,7 +236,10 @@ const SingleBlock = memo(function SingleBlock({
                 {i + 1}
               </span>
               <div className="min-w-0 pt-1">
-                <h4 className="mb-1 font-semibold text-fg">{step.title}</h4>
+                {/* Not a heading: the <ol> and numbered marker already convey
+                    structure, and a per-item <h4> risked skipping outline
+                    levels depending on what heading preceded this block. */}
+                <p className="mb-1 font-semibold text-fg">{step.title}</p>
                 <p className="text-[15.5px] leading-[1.75] text-fg/80">{inline(step.text)}</p>
               </div>
             </li>
@@ -242,36 +257,44 @@ const SingleBlock = memo(function SingleBlock({
             </div>
           )}
           <div className="grid gap-4 sm:grid-cols-2">
-            {[block.left, block.right].map((side, s) => (
-              <div
-                key={s}
-                className="rounded-2xl border border-border-token bg-bg-elev p-5 shadow-sm"
-              >
-                <h4
-                  className={cn(
-                    'mb-3 border-b pb-2.5 text-sm font-bold uppercase tracking-wider',
-                    s === 0
-                      ? 'border-sky-500/25 text-sky-600 dark:text-sky-400'
-                      : 'border-violet-500/25 text-violet-600 dark:text-violet-400',
-                  )}
+            {[block.left, block.right].map((side, s) => {
+              const labelId = `comparison-${blockIndex}-${s}`
+              return (
+                <div
+                  key={s}
+                  role="group"
+                  aria-labelledby={labelId}
+                  className="rounded-2xl border border-border-token bg-bg-elev p-5 shadow-sm"
                 >
-                  {side.label}
-                </h4>
-                <ul className="space-y-2">
-                  {side.items.map((item, i) => (
-                    <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-fg/85">
-                      <span
-                        className={cn(
-                          'mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full',
-                          s === 0 ? 'bg-sky-500' : 'bg-violet-500',
-                        )}
-                      />
-                      <span>{inline(item)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                  {/* A card header, not a document heading — see the note on
+                      the keyPoints block above for why this isn't <h4>. */}
+                  <p
+                    id={labelId}
+                    className={cn(
+                      'mb-3 border-b pb-2.5 text-sm font-bold uppercase tracking-wider',
+                      s === 0
+                        ? 'border-sky-500/25 text-sky-600 dark:text-sky-400'
+                        : 'border-violet-500/25 text-violet-600 dark:text-violet-400',
+                    )}
+                  >
+                    {side.label}
+                  </p>
+                  <ul className="space-y-2">
+                    {side.items.map((item, i) => (
+                      <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed text-fg/85">
+                        <span
+                          className={cn(
+                            'mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full',
+                            s === 0 ? 'bg-sky-500' : 'bg-violet-500',
+                          )}
+                        />
+                        <span>{inline(item)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })}
           </div>
         </motion.div>
       )

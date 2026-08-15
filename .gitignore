@@ -32,3 +32,9 @@ public/robots.txt
 .env.local
 .env.*.local
 !.env.example
+
+# Test output
+/test-results
+/playwright-report
+/playwright/.cache
+/coverage

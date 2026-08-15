@@ -5,6 +5,7 @@ import { config } from '../config'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
 import { cn } from '../lib/cn'
+import { card } from '../lib/card'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 
@@ -148,7 +149,7 @@ export function TutorialDetail() {
                     <li key={lesson.slug}>
                       <Link
                         to={`/tutorials/${tutorial.slug}/${lesson.slug}`}
-                        className="group flex items-start gap-4 rounded-2xl border border-border-token bg-bg-elev p-4 transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md"
+                        className={card({ interactive: true, className: 'flex items-start gap-4 p-4' })}
                       >
                         <span
                           className={cn(

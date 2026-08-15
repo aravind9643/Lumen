@@ -8,6 +8,7 @@ import { useProgress } from '../lib/progress'
 import { useTTS } from '../lib/tts'
 import { events } from '../lib/analytics'
 import { cn } from '../lib/cn'
+import { card } from '../lib/card'
 import { BlockRenderer } from '../components/content/BlockRenderer'
 import { VoicePlayer } from '../components/ui/VoicePlayer'
 import { AdSlot } from '../components/ads/AdSlot'
@@ -264,7 +265,7 @@ export function Lesson() {
               {prev ? (
                 <Link
                   to={`/tutorials/${tutorial.slug}/${prev.slug}`}
-                  className="group flex flex-col rounded-2xl border border-border-token bg-bg-elev p-4 transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md"
+                  className={card({ interactive: true, className: 'flex flex-col p-4' })}
                 >
                   <span className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-fg-muted">
                     <Icon name="arrowLeft" size={11} /> Previous
@@ -278,7 +279,7 @@ export function Lesson() {
               {next ? (
                 <Link
                   to={`/tutorials/${tutorial.slug}/${next.slug}`}
-                  className="group flex flex-col rounded-2xl border border-border-token bg-bg-elev p-4 text-right transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md"
+                  className={card({ interactive: true, className: 'flex flex-col p-4 text-right' })}
                 >
                   <span className="mb-1 flex items-center justify-end gap-1.5 text-xs font-semibold uppercase tracking-wider text-fg-muted">
                     Next <Icon name="arrowRight" size={11} />

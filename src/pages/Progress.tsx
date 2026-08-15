@@ -4,6 +4,7 @@ import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/mani
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
 import type { IconName } from '../lib/icons'
+import { card } from '../lib/card'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 
@@ -94,7 +95,7 @@ export function ProgressPage() {
               >
                 <Link
                   to={`/tutorials/${tutorial.slug}`}
-                  className="group flex items-center gap-4 rounded-2xl border border-border-token bg-bg-elev p-5 transition-all hover:border-accent/50 hover:shadow-md"
+                  className={card({ interactive: true, className: 'flex items-center gap-4 p-5' })}
                 >
                   <span
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
@@ -143,7 +144,7 @@ export function ProgressPage() {
             {bookmarks.map(({ tutorial, lesson }) => (
               <li
                 key={`${tutorial.slug}/${lesson.slug}`}
-                className="flex items-center gap-3 rounded-2xl border border-border-token bg-bg-elev p-4"
+                className={card({ className: 'flex items-center gap-3 p-4' })}
               >
                 <Link
                   to={`/tutorials/${tutorial.slug}/${lesson.slug}`}
@@ -189,7 +190,7 @@ function Stat({ icon, label, value }: { icon: IconName; label: string; value: st
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="rounded-2xl border border-border-token bg-bg-elev p-5"
+      className={card({ className: 'p-5' })}
     >
       <Icon name={icon} size={16} className="mb-2.5 text-accent" />
       <p className="text-2xl font-extrabold tracking-tight">{value}</p>

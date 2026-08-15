@@ -22,10 +22,20 @@ export function usePersistentState<T>(key: string, initial: T) {
   // Skip the first run: on mount `value` is whatever we just read back (or the
   // default), so writing it again is pure overhead on every page load.
   const hydrated = useRef(false)
+  /**
+   * Set by `reset` so the write below skips the state change reset causes.
+   * Without it, removeItem is immediately undone by the effect re-persisting
+   * the restored initial value, and the key reappears.
+   */
+  const skipNextWrite = useRef(false)
 
   useEffect(() => {
     if (!hydrated.current) {
       hydrated.current = true
+      return
+    }
+    if (skipNextWrite.current) {
+      skipNextWrite.current = false
       return
     }
     try {
@@ -60,6 +70,7 @@ export function usePersistentState<T>(key: string, initial: T) {
     } catch {
       /* ignore */
     }
+    skipNextWrite.current = true
     setValue(initialRef.current)
   }, [key])
 

@@ -4,9 +4,10 @@ A production-ready React tutorial site for **any subject**. Content lives as typ
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run verify   # manifest + import boundary + typecheck + lint
-npm run build    # runs verify, then -> dist/
+npm run dev        # http://localhost:5173
+npm run verify     # guards + typecheck + lint + unit tests
+npm run build      # runs verify, prerenders every route -> dist/
+npm run test:e2e   # Playwright, against the built output
 ```
 
 > **Contributing with an AI agent?** [CLAUDE.md](./CLAUDE.md) holds the full working rules — architecture invariants, content style, design constraints, and known gaps. [AGENTS.md](./AGENTS.md) points other tools at it.
@@ -24,7 +25,16 @@ Five invariants are machine-checked, because each fails silently otherwise:
 | `check:prerender` | Pages rendering as the bare shell, or non-per-route titles | The site silently becomes invisible to crawlers again |
 | `typecheck` | A `Block` variant with no `BlockRenderer` case | The block renders as nothing |
 
-CI (`.github/workflows/ci.yml`) runs all of them on push and pull request.
+CI (`.github/workflows/ci.yml`) runs all of them, plus both test suites, on push and pull request.
+
+### Tests
+
+| Suite | What it covers |
+|---|---|
+| **Unit** (`tests/unit/`, Vitest + jsdom) | 102 tests: content resolution and search, `usePersistentState` including blocked/corrupt storage, progress and streak logic, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, and analytics event forwarding |
+| **E2E** (`tests/e2e/`, Playwright) | 23 tests × 2 viewports: prerendered HTML with JS disabled, hydration without errors, search combobox and focus restoration, progress persistence, theming, category filtering, and recovery from blocked storage and failed chunk loads |
+
+E2E runs against the built output using `tests/e2e/static-server.mjs`. `vite preview` cannot be used — it applies the SPA fallback before checking for nested `index.html`, so prerendered routes never get served.
 
 Note that `typecheck` is `tsc -b --force`, not `tsc --noEmit` — the root tsconfig is a solution file, so a bare `tsc --noEmit` resolves no files and passes vacuously.
 
