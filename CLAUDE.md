@@ -201,8 +201,14 @@ Head tags are built from the content registry in the prerender script, not captu
 
 `check:prerender` fails the build if any page renders under ~800 characters or if titles are not per-route.
 
+### Adding a new static route (not a tutorial/lesson page)
+
+Add it to `scripts/static-routes.mjs` first, with `indexable: true` unless the page has no evergreen content worth surfacing in search (that's why `/progress` is `indexable: false` — a fresh visitor just sees "0 of N complete"). `prerender.mjs` asserts its own route list agrees with `static-routes.mjs` and fails the build on mismatch — this is what previously let the sitemap silently miss `/progress` for a while, since the two scripts each hardcoded their own copy.
+
 ## Known gaps
 
-None currently tracked. 102 unit tests cover content resolution, storage, progress, the quiz, the block renderer, TTS (including the session-token race conditions), and analytics; 46 E2E tests (2 viewports) cover prerendering, hydration, search, theming, category browsing, and resilience.
+- **No offline support.** No service worker, no web app manifest. A lost connection mid-lesson breaks navigation entirely. Reasonable for a reading-focused site to eventually want (people read on mobile/transit), but it's a deliberate absence, not an oversight — adding one is a real feature decision (cache strategy, storage budget, update flow), not a quick fix.
+
+112 unit tests cover content resolution, storage, progress, the quiz, the block renderer, TTS (including the session-token race conditions), analytics, SEO URL construction, and AdSlot's ad-blocker resilience; 46 E2E tests (2 viewports) cover prerendering, hydration, search, theming, category browsing, and resilience.
 
 If you find a real gap, add it here rather than fixing it silently — this list is what stops the same thing being "discovered" repeatedly.
