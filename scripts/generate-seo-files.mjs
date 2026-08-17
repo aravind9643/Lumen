@@ -49,9 +49,9 @@ for (const file of readdirSync(dir).filter((f) => f.endsWith('.ts'))) {
   }
 }
 
-if (lessonCount === 0) {
+if (routes.length === 0) {
   // Shipping an empty sitemap is worse than shipping none — fail loudly.
-  console.error('[seo] no lessons found; refusing to write an empty sitemap')
+  console.error('[seo] no routes found; refusing to write an empty sitemap')
   process.exit(1)
 }
 

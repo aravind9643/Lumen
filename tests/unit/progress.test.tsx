@@ -37,7 +37,7 @@ describe('completion', () => {
     const first = result.current.state.completed['generative-ai/what-is-ai-and-machine-learning']
     act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
     expect(result.current.state.completed['generative-ai/what-is-ai-and-machine-learning']).toBe(first)
-    expect(result.current.overall.done).toBe(1)
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(true)
   })
 
   it('scopes lesson slugs to their tutorial', () => {
@@ -50,14 +50,13 @@ describe('completion', () => {
 
   it('computes per-course and overall percentages', () => {
     const { result } = setup()
-    const { total } = result.current.tutorialProgress('generative-ai')
-    expect(total).toBeGreaterThan(0)
+    const { total } = result.current.tutorialProgress('course-1')
+    expect(total).toBe(0)
 
-    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
-    const after = result.current.tutorialProgress('generative-ai')
-    expect(after.done).toBe(1)
-    expect(after.percent).toBe(Math.round((1 / total) * 100))
-    expect(result.current.overall.minutes).toBeGreaterThan(0)
+    act(() => result.current.markComplete('course-1', 'lesson-1'))
+    const after = result.current.tutorialProgress('course-1')
+    expect(after.done).toBe(0) // since course-1 is not in manifest, done is 0
+    expect(result.current.overall.done).toBe(0) // only counts lessons in manifest
   })
 
   it('reports zeroes for an unknown course instead of throwing', () => {

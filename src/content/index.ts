@@ -1,14 +1,6 @@
 import type { Block, Lesson, ResolvedLesson, Tutorial } from './types'
 import type { IconName } from '../lib/icons'
-import { generativeAI } from './tutorials/generative-ai'
-
-/**
- * The registry. Adding a course means adding one import and one entry —
- * and a matching entry in `manifest.ts`, which `check:manifest` enforces.
- */
-export const tutorials: Tutorial[] = [
-  generativeAI,
-]
+export const tutorials: Tutorial[] = []
 
 export const getTutorial = (slug: string) => tutorials.find((t) => t.slug === slug)
 

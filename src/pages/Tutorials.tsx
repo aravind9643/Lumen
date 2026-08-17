@@ -33,7 +33,12 @@ export function Tutorials() {
 
   useSEO({
     title: 'All Tutorials',
-    description: `Browse every course across ${allCategories.length > 1 ? allCategories.join(', ') : allCategories[0]}.`,
+    description:
+      allCategories.length > 1
+        ? `Browse every course across ${allCategories.join(', ')}.`
+        : allCategories.length === 1
+          ? `Browse every course in ${allCategories[0]}.`
+          : 'Browse all tutorials.',
     path: '/tutorials',
   })
 

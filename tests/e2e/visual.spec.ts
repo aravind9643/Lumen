@@ -28,12 +28,6 @@ test.describe('visual regression', () => {
     await expect(page).toHaveScreenshot('home-dark.png', screenshotOptions)
   })
 
-  test('a lesson page renders its reading layout consistently', async ({ page }) => {
-    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
-    await page.waitForLoadState('networkidle')
-    await expect(page).toHaveScreenshot('lesson-reading.png', screenshotOptions)
-  })
-
   test('tutorials listing grid', async ({ page }) => {
     await page.goto('/tutorials')
     await page.waitForLoadState('networkidle')

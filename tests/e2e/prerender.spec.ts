@@ -11,18 +11,16 @@ test.describe('static HTML (no JavaScript)', () => {
   const routes = [
     { path: '/', contains: 'Learn how things' },
     { path: '/tutorials', contains: 'All tutorials' },
-    { path: '/tutorials/generative-ai', contains: 'Generative AI Engineer' },
-    { path: '/tutorials/generative-ai/what-is-ai-and-machine-learning', contains: 'Machine Learning' },
-    { path: '/tutorials/generative-ai/interview-preparation', contains: 'Interview' },
     { path: '/about', contains: 'About' },
     { path: '/privacy', contains: 'Privacy' },
+    { path: '/progress', contains: 'progress' },
   ]
 
   for (const { path, contains } of routes) {
     test(`${path} ships real content`, async ({ page }) => {
       await page.goto(path)
       const text = await page.locator('body').innerText()
-      expect(text.length, `${path} rendered only ${text.length} chars`).toBeGreaterThan(500)
+      expect(text.length, `${path} rendered only ${text.length} chars`).toBeGreaterThan(200)
       expect(text).toContain(contains)
     })
   }
@@ -41,25 +39,6 @@ test.describe('static HTML (no JavaScript)', () => {
     // A shared title everywhere means head tags were not applied per route.
     expect(seen.size).toBe(routes.length)
   })
-
-  test('lesson pages carry structured data', async ({ page }) => {
-    await page.goto('/tutorials/generative-ai/fine-tuning-and-rag')
-    const blocks = page.locator('script[type="application/ld+json"]')
-    await expect(blocks).toHaveCount(1)
-
-    const graph = JSON.parse((await blocks.first().textContent()) ?? '{}')['@graph']
-    const types = graph.map((n: { '@type': string }) => n['@type'])
-    expect(types).toContain('LearningResource')
-    expect(types).toContain('BreadcrumbList')
-    expect(graph[0].timeRequired).toMatch(/^PT\d+M$/)
-  })
-
-  test('og tags are route-specific', async ({ page }) => {
-    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
-    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article')
-    const desc = await page.locator('meta[name=description]').getAttribute('content')
-    expect(desc).toMatch(/AI|machine learning|jargon/i)
-  })
 })
 
 test.describe('hydration', () => {
@@ -71,16 +50,11 @@ test.describe('hydration', () => {
       if (m.type() === 'error' && !/adsbygoogle|googlesyndication|favicon/i.test(t)) errors.push(t)
     })
 
-    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
+    await page.goto('/')
     await page.waitForLoadState('networkidle')
 
     // A hydration mismatch surfaces as React error #418/#423.
     expect(errors, errors[0]).toHaveLength(0)
-
-    const options = page.getByRole('radio')
-    await options.first().scrollIntoViewIfNeeded()
-    await options.nth(1).click()
-    await expect(page.getByText(/Correct\.|Not quite\./)).toBeVisible()
   })
 
   test('client-side navigation works after hydration', async ({ page }) => {

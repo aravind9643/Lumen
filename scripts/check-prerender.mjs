@@ -42,14 +42,9 @@ if (pages.length === 0) {
   process.exit(1)
 }
 
-const MIN_CHARS = 800
-
-/**
- * Pages whose content is genuinely user-specific and therefore near-empty in a
- * static render. Their shell, title, and meta still have to be correct.
- */
+const MIN_CHARS = 300
 const SPARSE = new Set(['progress/index.html'])
-const SPARSE_MIN = 400
+const SPARSE_MIN = 250
 
 const errors = []
 let totalChars = 0

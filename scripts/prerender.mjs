@@ -88,7 +88,10 @@ const routes = [
   {
     path: '/tutorials',
     title: 'All Tutorials',
-    description: `Browse every course across ${[...new Set(tutorials.map((t) => t.category))].join(', ')}.`,
+    description:
+      tutorials.length > 0
+        ? `Browse every course across ${[...new Set(tutorials.map((t) => t.category))].join(', ')}.`
+        : 'Browse all available tutorials and courses.',
   },
   { path: '/about', title: 'About', description: `About ${site.name} — why it exists and how it is written.` },
   { path: '/privacy', title: 'Privacy', description: 'What data this site stores and what it does not.' },

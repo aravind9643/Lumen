@@ -82,17 +82,23 @@ export function Home() {
               className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
             >
               <Link
-                to={resume ? `/tutorials/${resume.tutorialSlug}/${resume.lessonSlug}` : `/tutorials/${tutorialsMeta[0].slug}`}
+                to={
+                  resume
+                    ? `/tutorials/${resume.tutorialSlug}/${resume.lessonSlug}`
+                    : tutorialsMeta[0]
+                      ? `/tutorials/${tutorialsMeta[0].slug}`
+                      : '/tutorials'
+                }
                 className="group inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3.5 font-semibold text-accent-fg shadow-lg shadow-black/10 transition-all hover:scale-[1.03] hover:shadow-xl"
               >
-                {resume ? 'Continue where you left off' : 'Start with the fundamentals'}
+                {resume ? 'Continue where you left off' : 'Browse all courses'}
                 <Icon name="arrowRight" size={15} className="transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/tutorials"
                 className="inline-flex items-center gap-2 rounded-xl border border-border-token bg-bg-elev/70 px-6 py-3.5 font-semibold backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
               >
-                Browse all courses
+                All tutorials
               </Link>
             </motion.div>
 
@@ -118,22 +124,24 @@ export function Home() {
       </section>
 
       {/* ── Courses ───────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Courses"
-          title={tutorialsMeta.length > 1 ? 'Start anywhere. They connect.' : 'One path, start to finish.'}
-          subtitle={
-            tutorialsMeta.length > 1
-              ? 'Each course stands alone, but they are ordered so the concepts compound if you take them in sequence.'
-              : 'A single, deliberately ordered course — each lesson builds on the last, all the way to job-ready.'
-          }
-        />
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tutorialsMeta.map((tutorial, i) => (
-            <TutorialCard key={tutorial.slug} tutorial={tutorial} index={i} />
-          ))}
-        </div>
-      </section>
+      {tutorialsMeta.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Courses"
+            title={tutorialsMeta.length > 1 ? 'Start anywhere. They connect.' : 'One path, start to finish.'}
+            subtitle={
+              tutorialsMeta.length > 1
+                ? 'Each course stands alone, but they are ordered so the concepts compound if you take them in sequence.'
+                : 'A single, deliberately ordered course — each lesson builds on the last, all the way to job-ready.'
+            }
+          />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {tutorialsMeta.map((tutorial, i) => (
+              <TutorialCard key={tutorial.slug} tutorial={tutorial} index={i} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <AdSlot placement="inArticle" className="my-8" />
@@ -183,10 +191,10 @@ export function Home() {
               No account, no paywall, no email capture. Open the first lesson and start reading.
             </p>
             <Link
-              to={`/tutorials/${tutorialsMeta[0].slug}`}
+              to={tutorialsMeta[0] ? `/tutorials/${tutorialsMeta[0].slug}` : '/tutorials'}
               className="group mt-8 inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3.5 font-semibold text-accent-fg shadow-lg transition-all hover:scale-[1.03]"
             >
-              Open the first lesson
+              {tutorialsMeta[0] ? 'Open the first lesson' : 'Browse tutorials'}
               <Icon name="arrowRight" size={15} className="transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
