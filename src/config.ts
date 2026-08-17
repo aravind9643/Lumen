@@ -19,9 +19,9 @@ const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '')
 export const config = {
   site: {
     name: 'Lumen',
-    tagline: 'Learn it properly.',
+    tagline: 'Master Software & AI Engineering from First Principles',
     description:
-      'In-depth, carefully written tutorials that start from zero and build up. Free, open, and made for people who want to actually understand the subject.',
+      'Comprehensive, zero-fluff engineering courses covering Generative AI, Cloud Systems, Distributed Backend, Modern Frontend, Mobile Architecture, and Quantitative Finance.',
     url: stripTrailingSlash(env.VITE_SITE_URL ?? 'https://lumen-peach-two.vercel.app'),
     author: 'Lumen',
     twitter: '@lumenlearn',

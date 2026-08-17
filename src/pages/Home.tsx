@@ -10,12 +10,12 @@ import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 
 const FEATURES: { icon: IconName; title: string; text: string }[] = [
-  { icon: 'book', title: 'Structured, not scattered', text: 'Every course builds in a deliberate order. Concepts arrive when you have the background to absorb them.' },
-  { icon: 'headphones', title: 'Listen while you commute', text: 'Any lesson can be read aloud with adjustable voice, speed, and pitch — with the text following along.' },
-  { icon: 'target', title: 'Understanding, not memorising', text: 'Worked examples, honest trade-offs, and quizzes that explain why an answer is right rather than just marking it.' },
-  { icon: 'moon', title: 'Built for long reading', text: 'Light and dark themes, five accent palettes, and adjustable text size. Your eyes will last the whole chapter.' },
-  { icon: 'keyPoints', title: 'Progress that persists', text: 'Completed lessons, bookmarks, and study streaks are saved locally — no account, no email, no tracking wall.' },
-  { icon: 'code', title: 'Real code, run it yourself', text: 'Examples are complete and copyable, not fragments. Every snippet was written to actually execute.' },
+  { icon: 'book', title: 'Structured from First Principles', text: 'Every course builds in a deliberate sequence — from foundational concepts to production architecture without knowledge gaps.' },
+  { icon: 'headphones', title: 'Listen While You Commute', text: 'Any lesson can be read aloud with built-in voice synthesis, synchronized sentence highlighting, and adjustable speed.' },
+  { icon: 'target', title: 'Deep Conceptual Understanding', text: 'Real-world architectural trade-offs, interactive browser sandboxes, and quizzes that explain the core mechanics.' },
+  { icon: 'moon', title: 'Built for Deep Focus', text: 'Adaptive dark & light modes, reader typography controls, book serif and mono fonts, plus distraction-free Focus Mode.' },
+  { icon: 'keyPoints', title: 'Private & Account-Free', text: 'Completed lessons, bookmarks, streaks, and personal study notes are stored privately in your browser without tracking.' },
+  { icon: 'code', title: 'Executable & Verified Code', text: 'Complete, runnable snippets tested against modern industry standards. Run code directly inside your browser.' },
 ]
 
 export function Home() {
@@ -51,7 +51,7 @@ export function Home() {
               className="mb-6 inline-flex items-center gap-2 rounded-full border border-border-token bg-bg-elev/70 px-4 py-1.5 text-xs font-medium backdrop-blur-sm"
             >
               <Icon name="sparkles" size={12} className="text-accent" />
-              {totalLessonCount} in-depth lessons across {tutorialsMeta.length} courses
+              {totalLessonCount} in-depth lessons across {tutorialsMeta.length} master courses
             </motion.div>
 
             <motion.h1
@@ -60,9 +60,9 @@ export function Home() {
               transition={{ duration: 0.6, delay: 0.08 }}
               className="text-balance text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl"
             >
-              Learn how things
+              Master software & AI
               <br />
-              <span className="text-accent-flat">actually work.</span>
+              <span className="text-accent-flat">from first principles.</span>
             </motion.h1>
 
             <motion.p
@@ -71,8 +71,8 @@ export function Home() {
               transition={{ duration: 0.6, delay: 0.16 }}
               className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted sm:text-xl"
             >
-              No hype, no hand-waving. Every course starts from zero, defines its terms,
-              and explains the real mechanism — for people who want to genuinely understand.
+              Deep, zero-fluff engineering courses covering Generative AI, Distributed Backend,
+              Cloud Infrastructure, Mobile Architecture, and Quantitative Systems — from zero to production.
             </motion.p>
 
             <motion.div

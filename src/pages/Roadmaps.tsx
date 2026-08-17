@@ -78,9 +78,9 @@ const ROADMAPS: RoadmapTrack[] = [
     estimatedWeeks: 26,
     steps: [
       {
-        courseSlug: 'web-development',
-        milestoneTitle: 'Step 1: Modern Frontend Engineering',
-        focusAreas: ['HTML5 / CSS3', 'TypeScript', 'React Components & Hooks', 'Node.js'],
+        courseSlug: 'react',
+        milestoneTitle: 'Step 1: Modern Frontend & React Architecture',
+        focusAreas: ['HTML5 / CSS3', 'TypeScript', 'React Components & Hooks', 'Next.js & Tailwind'],
         level: 'Beginner',
       },
       {

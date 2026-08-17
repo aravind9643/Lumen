@@ -74,7 +74,8 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     { label: 'Python Mastery', slug: 'python-programming', icon: 'code' as const, color: '#0ea5e9' },
     { label: 'Java Enterprise', slug: 'java-enterprise', icon: 'code' as const, color: '#f97316' },
     { label: 'AWS Cloud Architecture', slug: 'aws-cloud', icon: 'chart' as const, color: '#f59e0b' },
-    { label: 'Full-Stack Web Dev', slug: 'web-development', icon: 'code' as const, color: '#10b981' },
+    { label: 'React Architecture', slug: 'react', icon: 'code' as const, color: '#61dafb' },
+    { label: 'Node.js & Express', slug: 'nodejs', icon: 'code' as const, color: '#339933' },
     { label: 'Flutter Mobile', slug: 'flutter-dart', icon: 'robot' as const, color: '#0284c7' },
   ]
 

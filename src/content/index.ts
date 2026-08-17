@@ -1,37 +1,59 @@
-import type { Block, Lesson, ResolvedLesson, Tutorial } from './types'
+import type { Block, ResolvedLesson, Tutorial } from './types'
 import type { IconName } from '../lib/icons'
-import { generativeAI } from './tutorials/generative-ai'
-import { pythonProgramming } from './tutorials/python'
-import { javaEnterprise } from './tutorials/java'
-import { dotnetCore } from './tutorials/dotnet'
-import { sqlDatabases } from './tutorials/sql'
-import { webDevelopment } from './tutorials/web-dev'
-import { flutterDart } from './tutorials/flutter'
 import { androidKotlin } from './tutorials/android'
-import { reactNative } from './tutorials/react-native'
-import { ionicCapacitor } from './tutorials/ionic'
-import { dockerContainers } from './tutorials/docker'
+import { angularCourse } from './tutorials/angular'
 import { awsCloud } from './tutorials/aws'
 import { azureCloud } from './tutorials/azure'
+import { cssCourse } from './tutorials/css'
+import { dockerContainers } from './tutorials/docker'
+import { dotnetCore } from './tutorials/dotnet'
+import { flutterDart } from './tutorials/flutter'
 import { googleCloud } from './tutorials/gcp'
+import { generativeAI } from './tutorials/generative-ai'
+import { htmlCourse } from './tutorials/html'
+import { ionicCapacitor } from './tutorials/ionic'
+import { javaEnterprise } from './tutorials/java'
+import { javascriptCourse } from './tutorials/javascript'
+import { nestjsCourse } from './tutorials/nestjs'
+import { nextjsCourse } from './tutorials/nextjs'
+import { nodejsCourse } from './tutorials/nodejs'
+import { pythonProgramming } from './tutorials/python'
+import { reactNative } from './tutorials/react-native'
+import { reactCourse } from './tutorials/react'
+import { sqlDatabases } from './tutorials/sql'
 import { stockMarket } from './tutorials/stock-market'
+import { svelteCourse } from './tutorials/svelte'
+import { tailwindcssCourse } from './tutorials/tailwindcss'
+import { typescriptCourse } from './tutorials/typescript'
+import { vueCourse } from './tutorials/vue'
 
 export const tutorials: Tutorial[] = [
-  generativeAI,
-  pythonProgramming,
-  javaEnterprise,
-  dotnetCore,
-  sqlDatabases,
-  webDevelopment,
-  flutterDart,
   androidKotlin,
-  reactNative,
-  ionicCapacitor,
-  dockerContainers,
+  angularCourse,
   awsCloud,
   azureCloud,
+  cssCourse,
+  dockerContainers,
+  dotnetCore,
+  flutterDart,
   googleCloud,
-  stockMarket
+  generativeAI,
+  htmlCourse,
+  ionicCapacitor,
+  javaEnterprise,
+  javascriptCourse,
+  nestjsCourse,
+  nextjsCourse,
+  nodejsCourse,
+  pythonProgramming,
+  reactNative,
+  reactCourse,
+  sqlDatabases,
+  stockMarket,
+  svelteCourse,
+  tailwindcssCourse,
+  typescriptCourse,
+  vueCourse
 ]
 
 export const getTutorial = (slug: string) => tutorials.find((t) => t.slug === slug)
@@ -58,11 +80,11 @@ export function resolveLesson(tutorialSlug: string, lessonSlug: string): Resolve
   if (!tutorial) return null
 
   const flat = flatLessons(tutorial)
-  const index = flat.findIndex((entry) => entry.lesson.slug === lessonSlug)
+  const index = flat.findIndex(({ lesson }) => lesson.slug === lessonSlug)
   if (index === -1) return null
 
-  const toRef = (entry?: { lesson: Lesson }) =>
-    entry ? { slug: entry.lesson.slug, title: entry.lesson.title } : null
+  const prevLesson = index > 0 ? flat[index - 1].lesson : null
+  const nextLesson = index < flat.length - 1 ? flat[index + 1].lesson : null
 
   return {
     tutorial,
@@ -70,71 +92,69 @@ export function resolveLesson(tutorialSlug: string, lessonSlug: string): Resolve
     lesson: flat[index].lesson,
     index,
     total: flat.length,
-    prev: toRef(flat[index - 1]),
-    next: toRef(flat[index + 1]),
+    prev: prevLesson ? { slug: prevLesson.slug, title: prevLesson.title } : null,
+    next: nextLesson ? { slug: nextLesson.slug, title: nextLesson.title } : null,
   }
 }
 
-/** Headings a lesson exposes, for the in-page table of contents. */
-export const slugifyHeading = (text: string) =>
-  text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-')
-
-export function extractHeadings(blocks: Block[]) {
-  return blocks
-    .filter((b): b is Extract<Block, { type: 'heading' }> => b.type === 'heading')
-    .map((b) => ({ id: b.id ?? slugifyHeading(b.text), text: b.text, level: b.level }))
-}
-
-/** Plain-text projection of a lesson, used by search and text-to-speech. */
+/**
+ * Extracts plain text from blocks for the voice player and search.
+ */
 export function blocksToText(blocks: Block[]): string[] {
   const out: string[] = []
-  for (const b of blocks) {
-    switch (b.type) {
-      case 'heading':
+  for (const block of blocks) {
+    switch (block.type) {
       case 'paragraph':
-        out.push(b.text)
-        break
-      case 'list':
-        out.push(...b.items)
-        break
-      case 'callout':
-        out.push(b.title ? `${b.title}. ${b.text}` : b.text)
+      case 'heading':
+      case 'analogy':
+        out.push(block.text)
         break
       case 'quote':
-        out.push(b.author ? `${b.text} — ${b.author}` : b.text)
-        break
-      case 'keyPoints':
-        out.push(b.title ?? 'Key points')
-        out.push(...b.points)
-        break
-      case 'steps':
-        out.push(...b.items.map((i) => `${i.title}. ${i.text}`))
-        break
-      case 'comparison':
-        if (b.title) out.push(b.title)
-        out.push(b.left.label, ...b.left.items, b.right.label, ...b.right.items)
-        break
-      case 'quiz':
-        out.push(b.question)
-        break
-      case 'table':
-        out.push(b.headers.join(', '), ...b.rows.map((r) => r.join(', ')))
-        break
-      case 'image':
-        if (b.caption) out.push(b.caption)
+        out.push(block.author ? `${block.text} — ${block.author}` : block.text)
         break
       case 'definition':
-        out.push(`${b.term}. ${b.plain}`)
-        if (b.formal) out.push(b.formal)
+        out.push(`${block.term}: ${block.plain}`)
         break
-      case 'analogy':
-        out.push(b.text)
+      case 'callout':
+        out.push(block.title ? `${block.title}: ${block.text}` : block.text)
+        break
+      case 'keyPoints':
+        if (block.title) out.push(block.title)
+        out.push(...block.points)
+        break
+      case 'list':
+        out.push(...block.items)
+        break
+      case 'steps':
+        for (const step of block.items) {
+          out.push(`${step.title}: ${step.text}`)
+        }
+        break
+      case 'comparison':
+        if (block.title) out.push(block.title)
+        out.push(`${block.left.label}: ${block.left.items.join(', ')}`)
+        out.push(`${block.right.label}: ${block.right.items.join(', ')}`)
+        break
+      case 'quiz':
+        out.push(block.question)
+        out.push(...block.options)
+        if (block.explanation) out.push(block.explanation)
         break
       case 'exercise':
-        out.push(b.prompt)
+        out.push(block.prompt)
+        if (block.hint) out.push(block.hint)
+        out.push(block.solution)
         break
-      case 'recap':
-        out.push(...b.points)
+      case 'table':
+        out.push(block.headers.join(' '))
+        for (const row of block.rows) {
+          out.push(row.join(' '))
+        }
+        break
+      case 'code':
+      case 'image':
+      case 'video':
+      case 'divider':
         break
     }
   }
@@ -144,101 +164,106 @@ export function blocksToText(blocks: Block[]): string[] {
 export interface SearchResult {
   tutorialSlug: string
   tutorialTitle: string
+  color: string
+  icon: IconName
   lessonSlug: string
   lessonTitle: string
-  description: string
-  icon: IconName
-  color: string
   excerpt: string
+  matchType: 'title' | 'description' | 'content'
+  score: number
 }
 
-let bodyCache: Map<string, string> | null = null
-
-function getBodyIndex(): Map<string, string> {
-  if (bodyCache) return bodyCache
-  bodyCache = new Map()
-  for (const tutorial of tutorials) {
-    for (const { lesson } of flatLessons(tutorial)) {
-      bodyCache.set(`${tutorial.slug}/${lesson.slug}`, blocksToText(lesson.blocks).join(' '))
-    }
-  }
-  return bodyCache
-}
-
-function withinEditDistance(a: string, b: string, max: number): boolean {
-  if (Math.abs(a.length - b.length) > max) return false
-  let prev = Array.from({ length: b.length + 1 }, (_, i) => i)
-  for (let i = 1; i <= a.length; i++) {
-    const curr = [i]
-    let rowMin = curr[0]
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1
-      const value = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost)
-      curr.push(value)
-      rowMin = Math.min(rowMin, value)
-    }
-    if (rowMin > max) return false
-    prev = curr
-  }
-  return prev[b.length] <= max
-}
-
-function fuzzyWordMatch(query: string, word: string): boolean {
-  if (query.length < 4) return false
-  const budget = query.length <= 5 ? 1 : 2
-  return withinEditDistance(query, word, budget)
-}
-
-export function searchContent(query: string, limit = 12): SearchResult[] {
+/**
+ * In-memory substring search over the lazy-loaded registry.
+ */
+export function searchContent(query: string, limit = 8): SearchResult[] {
   const q = query.trim().toLowerCase()
-  if (q.length < 2) return []
-  const qWords = q.split(/\s+/).filter(Boolean)
+  if (!q) return []
 
-  const bodies = getBodyIndex()
-  const results: (SearchResult & { score: number })[] = []
+  const terms = q.split(/\s+/).filter(Boolean)
+  const results: SearchResult[] = []
 
   for (const tutorial of tutorials) {
     for (const { lesson } of flatLessons(tutorial)) {
-      const body = bodies.get(`${tutorial.slug}/${lesson.slug}`) ?? ''
-      const haystack = `${lesson.title} ${lesson.description} ${body}`.toLowerCase()
-      const exact = haystack.includes(q)
+      let score = 0
+      let matchType: 'title' | 'description' | 'content' = 'content'
+      let excerpt = lesson.description
 
-      const titleWords = `${lesson.title} ${lesson.description}`.toLowerCase().split(/\W+/).filter(Boolean)
-      const fuzzy = !exact && qWords.some((qw) => titleWords.some((w) => fuzzyWordMatch(qw, w)))
+      const titleLower = lesson.title.toLowerCase()
+      const descLower = lesson.description.toLowerCase()
 
-      if (!exact && !fuzzy) continue
+      let titleMatch = false
+      let descMatch = false
 
-      const score = exact
-        ? (lesson.title.toLowerCase().includes(q) ? 100 : 0) +
-          (lesson.description.toLowerCase().includes(q) ? 40 : 0) +
-          (tutorial.tags.some((t) => t.toLowerCase().includes(q)) ? 25 : 0) +
-          Math.min(20, (haystack.split(q).length - 1) * 2)
-        : 10
+      for (const term of terms) {
+        if (titleLower.includes(term)) {
+          score += 10
+          titleMatch = true
+        }
+        if (descLower.includes(term)) {
+          score += 5
+          descMatch = true
+        }
+      }
 
-      const at = exact ? body.toLowerCase().indexOf(q) : -1
-      const excerpt =
-        at === -1
-          ? lesson.description
-          : `…${body.slice(Math.max(0, at - 70), at + 110).trim()}…`
+      if (titleMatch) matchType = 'title'
+      else if (descMatch) matchType = 'description'
 
-      results.push({
-        score,
-        tutorialSlug: tutorial.slug,
-        tutorialTitle: tutorial.shortTitle ?? tutorial.title,
-        lessonSlug: lesson.slug,
-        lessonTitle: lesson.title,
-        description: lesson.description,
-        icon: tutorial.icon,
-        color: tutorial.color,
-        excerpt,
-      })
+      const texts = blocksToText(lesson.blocks)
+      for (const text of texts) {
+        const textLower = text.toLowerCase()
+        for (const term of terms) {
+          if (textLower.includes(term)) {
+            score += 1
+            if (excerpt === lesson.description && text.length > 20) {
+              const idx = textLower.indexOf(term)
+              const start = Math.max(0, idx - 40)
+              const end = Math.min(text.length, idx + term.length + 60)
+              excerpt = (start > 0 ? '…' : '') + text.slice(start, end).trim() + (end < text.length ? '…' : '')
+            }
+          }
+        }
+      }
+
+      if (score > 0) {
+        results.push({
+          tutorialSlug: tutorial.slug,
+          tutorialTitle: tutorial.shortTitle || tutorial.title,
+          color: tutorial.color,
+          icon: tutorial.icon,
+          lessonSlug: lesson.slug,
+          lessonTitle: lesson.title,
+          excerpt,
+          matchType,
+          score,
+        })
+      }
     }
   }
 
-  return results
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map(({ score: _score, ...rest }) => rest)
+  return results.sort((a, b) => b.score - a.score).slice(0, limit)
 }
 
-export * from './types'
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+export interface HeadingItem {
+  id: string
+  text: string
+  level: number
+}
+
+export function extractHeadings(blocks: Block[]): HeadingItem[] {
+  const headings: HeadingItem[] = []
+  for (const block of blocks) {
+    if (block.type === 'heading') {
+      const id = block.id || slugifyHeading(block.text)
+      headings.push({ id, text: block.text, level: block.level })
+    }
+  }
+  return headings
+}
