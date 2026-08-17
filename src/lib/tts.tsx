@@ -26,6 +26,9 @@ interface TTSContextValue {
   stop: () => void
   next: () => void
   previous: () => void
+  /** Re-speaks the current segment at the latest settings, so a rate/pitch
+   *  change is audible immediately rather than waiting for the segment to end. */
+  restartCurrent: () => void
 }
 
 const TTSContext = createContext<TTSContextValue | null>(null)
@@ -180,6 +183,13 @@ export function TTSProvider({ children }: { children: ReactNode }) {
   const next = useCallback(() => jump(1), [jump])
   const previous = useCallback(() => jump(-1), [jump])
 
+  const restartCurrent = useCallback(() => {
+    if (index.current < 0 || !queue.current.length) return
+    session.current++
+    window.speechSynthesis.cancel()
+    speakAt(index.current)
+  }, [speakAt])
+
   const setSettings = useCallback(
     (patch: Partial<TTSSettings>) => setSettingsState((prev) => ({ ...prev, ...patch })),
     [setSettingsState],
@@ -211,8 +221,8 @@ export function TTSProvider({ children }: { children: ReactNode }) {
   }, [supported])
 
   const value = useMemo(
-    () => ({ supported, speaking, paused, current, voices, settings, setSettings, speak, pause, resume, stop, next, previous }),
-    [supported, speaking, paused, current, voices, settings, setSettings, speak, pause, resume, stop, next, previous],
+    () => ({ supported, speaking, paused, current, voices, settings, setSettings, speak, pause, resume, stop, next, previous, restartCurrent }),
+    [supported, speaking, paused, current, voices, settings, setSettings, speak, pause, resume, stop, next, previous, restartCurrent],
   )
 
   return <TTSContext.Provider value={value}>{children}</TTSContext.Provider>

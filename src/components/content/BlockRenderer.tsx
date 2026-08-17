@@ -72,6 +72,16 @@ interface BlockRendererProps {
   speakingBlockIndex?: number
   /** Inject an in-article ad after this many top-level blocks (0 disables). */
   adAfterBlocks?: number
+  /**
+   * Called with a block's index when its "Read from here" affordance is
+   * clicked. Only rendered for blocks with narratable text (checked by the
+   * caller, which owns the segment map) — omit to disable the affordance
+   * entirely, e.g. when voice reading is unsupported.
+   */
+  onReadFromBlock?: (blockIndex: number) => void
+  /** Indices of blocks that have narratable text, so the affordance only
+   *  appears where clicking it would actually do something. */
+  readableBlocks?: Set<number>
 }
 
 export function BlockRenderer({
@@ -80,6 +90,8 @@ export function BlockRenderer({
   lessonSlug,
   speakingBlockIndex = -1,
   adAfterBlocks = 0,
+  onReadFromBlock,
+  readableBlocks,
 }: BlockRendererProps) {
   return (
     <>
@@ -87,9 +99,19 @@ export function BlockRenderer({
         <Fragment key={i}>
           <div
             data-block-index={i}
-            className={cn(speakingBlockIndex === i && 'tts-active')}
+            className={cn('group/block relative', speakingBlockIndex === i && 'tts-active')}
           >
             <SingleBlock block={block} tutorialSlug={tutorialSlug} lessonSlug={lessonSlug} blockIndex={i} />
+            {onReadFromBlock && readableBlocks?.has(i) && (
+              <button
+                onClick={() => onReadFromBlock(i)}
+                className="no-print absolute -left-9 top-1 hidden h-7 w-7 items-center justify-center rounded-full text-fg-muted opacity-0 transition-opacity hover:bg-bg-subtle hover:text-accent focus-visible:opacity-100 group-hover/block:opacity-100 sm:flex"
+                aria-label="Read from here"
+                title="Read from here"
+              >
+                <Icon name="play" size={11} />
+              </button>
+            )}
           </div>
           {adAfterBlocks > 0 && i > 0 && (i + 1) % adAfterBlocks === 0 && i < blocks.length - 3 && (
             <AdSlot placement="inArticle" className="my-10" />

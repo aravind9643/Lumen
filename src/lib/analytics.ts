@@ -71,4 +71,8 @@ export const events = {
   ttsToggle: (action: 'play' | 'pause' | 'stop') => trackEvent('tts_toggle', { action }),
   themeChange: (mode: string) => trackEvent('theme_change', { mode }),
   codeCopy: (language: string) => trackEvent('code_copy', { language }),
+  lessonPrint: (tutorial: string, lesson: string) => trackEvent('lesson_print', { tutorial, lesson }),
+  progressExport: () => trackEvent('progress_export'),
+  progressImport: (success: boolean) => trackEvent('progress_import', { success }),
+  quizReviewView: (count: number) => trackEvent('quiz_review_view', { count }),
 }

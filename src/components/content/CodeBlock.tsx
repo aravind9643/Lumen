@@ -125,7 +125,10 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
       </figcaption>
 
       <div className="overflow-x-auto">
-        <pre className="min-w-full py-4 font-mono text-[13px] leading-relaxed">
+        <pre
+          className="min-w-full py-4 font-mono leading-relaxed"
+          style={{ fontSize: 'calc(13px * var(--font-scale, 1))' }}
+        >
           <code>
             {lines.map((html, i) => (
               <div

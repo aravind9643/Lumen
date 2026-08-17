@@ -7,6 +7,7 @@ import { config } from '../config'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
 import { useTTS } from '../lib/tts'
+import { usePersistentState } from '../lib/storage'
 import { events } from '../lib/analytics'
 import { cn } from '../lib/cn'
 import { card } from '../lib/card'
@@ -21,9 +22,10 @@ export function Lesson() {
   const resolved = useMemo(() => resolveLesson(tutorialSlug, lessonSlug), [tutorialSlug, lessonSlug])
 
   const { isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark, visit } = useProgress()
-  const { current: speakingSegment, speaking } = useTTS()
+  const { current: speakingSegment, speaking, speak, supported: ttsSupported } = useTTS()
   const [activeHeading, setActiveHeading] = useState<string>('')
   const [scrollPercent, setScrollPercent] = useState(0)
+  const [seenTip, setSeenTip] = usePersistentState('lesson:seen-first-visit-tip', false)
   const depthReported = useRef(new Set<number>())
 
   // LearningResource plus a breadcrumb trail — lesson pages are the ones that
@@ -196,6 +198,21 @@ export function Lesson() {
     return { segments: segs, segmentToBlock: map }
   }, [resolved])
 
+  // Inverse of segmentToBlock: the first segment index for each block, so
+  // "Read from here" can jump narration straight to that point.
+  const { firstSegmentOfBlock, readableBlocks } = useMemo(() => {
+    const first = new Map<number, number>()
+    segmentToBlock.forEach((blockIndex, segmentIndex) => {
+      if (blockIndex >= 0 && !first.has(blockIndex)) first.set(blockIndex, segmentIndex)
+    })
+    return { firstSegmentOfBlock: first, readableBlocks: new Set(first.keys()) }
+  }, [segmentToBlock])
+
+  const readFromBlock = (blockIndex: number) => {
+    const segmentIndex = firstSegmentOfBlock.get(blockIndex)
+    if (segmentIndex !== undefined) speak(segments, segmentIndex)
+  }
+
   if (!resolved) return <Navigate to="/tutorials" replace />
 
   const { tutorial, chapter, lesson, index, total, prev, next } = resolved
@@ -279,13 +296,41 @@ export function Lesson() {
                 </button>
 
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => {
+                    events.lessonPrint(tutorialSlug, lessonSlug)
+                    window.print()
+                  }}
                   className="no-print flex items-center gap-1.5 rounded-lg border border-border-token px-3 py-1.5 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
                 >
                   <Icon name="file" size={12} /> Print / Save PDF
                 </button>
               </div>
             </motion.header>
+
+            {!seenTip && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.15 }}
+                className="no-print mt-6 flex items-start gap-3 rounded-2xl border border-accent/30 bg-accent-soft/25 p-4"
+              >
+                <Icon name="sparkles" size={15} className="mt-0.5 shrink-0 text-accent" />
+                <div className="min-w-0 flex-1 text-sm leading-relaxed">
+                  <p>
+                    New here? You can have any lesson read aloud (bottom of the page), save it for
+                    later with the Save button above, and your progress is tracked automatically —
+                    all stored only in this browser.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSeenTip(true)}
+                  className="shrink-0 rounded-lg p-1.5 text-fg-muted transition-colors hover:bg-bg-subtle hover:text-fg"
+                  aria-label="Dismiss tip"
+                >
+                  <Icon name="close" size={13} />
+                </button>
+              </motion.div>
+            )}
 
             <article className="pb-8" style={{ fontSize: 'calc(1rem * var(--font-scale, 1))' }}>
               <BlockRenderer
@@ -294,6 +339,8 @@ export function Lesson() {
                 lessonSlug={lessonSlug}
                 speakingBlockIndex={speakingBlock}
                 adAfterBlocks={9}
+                onReadFromBlock={ttsSupported ? readFromBlock : undefined}
+                readableBlocks={readableBlocks}
               />
             </article>
 

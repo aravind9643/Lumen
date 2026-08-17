@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/manifest'
@@ -7,6 +7,7 @@ import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/mani
 import { resolveLesson } from '../content'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
+import { events } from '../lib/analytics'
 import type { IconName } from '../lib/icons'
 import { card } from '../lib/card'
 import { cn } from '../lib/cn'
@@ -20,6 +21,7 @@ export function ProgressPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleExport = () => {
+    events.progressExport()
     const blob = new Blob([exportState()], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -32,6 +34,7 @@ export function ProgressPage() {
   const handleImportFile = async (file: File) => {
     const text = await file.text()
     const ok = importState(text)
+    events.progressImport(ok)
     setImportMessage(
       ok
         ? { ok: true, text: 'Progress imported.' }
@@ -76,6 +79,12 @@ export function ProgressPage() {
       return { ...entry, tutorial: resolved.tutorial, lesson: resolved.lesson, block }
     })
     .filter((v): v is NonNullable<typeof v> => v !== null)
+
+  // Depend on the count, not the derived `quizReview` array (a new reference
+  // every render) — this should fire once per page visit, not once per render.
+  useEffect(() => {
+    if (quizReview.length > 0) events.quizReviewView(quizReview.length)
+  }, [quizReview.length])
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { allCategories, allTags, tutorialsByCategory, tutorialsMeta } from '../content/manifest'
+import { allCategories, allTags, totalDuration, tutorialsByCategory, tutorialsMeta } from '../content/manifest'
+import type { TutorialMeta } from '../content/manifest'
 import type { Difficulty } from '../content/types'
 import { useSEO } from '../lib/seo'
 import { cn } from '../lib/cn'
@@ -10,6 +11,17 @@ import { Icon } from '../components/ui/Icon'
 
 const LEVELS: (Difficulty | 'all')[] = ['all', 'beginner', 'intermediate', 'advanced']
 
+const DIFFICULTY_RANK: Record<Difficulty, number> = { beginner: 0, intermediate: 1, advanced: 2 }
+
+const SORTS = {
+  featured: { label: 'Featured', compare: () => 0 },
+  duration: { label: 'Shortest first', compare: (a: TutorialMeta, b: TutorialMeta) => totalDuration(a) - totalDuration(b) },
+  updated: { label: 'Recently updated', compare: (a: TutorialMeta, b: TutorialMeta) => b.updated.localeCompare(a.updated) },
+  level: { label: 'Difficulty', compare: (a: TutorialMeta, b: TutorialMeta) => DIFFICULTY_RANK[a.difficulty] - DIFFICULTY_RANK[b.difficulty] },
+} as const
+
+type SortKey = keyof typeof SORTS
+
 /** Local slug helper — avoids importing the heavy content registry for one id. */
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
@@ -17,6 +29,7 @@ export function Tutorials() {
   const [level, setLevel] = useState<Difficulty | 'all'>('all')
   const [tag, setTag] = useState<string | null>(null)
   const [category, setCategory] = useState<string | null>(null)
+  const [sort, setSort] = useState<SortKey>('featured')
 
   useSEO({
     title: 'All Tutorials',
@@ -36,8 +49,12 @@ export function Tutorials() {
   )
 
   // Group only when there is more than one subject to show — a single heading
-  // above a single group is noise.
-  const groups = useMemo(() => tutorialsByCategory(filtered), [filtered])
+  // above a single group is noise. Sorting is applied within each group, so
+  // switching subject/level filters never disturbs a chosen sort order.
+  const groups = useMemo(() => {
+    const compare = SORTS[sort].compare
+    return tutorialsByCategory(filtered).map((g) => ({ ...g, tutorials: [...g.tutorials].sort(compare) }))
+  }, [filtered, sort])
   const showGroupHeadings = groups.length > 1
 
   return (
@@ -130,9 +147,25 @@ export function Tutorials() {
         </div>
       </div>
 
-      <p className="mt-6 text-sm text-fg-muted">
-        Showing {filtered.length} of {tutorialsMeta.length} course{tutorialsMeta.length === 1 ? '' : 's'}
-      </p>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-fg-muted">
+          Showing {filtered.length} of {tutorialsMeta.length} course{tutorialsMeta.length === 1 ? '' : 's'}
+        </p>
+
+        <label className="flex items-center gap-2 text-sm text-fg-muted">
+          <Icon name="sliders" size={12} />
+          <span className="sr-only">Sort courses by</span>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="rounded-lg border border-border-token bg-bg px-2.5 py-1.5 text-sm outline-none focus:border-accent"
+          >
+            {Object.entries(SORTS).map(([key, { label }]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       {filtered.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-dashed border-border-token py-20 text-center">

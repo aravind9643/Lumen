@@ -183,6 +183,38 @@ describe('content integrity', () => {
     }
   })
 
+  it('keeps declared duration roughly consistent with actual reading time', () => {
+    // Technical prose reads slower than casual text; this band is deliberately
+    // generous (90-260 wpm) so it only catches a duration that is wildly off —
+    // e.g. a lesson duplicated from another and never re-timed — not every
+    // lesson that reads a little fast or slow for a given reader. Code/exercise
+    // blocks take real time to work through that prose word count can't see,
+    // so each one adds extra slack rather than being counted as words.
+    const MIN_WPM = 70
+    const MAX_WPM = 260
+    const MINUTES_PER_CODE_OR_EXERCISE_BLOCK = 1.5
+
+    for (const tutorial of tutorials) {
+      for (const { lesson } of flatLessons(tutorial)) {
+        const words = blocksToText(lesson.blocks).join(' ').split(/\s+/).filter(Boolean).length
+        const workBlocks = lesson.blocks.filter((b) => b.type === 'code' || b.type === 'exercise').length
+        const slack = workBlocks * MINUTES_PER_CODE_OR_EXERCISE_BLOCK
+        const impliedMinutes = words / 180 // midpoint of the band, for the message only
+        const minMinutes = words / MAX_WPM
+        const maxMinutes = words / MIN_WPM + slack
+
+        expect(
+          lesson.duration,
+          `${tutorial.slug}/${lesson.slug}: ${words} words implies ~${impliedMinutes.toFixed(1)} min, but duration is ${lesson.duration}`,
+        ).toBeGreaterThanOrEqual(Math.floor(minMinutes))
+        expect(
+          lesson.duration,
+          `${tutorial.slug}/${lesson.slug}: ${words} words (+ ${workBlocks} code/exercise blocks) implies up to ~${maxMinutes.toFixed(1)} min, but duration is ${lesson.duration}`,
+        ).toBeLessThanOrEqual(Math.ceil(maxMinutes) + 1)
+      }
+    }
+  })
+
   it('keeps every quiz answer index inside its options', () => {
     for (const tutorial of tutorials) {
       for (const { lesson } of flatLessons(tutorial)) {

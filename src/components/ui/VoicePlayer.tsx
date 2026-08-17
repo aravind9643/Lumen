@@ -9,8 +9,23 @@ import { Icon } from './Icon'
  * full transport controls while speaking.
  */
 export function VoicePlayer({ segments }: { segments: string[] }) {
-  const { supported, speaking, paused, current, voices, settings, setSettings, speak, pause, resume, stop, next, previous } = useTTS()
+  const {
+    supported, speaking, paused, current, voices, settings, setSettings,
+    speak, pause, resume, stop, next, previous, restartCurrent,
+  } = useTTS()
   const [showSettings, setShowSettings] = useState(false)
+  const [justApplied, setJustApplied] = useState(false)
+
+  // Re-speaks the current segment at the new rate/pitch immediately, rather
+  // than making the reader wait for the segment to finish to hear the change.
+  // Only while actively speaking — restarting a paused/idle player would
+  // surprise the reader by resuming narration they had deliberately stopped.
+  const applySetting = (patch: { rate: number } | { pitch: number }) => {
+    setSettings(patch)
+    if (speaking && !paused) restartCurrent()
+    setJustApplied(true)
+    window.setTimeout(() => setJustApplied(false), 1200)
+  }
 
   // Stop narration when navigating away from the lesson.
   useEffect(() => () => stop(), [stop])
@@ -123,19 +138,28 @@ export function VoicePlayer({ segments }: { segments: string[] }) {
                       label="Speed"
                       min={0.5} max={2} step={0.1}
                       value={settings.rate}
-                      onChange={(rate) => setSettings({ rate })}
+                      onChange={(rate) => applySetting({ rate })}
                       format={(v) => `${v.toFixed(1)}×`}
                     />
                     <Slider
                       label="Pitch"
                       min={0.5} max={1.5} step={0.1}
                       value={settings.pitch}
-                      onChange={(pitch) => setSettings({ pitch })}
+                      onChange={(pitch) => applySetting({ pitch })}
                       format={(v) => v.toFixed(1)}
                     />
 
-                    <p className="text-[11px] leading-relaxed text-fg-muted">
-                      Speed and voice changes apply from the next section onward.
+                    <p
+                      role="status"
+                      aria-live="polite"
+                      className={cn(
+                        'text-[11px] leading-relaxed transition-colors',
+                        justApplied ? 'text-accent' : 'text-fg-muted',
+                      )}
+                    >
+                      {justApplied
+                        ? 'Applied — hear it now in the current section.'
+                        : 'Voice changes apply from the next section onward.'}
                     </p>
                   </div>
                 </motion.div>
