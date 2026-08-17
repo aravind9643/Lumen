@@ -68,8 +68,15 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-10 border-t border-border-token pt-6 text-center text-xs text-fg-muted">
-          © {new Date().getFullYear()} {config.site.name}. Built for people who want to actually understand this stuff.
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border-token pt-6 text-xs text-fg-muted sm:flex-row">
+          <p>© {new Date().getFullYear()} {config.site.name}. Built for people who want to actually understand how things work.</p>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('lumen:shortcuts'))}
+            className="flex items-center gap-1.5 rounded-lg border border-border-token bg-bg px-2.5 py-1 text-[11px] font-semibold text-fg-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Icon name="keyboard" size={12} />
+            <span>Shortcuts (?)</span>
+          </button>
         </div>
       </div>
     </footer>

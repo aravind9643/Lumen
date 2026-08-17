@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/manifest'
+import type { LessonMeta, TutorialMeta } from '../content/manifest'
 import { resolveLesson } from '../content'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
@@ -79,6 +80,29 @@ export function ProgressPage() {
       return { ...entry, tutorial: resolved.tutorial, lesson: resolved.lesson, block }
     })
     .filter((v): v is NonNullable<typeof v> => v !== null)
+
+  const savedNotes = useMemo(() => {
+    try {
+      const items: { tutorialSlug: string; lessonSlug: string; text: string; tutorial: TutorialMeta; lesson: LessonMeta }[] = []
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i)
+        if (k && k.startsWith('lumen:note:')) {
+          const path = k.replace('lumen:note:', '')
+          const [tSlug, lSlug] = path.split('/')
+          const val = localStorage.getItem(k)
+          if (val && val.trim()) {
+            const found = lookup(tSlug, lSlug)
+            if (found) {
+              items.push({ tutorialSlug: tSlug, lessonSlug: lSlug, text: val, tutorial: found.tutorial, lesson: found.lesson })
+            }
+          }
+        }
+      }
+      return items
+    } catch {
+      return []
+    }
+  }, [])
 
   const completedCourses = tutorialsMeta.filter((t) => {
     const p = tutorialProgress(t.slug)
@@ -443,6 +467,64 @@ export function ProgressPage() {
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      {/* ── Personal Notes Hub ─────────────────────────────── */}
+      <section className="mt-12">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">My Lesson Notes</h2>
+            <p className="text-xs text-fg-muted">Personal study insights and notes taken across lessons.</p>
+          </div>
+          {savedNotes.length > 0 && (
+            <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent">
+              {savedNotes.length} {savedNotes.length === 1 ? 'Note' : 'Notes'}
+            </span>
+          )}
+        </div>
+
+        {savedNotes.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-border-token py-10 text-center">
+            <Icon name="bookmark" size={20} className="mx-auto mb-2 text-fg-muted/40" />
+            <p className="text-sm text-fg-muted">
+              No notes taken yet. Use the <strong>My Lesson Notes</strong> drawer inside any lesson to record takeaways.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {savedNotes.map(({ tutorial, lesson, text }) => (
+              <div
+                key={`${tutorial.slug}/${lesson.slug}`}
+                className="flex flex-col justify-between rounded-2xl border border-border-token bg-bg p-4 transition-all hover:border-accent/60"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="truncate text-xs font-semibold text-fg-muted">
+                      {tutorial.shortTitle ?? tutorial.title}
+                    </span>
+                  </div>
+                  <Link
+                    to={`/tutorials/${tutorial.slug}/${lesson.slug}`}
+                    className="mt-0.5 block font-bold text-fg hover:text-accent"
+                  >
+                    {lesson.title}
+                  </Link>
+                  <p className="mt-2 line-clamp-3 rounded-lg bg-bg-subtle p-2.5 font-mono text-xs leading-relaxed text-fg-muted">
+                    {text}
+                  </p>
+                </div>
+                <div className="mt-3 border-t border-border-token/50 pt-2 text-right">
+                  <Link
+                    to={`/tutorials/${tutorial.slug}/${lesson.slug}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"
+                  >
+                    Open Lesson <Icon name="arrowRight" size={9} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 

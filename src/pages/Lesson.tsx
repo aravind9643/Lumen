@@ -16,6 +16,7 @@ import { VoicePlayer } from '../components/ui/VoicePlayer'
 import { Icon } from '../components/ui/Icon'
 import { ReaderSettings, useReaderPreferences } from '../components/ui/ReaderSettings'
 import { triggerConfetti } from '../components/ui/Confetti'
+import { LessonNotes } from '../components/content/LessonNotes'
 
 export function Lesson() {
   const { tutorialSlug = '', lessonSlug = '' } = useParams()
@@ -224,6 +225,29 @@ export function Lesson() {
     if (segmentIndex !== undefined) speak(segments, segmentIndex)
   }
 
+  useEffect(() => {
+    if (!resolved) return
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      const tag = (target?.tagName || '').toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) {
+        return
+      }
+
+      if (e.key === 'ArrowLeft' && resolved.prev) {
+        navigate(`/tutorials/${resolved.tutorial.slug}/${resolved.prev.slug}`)
+      } else if (e.key === 'ArrowRight' && resolved.next) {
+        navigate(`/tutorials/${resolved.tutorial.slug}/${resolved.next.slug}`)
+      } else if (e.key === 'b' || e.key === 'B') {
+        toggleBookmark(tutorialSlug, lessonSlug)
+      } else if (e.key === 'f' || e.key === 'F') {
+        setReaderPrefs((p) => ({ ...p, focusMode: !p.focusMode }))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [resolved, navigate, toggleBookmark, tutorialSlug, lessonSlug, setReaderPrefs])
+
   if (!resolved) return <Navigate to="/tutorials" replace />
 
   const { tutorial, chapter, lesson, index, total, prev, next } = resolved
@@ -386,6 +410,13 @@ export function Lesson() {
                 readableBlocks={readableBlocks}
               />
             </article>
+
+            {/* ── Personal In-Lesson Notes ─────────────────────── */}
+            <LessonNotes
+              tutorialSlug={tutorialSlug}
+              lessonSlug={lessonSlug}
+              lessonTitle={lesson.title}
+            />
 
             {/* ── Prev / next ────────────────────────────────── */}
             {(prev || next) && (

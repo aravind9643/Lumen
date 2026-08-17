@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from './lib/theme'
@@ -22,6 +22,7 @@ const About = lazy(() => import('./pages/Static').then((m) => ({ default: m.Abou
 const Privacy = lazy(() => import('./pages/Static').then((m) => ({ default: m.Privacy })))
 const NotFound = lazy(() => import('./pages/Static').then((m) => ({ default: m.NotFound })))
 import { Confetti } from './components/ui/Confetti'
+import { ShortcutsDialog } from './components/ui/ShortcutsDialog'
 
 /**
  * Content-shaped skeleton so a lazy route swap reads as "the page is arriving"
@@ -95,15 +96,32 @@ function AnimatedRoutes() {
 }
 
 function Shell() {
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
   useAdSenseScript()
 
   useEffect(() => {
     initAnalytics()
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      const tag = (target?.tagName || '').toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        setShortcutsOpen((v) => !v)
+      }
+    }
+    const onShortcutsEvent = () => setShortcutsOpen(true)
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('lumen:shortcuts', onShortcutsEvent)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('lumen:shortcuts', onShortcutsEvent)
+    }
   }, [])
 
   return (
     <div className="flex min-h-screen flex-col">
       <Confetti />
+      <ShortcutsDialog open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-accent-fg"

@@ -1,0 +1,18 @@
+{
+  "name": "Lumen — Technical Mastery & Tutorials",
+  "short_name": "Lumen",
+  "description": "Comprehensive, zero-fluff engineering courses across AI, Backend, Mobile, Cloud, and Systems.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

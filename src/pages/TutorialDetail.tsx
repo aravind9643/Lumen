@@ -17,6 +17,7 @@ export function TutorialDetail() {
   const tutorial = getTutorial(tutorialSlug)
   const { isComplete, tutorialProgress } = useProgress()
   const [showCert, setShowCert] = useState(false)
+  const [dailyPace, setDailyPace] = useState<number>(20)
 
   useSEO({
     title: tutorial?.title ?? 'Not found',
@@ -42,6 +43,80 @@ export function TutorialDetail() {
   const flat = flatLessons(tutorial)
   const nextUp = flat.find(({ lesson }) => !isComplete(tutorial.slug, lesson.slug)) ?? flat[0]
 
+  const totalMins = totalDuration(tutorial)
+  const remainingMins = Math.round(totalMins * (1 - percent / 100))
+  const daysToFinish = Math.max(1, Math.ceil(remainingMins / dailyPace))
+  const targetDate = new Date(Date.now() + daysToFinish * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  })
+
+  const exportCourseMarkdown = () => {
+    let md = `# ${tutorial.title}\n\n`
+    md += `> ${tutorial.description}\n\n`
+    md += `- **Track**: ${tutorial.category}\n`
+    md += `- **Difficulty**: ${tutorial.difficulty}\n`
+    md += `- **Duration**: ~${totalMins} Minutes\n`
+    md += `- **Export Date**: ${new Date().toLocaleDateString()}\n\n`
+    md += `---\n\n## Table of Contents\n\n`
+
+    tutorial.chapters.forEach((ch, ci) => {
+      md += `### Chapter ${ci + 1}: ${ch.title}\n`
+      ch.lessons.forEach((l, li) => {
+        md += `- [${ci + 1}.${li + 1} ${l.title}](#${l.slug})\n`
+      })
+      md += `\n`
+    })
+
+    md += `---\n\n`
+
+    tutorial.chapters.forEach((ch, ci) => {
+      md += `# Chapter ${ci + 1}: ${ch.title}\n\n`
+      ch.lessons.forEach((l) => {
+        md += `## <a id="${l.slug}"></a>${l.title}\n\n`
+        md += `*${l.description}* (${l.duration} min read)\n\n`
+
+        l.blocks.forEach((b) => {
+          if (b.type === 'paragraph') {
+            md += `${b.text}\n\n`
+          } else if (b.type === 'heading') {
+            md += `${'#'.repeat(b.level)} ${b.text}\n\n`
+          } else if (b.type === 'code') {
+            md += `\`\`\`${b.language}\n${b.code}\n\`\`\`\n\n`
+          } else if (b.type === 'callout') {
+            md += `> **[${b.kind.toUpperCase()}]**: ${b.text}\n\n`
+          } else if (b.type === 'keyPoints') {
+            md += `### Key Takeaways:\n`
+            b.points.forEach((p) => {
+              md += `- ${p}\n`
+            })
+            md += `\n`
+          } else if (b.type === 'quote') {
+            md += `> "${b.text}" ${b.author ? `— *${b.author}*` : ''}\n\n`
+          } else if (b.type === 'analogy') {
+            md += `> 💡 **Analogy**: ${b.text}\n\n`
+          } else if (b.type === 'definition') {
+            md += `> 📖 **Definition: ${b.term}**: ${b.plain}\n\n`
+          } else if (b.type === 'list') {
+            b.items.forEach((item, idx) => {
+              md += `${b.ordered ? `${idx + 1}.` : '-'} ${item}\n`
+            })
+            md += `\n`
+          }
+        })
+        md += `---\n\n`
+      })
+    })
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${tutorial.slug}-complete-study-guide.md`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <>
       {showCert && (
@@ -52,33 +127,29 @@ export function TutorialDetail() {
         />
       )}
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-border-token">
-        {/* Flat colour band identifying the course */}
-        <div
-          className="absolute inset-x-0 top-0 h-1.5"
-          style={{ background: tutorial.color }}
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <nav className="mb-6 flex items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
-            <Link to="/tutorials" className="transition-colors hover:text-accent">Tutorials</Link>
-            <Icon name="chevronRight" size={11} />
-            <span className="text-fg">{tutorial.shortTitle ?? tutorial.title}</span>
-          </nav>
+      {/* ── Hero ────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden border-b border-border-token bg-bg-elev/40 py-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <nav className="mb-6 flex items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
+              <Link to="/tutorials" className="transition-colors hover:text-accent">Tutorials</Link>
+              <Icon name="chevronRight" size={10} />
+              <span className="text-fg-muted/70">{tutorial.category}</span>
+            </nav>
 
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span
-              className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-sm"
+              className="inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold text-white shadow-xs"
               style={{ background: tutorial.color }}
             >
-              <Icon name={tutorial.icon} size={26} />
+              <Icon name={tutorial.icon} size={13} />
+              {tutorial.category}
             </span>
 
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-accent">
-              {tutorial.category}
-            </p>
-            <h1 className="text-balance text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+            <h1 className="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">
               {tutorial.title}
             </h1>
             <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted">
@@ -87,12 +158,12 @@ export function TutorialDetail() {
 
             <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-fg-muted">
               <span className="flex items-center gap-1.5"><Icon name="bookOpen" size={13} /> {lessonCount(tutorial)} lessons</span>
-              <span className="flex items-center gap-1.5"><Icon name="clock" size={13} /> {totalDuration(tutorial)} minutes</span>
+              <span className="flex items-center gap-1.5"><Icon name="clock" size={13} /> {totalMins} minutes</span>
               <span className="flex items-center gap-1.5 capitalize"><Icon name="target" size={13} /> {tutorial.difficulty}</span>
               <span className="text-xs">Updated {tutorial.updated}</span>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 to={`/tutorials/${tutorial.slug}/${nextUp.lesson.slug}`}
                 className="group inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3.5 font-semibold text-accent-fg shadow-lg transition-all hover:scale-[1.03]"
@@ -114,6 +185,15 @@ export function TutorialDetail() {
                 </button>
               )}
 
+              <button
+                onClick={exportCourseMarkdown}
+                className="inline-flex items-center gap-2 rounded-xl border border-border-token bg-bg px-4 py-3 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+                title="Download full course as single Markdown study guide"
+              >
+                <Icon name="file" size={13} />
+                <span>Export Markdown (.md)</span>
+              </button>
+
               {percent > 0 && (
                 <div className="min-w-[180px] flex-1 sm:max-w-xs">
                   <div className="mb-1.5 flex justify-between text-xs font-medium">
@@ -131,6 +211,37 @@ export function TutorialDetail() {
                 </div>
               )}
             </div>
+
+            {/* ── Study Pace Planner Widget ────────────────────── */}
+            {percent < 100 && (
+              <div className="mt-8 rounded-2xl border border-border-token bg-bg/80 p-4 backdrop-blur-sm">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
+                    <Icon name="clock" size={14} className="text-accent" />
+                    <span className="text-xs font-bold text-fg">
+                      Study Planner: Finish in ~{daysToFinish} {daysToFinish === 1 ? 'day' : 'days'} ({targetDate})
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <span className="text-fg-muted text-[11px]">Daily pace:</span>
+                    {[15, 20, 30, 45].map((m) => (
+                      <button
+                        key={m}
+                        onClick={() => setDailyPace(m)}
+                        className={cn(
+                          'rounded-lg border px-2 py-0.5 font-semibold text-[11px] transition-all',
+                          dailyPace === m
+                            ? 'border-accent bg-accent text-accent-fg'
+                            : 'border-border-token bg-bg-subtle text-fg-muted hover:border-accent hover:text-fg',
+                        )}
+                      >
+                        {m}m/d
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
