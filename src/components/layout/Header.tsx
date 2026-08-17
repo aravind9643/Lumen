@@ -45,7 +45,7 @@ export function Header() {
     <>
       <header
         className={cn(
-          'sticky top-0 z-50 transition-all duration-300',
+          'no-print sticky top-0 z-50 transition-all duration-300',
           scrolled ? 'glass border-b border-border-token' : 'border-b border-transparent',
         )}
       >

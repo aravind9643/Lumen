@@ -32,10 +32,12 @@ CI (`.github/workflows/ci.yml`) runs all of them, plus both test suites, on push
 
 | Suite | What it covers |
 |---|---|
-| **Unit** (`tests/unit/`, Vitest + jsdom) | 112 tests: content resolution and search, `usePersistentState` including blocked/corrupt storage, progress and streak logic, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, analytics event forwarding, canonical/og:url construction, and `AdSlot`'s ad-blocker resilience |
-| **E2E** (`tests/e2e/`, Playwright) | 23 tests × 2 viewports: prerendered HTML with JS disabled, hydration without errors, search combobox and focus restoration, progress persistence, theming, category filtering, and recovery from blocked storage and failed chunk loads |
+| **Unit** (`tests/unit/`, Vitest + jsdom) | 122 tests: content resolution and search (including the fuzzy-match fallback), `usePersistentState` including blocked/corrupt storage, progress and streak logic, quiz-answer persistence and progress export/import round-tripping, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, analytics event forwarding, canonical/og:url construction, and `AdSlot`'s ad-blocker resilience |
+| **E2E** (`tests/e2e/`, Playwright) | 52 tests × 2 viewports (26 unique specs): prerendered HTML with JS disabled, hydration without errors, search combobox and focus restoration, progress persistence, theming, category filtering, recovery from blocked storage and failed chunk loads, and visual regression on the homepage, tutorials grid, and a lesson page |
 
 E2E runs against the built output using `tests/e2e/static-server.mjs`. `vite preview` cannot be used — it applies the SPA fallback before checking for nested `index.html`, so prerendered routes never get served.
+
+Visual regression (`tests/e2e/visual.spec.ts`) screenshots the homepage, tutorials grid, and a lesson page against platform-specific baselines. Run `npm run test:e2e:visual` on its own, or `npm run test:e2e:visual:update` to regenerate baselines after an intentional visual change.
 
 Note that `typecheck` is `tsc -b --force`, not `tsc --noEmit` — the root tsconfig is a solution file, so a bare `tsc --noEmit` resolves no files and passes vacuously.
 
@@ -132,8 +134,9 @@ TypeScript's exhaustiveness guard fails the build until step 2 is done. If the b
 | **Flat design** | No gradients anywhere — solid accent fills and per-course flat colours only. The one `linear-gradient` left is the hero grid, where it draws repeating rules rather than a colour blend. |
 | **Icons** | Font Awesome SVG throughout, no emoji. Content references icons by name via `lib/icons.ts`, so content files stay pure data. |
 | **Voice reading** | Web Speech API, one utterance per sentence so highlighting tracks the text and Chrome's length limit is never hit. Voice/rate/pitch persist. |
-| **Progress** | Completion, bookmarks, streaks, resume-where-you-left-off. localStorage only, synced across tabs. |
-| **Search** | ⌘K dialog, full-text over all lesson prose, weighted ranking with excerpts. |
+| **Progress** | Completion, bookmarks, streaks, resume-where-you-left-off, quiz-answer history with a review screen. localStorage only, synced across tabs, with JSON export/import for moving between devices. |
+| **Search** | ⌘K dialog, full-text over all lesson prose, weighted ranking with excerpts, and a bounded-edit-distance fuzzy fallback that tolerates a small typo when the exact search finds nothing. |
+| **Reading** | Live "N min left" estimate that tracks scroll position, ← / → keyboard navigation between lessons, a print/PDF-friendly view, and a next-course suggestion once a course is finished. |
 | **Analytics** | GA4, lazily loaded and fully disabled when no measurement ID is set. |
 | **Ads** | AdSense with reserved height (no layout shift) and dev placeholders. |
 | **SEO** | Per-route meta, Open Graph, canonical URLs. JSON-LD on every page type (`EducationalOrganization`, `Course`, `LearningResource` + `BreadcrumbList`). `sitemap.xml` and `robots.txt` generated at build time from the content registry. |

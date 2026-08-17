@@ -6,7 +6,7 @@ import { Icon } from '../ui/Icon'
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border-token bg-bg-subtle/40">
+    <footer className="no-print mt-24 border-t border-border-token bg-bg-subtle/40">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <AdSlot placement="footer" className="mb-10" />
       </div>

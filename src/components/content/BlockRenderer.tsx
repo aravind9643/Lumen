@@ -400,6 +400,7 @@ const SingleBlock = memo(function SingleBlock({
           explanation={block.explanation}
           tutorialSlug={tutorialSlug}
           lessonSlug={lessonSlug}
+          blockIndex={blockIndex}
         />
       )
 

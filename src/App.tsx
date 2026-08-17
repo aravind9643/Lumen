@@ -21,11 +21,26 @@ const About = lazy(() => import('./pages/Static').then((m) => ({ default: m.Abou
 const Privacy = lazy(() => import('./pages/Static').then((m) => ({ default: m.Privacy })))
 const NotFound = lazy(() => import('./pages/Static').then((m) => ({ default: m.NotFound })))
 
-/** Height-stable fallback so lazy route swaps don't collapse the layout. */
+/**
+ * Content-shaped skeleton so a lazy route swap reads as "the page is arriving"
+ * rather than a bare spinner with no relation to what's about to render.
+ * Shared across all lazy routes rather than one skeleton per page, since the
+ * exact layout isn't known until the real component mounts anyway.
+ */
 function RouteFallback() {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-label="Loading">
-      <span className="h-8 w-8 animate-spin rounded-full border-2 border-border-token border-t-accent" />
+    <div
+      className="mx-auto w-full max-w-4xl animate-pulse space-y-6 px-4 py-10 sm:px-6 lg:px-8"
+      role="status"
+      aria-label="Loading"
+    >
+      <div className="h-4 w-24 rounded bg-bg-subtle" />
+      <div className="h-8 w-2/3 rounded bg-bg-subtle" />
+      <div className="h-4 w-full rounded bg-bg-subtle" />
+      <div className="h-4 w-5/6 rounded bg-bg-subtle" />
+      <div className="mt-8 h-40 w-full rounded-2xl bg-bg-subtle" />
+      <div className="h-4 w-full rounded bg-bg-subtle" />
+      <div className="h-4 w-4/5 rounded bg-bg-subtle" />
     </div>
   )
 }

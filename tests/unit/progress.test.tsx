@@ -142,6 +142,89 @@ describe('streak', () => {
   })
 })
 
+describe('quiz answers', () => {
+  it('records and retrieves an answer', () => {
+    const { result } = setup()
+    act(() => result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 2, true))
+    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)).toMatchObject({
+      picked: 2,
+      correct: true,
+    })
+  })
+
+  it('keys answers by block index within the same lesson', () => {
+    const { result } = setup()
+    act(() => {
+      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 1, false)
+      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 3, 2, true)
+    })
+    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)?.correct).toBe(false)
+    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 3)?.correct).toBe(true)
+  })
+
+  it('surfaces every answer through quizHistory', () => {
+    const { result } = setup()
+    act(() => {
+      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 1, false)
+      result.current.recordQuizAnswer('llm-engineering', 'rag-systems', 2, 0, true)
+    })
+    expect(result.current.quizHistory).toHaveLength(2)
+    expect(result.current.quizHistory).toContainEqual(
+      expect.objectContaining({ tutorialSlug: 'llm-engineering', lessonSlug: 'rag-systems' }),
+    )
+    // Sorted newest-first: never increasing in `at`.
+    for (let i = 1; i < result.current.quizHistory.length; i++) {
+      expect(result.current.quizHistory[i].at).toBeLessThanOrEqual(result.current.quizHistory[i - 1].at)
+    }
+  })
+
+  it('reading an unanswered quiz returns undefined rather than throwing', () => {
+    const { result } = setup()
+    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)).toBeUndefined()
+  })
+})
+
+describe('export and import', () => {
+  it('round-trips state through export then import', () => {
+    const { result } = setup()
+    act(() => {
+      result.current.markComplete('ai-fundamentals', 'what-is-ai')
+      result.current.toggleBookmark('ai-fundamentals', 'understanding-data')
+    })
+    const snapshot = result.current.exportState()
+
+    act(() => result.current.reset())
+    expect(result.current.overall.done).toBe(0)
+
+    act(() => {
+      const ok = result.current.importState(snapshot)
+      expect(ok).toBe(true)
+    })
+    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(true)
+    expect(result.current.isBookmarked('ai-fundamentals', 'understanding-data')).toBe(true)
+  })
+
+  it('rejects malformed JSON without touching existing state', () => {
+    const { result } = setup()
+    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
+
+    act(() => {
+      const ok = result.current.importState('{not valid json')
+      expect(ok).toBe(false)
+    })
+    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(true)
+  })
+
+  it('rejects a well-formed but foreign JSON shape', () => {
+    const { result } = setup()
+    act(() => {
+      const ok = result.current.importState(JSON.stringify({ hello: 'world' }))
+      expect(ok).toBe(false)
+    })
+    expect(result.current.overall.done).toBe(0)
+  })
+})
+
 describe('visit and reset', () => {
   it('records the last visited lesson', () => {
     const { result } = setup()

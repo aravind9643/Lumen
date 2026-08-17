@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '../../lib/cn'
 import { events } from '../../lib/analytics'
+import { useProgress } from '../../lib/progress'
 import { Icon } from '../ui/Icon'
 
 interface QuizProps {
@@ -11,10 +12,15 @@ interface QuizProps {
   explanation?: string
   tutorialSlug: string
   lessonSlug: string
+  blockIndex: number
 }
 
-export function Quiz({ question, options, answer, explanation, tutorialSlug, lessonSlug }: QuizProps) {
-  const [picked, setPicked] = useState<number | null>(null)
+export function Quiz({ question, options, answer, explanation, tutorialSlug, lessonSlug, blockIndex }: QuizProps) {
+  const { recordQuizAnswer, getQuizAnswer } = useProgress()
+  const saved = getQuizAnswer(tutorialSlug, lessonSlug, blockIndex)
+  // Local state overrides the persisted answer once the reader retries in
+  // this session — `saved` only seeds the initial render.
+  const [picked, setPicked] = useState<number | null>(saved?.picked ?? null)
   const submitted = picked !== null
   const correct = picked === answer
 
@@ -22,6 +28,7 @@ export function Quiz({ question, options, answer, explanation, tutorialSlug, les
     if (submitted) return
     setPicked(i)
     events.quizAnswer(tutorialSlug, lessonSlug, i === answer)
+    recordQuizAnswer(tutorialSlug, lessonSlug, blockIndex, i, i === answer)
   }
 
   return (

@@ -129,3 +129,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Printing a lesson: keep the article, drop chrome that only makes sense
+   on-screen (site header/footer, voice player, ads, sidebar, interactive
+   controls). Components opt in with the `.no-print` class. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

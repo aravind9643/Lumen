@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { blocksToText, extractHeadings, resolveLesson } from '../content'
+import { getTutorialMeta, nextTutorial } from '../content/manifest'
 import { config } from '../config'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
@@ -16,11 +17,13 @@ import { Icon } from '../components/ui/Icon'
 
 export function Lesson() {
   const { tutorialSlug = '', lessonSlug = '' } = useParams()
+  const navigate = useNavigate()
   const resolved = useMemo(() => resolveLesson(tutorialSlug, lessonSlug), [tutorialSlug, lessonSlug])
 
   const { isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark, visit } = useProgress()
   const { current: speakingSegment, speaking } = useTTS()
   const [activeHeading, setActiveHeading] = useState<string>('')
+  const [scrollPercent, setScrollPercent] = useState(0)
   const depthReported = useRef(new Set<number>())
 
   // LearningResource plus a breadcrumb trail — lesson pages are the ones that
@@ -73,6 +76,7 @@ export function Lesson() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
     depthReported.current.clear()
+    setScrollPercent(0)
   }, [tutorialSlug, lessonSlug])
 
   useEffect(() => {
@@ -80,6 +84,23 @@ export function Lesson() {
     visit(tutorialSlug, lessonSlug)
     events.lessonStart(tutorialSlug, lessonSlug)
   }, [resolved, tutorialSlug, lessonSlug, visit])
+
+  // Keyboard navigation between lessons — ignored while typing anywhere
+  // (search dialog, a future text input) so single letters don't hijack input.
+  useEffect(() => {
+    if (!resolved) return
+    const { prev, next } = resolved
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target && /^(input|textarea|select)$/i.test(target.tagName)) return
+      if (target?.isContentEditable) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.key === 'ArrowRight' && next) navigate(`/tutorials/${tutorialSlug}/${next.slug}`)
+      if (e.key === 'ArrowLeft' && prev) navigate(`/tutorials/${tutorialSlug}/${prev.slug}`)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [resolved, tutorialSlug, navigate])
 
   // Scroll-depth milestones, each reported at most once per lesson.
   useEffect(() => {
@@ -96,6 +117,7 @@ export function Lesson() {
       const max = document.documentElement.scrollHeight - window.innerHeight
       if (max <= 0) return
       const percent = Math.round((window.scrollY / max) * 100)
+      setScrollPercent(Math.min(100, Math.max(0, percent)))
 
       for (const milestone of MILESTONES) {
         if (percent < milestone || depthReported.current.has(milestone)) continue
@@ -177,6 +199,9 @@ export function Lesson() {
   if (!resolved) return <Navigate to="/tutorials" replace />
 
   const { tutorial, chapter, lesson, index, total, prev, next } = resolved
+  const tutorialMeta = getTutorialMeta(tutorial.slug)
+  const suggested = !next && tutorialMeta ? nextTutorial(tutorialMeta) : undefined
+  const minutesLeft = Math.max(0, Math.round(lesson.duration * (1 - scrollPercent / 100)))
   const complete = isComplete(tutorialSlug, lessonSlug)
   const bookmarked = isBookmarked(tutorialSlug, lessonSlug)
   const speakingBlock = speaking && speakingSegment >= 0 ? segmentToBlock[speakingSegment] ?? -1 : -1
@@ -188,7 +213,7 @@ export function Lesson() {
         <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
           {/* ── Article ──────────────────────────────────────── */}
           <div className="min-w-0 max-w-3xl">
-            <nav className="mb-5 flex flex-wrap items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
+            <nav className="no-print mb-5 flex flex-wrap items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
               <Link to="/tutorials" className="transition-colors hover:text-accent">Tutorials</Link>
               <Icon name="chevronRight" size={10} />
               <Link to={`/tutorials/${tutorial.slug}`} className="transition-colors hover:text-accent">
@@ -216,7 +241,12 @@ export function Lesson() {
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <span className="flex items-center gap-1.5 text-sm text-fg-muted">
-                  <Icon name="clock" size={12} /> {lesson.duration} min read
+                  <Icon name="clock" size={12} />
+                  {complete || scrollPercent === 0
+                    ? `${lesson.duration} min read`
+                    : minutesLeft <= 0
+                      ? 'almost done'
+                      : `${minutesLeft} min left`}
                 </span>
 
                 <button
@@ -247,6 +277,13 @@ export function Lesson() {
                   <Icon name="bookmark" size={12} />
                   {bookmarked ? 'Saved' : 'Save'}
                 </button>
+
+                <button
+                  onClick={() => window.print()}
+                  className="no-print flex items-center gap-1.5 rounded-lg border border-border-token px-3 py-1.5 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+                >
+                  <Icon name="file" size={12} /> Print / Save PDF
+                </button>
               </div>
             </motion.header>
 
@@ -261,7 +298,12 @@ export function Lesson() {
             </article>
 
             {/* ── Prev / next ────────────────────────────────── */}
-            <nav className="mt-10 grid gap-4 border-t border-border-token pt-8 sm:grid-cols-2" aria-label="Lesson navigation">
+            {(prev || next) && (
+              <p className="no-print mt-10 flex items-center gap-1.5 text-xs text-fg-muted/70">
+                <Icon name="keyboard" size={11} /> Use ← / → to move between lessons
+              </p>
+            )}
+            <nav className={cn('no-print grid gap-4 border-t border-border-token pt-8 sm:grid-cols-2', prev || next ? 'mt-2' : 'mt-10')} aria-label="Lesson navigation">
               {prev ? (
                 <Link
                   to={`/tutorials/${tutorial.slug}/${prev.slug}`}
@@ -300,10 +342,25 @@ export function Lesson() {
                 </Link>
               )}
             </nav>
+
+            {!next && suggested && (
+              <div className="no-print mt-4 flex items-center justify-between gap-4 rounded-2xl border border-border-token bg-bg-elev p-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">What&rsquo;s next</p>
+                  <p className="font-semibold leading-snug">{suggested.shortTitle ?? suggested.title}</p>
+                </div>
+                <Link
+                  to={`/tutorials/${suggested.slug}`}
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg border border-border-token px-3 py-1.5 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+                >
+                  Start course <Icon name="arrowRight" size={11} />
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* ── Sidebar ──────────────────────────────────────── */}
-          <aside className="hidden lg:block">
+          <aside className="no-print hidden lg:block">
             <div className="sticky top-24 space-y-6">
               {headings.length > 0 && (
                 <nav aria-label="On this page">

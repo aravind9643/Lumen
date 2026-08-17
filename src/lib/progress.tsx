@@ -8,15 +8,29 @@ import { flatLessonsMeta, tutorialsMeta } from '../content/manifest'
 /** Composite key so lesson slugs need only be unique within a tutorial. */
 const key = (tutorialSlug: string, lessonSlug: string) => `${tutorialSlug}/${lessonSlug}`
 
+export interface QuizAnswer {
+  picked: number
+  correct: boolean
+  at: number
+}
+
 export interface ProgressState {
   completed: Record<string, number> // key -> completion timestamp
   bookmarks: string[]
   lastVisited: { tutorialSlug: string; lessonSlug: string; at: number } | null
   /** Consecutive-day study streak, keyed off local dates. */
   streak: { count: number; lastDay: string }
+  /** key -> `${blockIndex}` -> last answer given for that quiz. */
+  quizAnswers: Record<string, Record<number, QuizAnswer>>
 }
 
-const EMPTY: ProgressState = { completed: {}, bookmarks: [], lastVisited: null, streak: { count: 0, lastDay: '' } }
+const EMPTY: ProgressState = {
+  completed: {},
+  bookmarks: [],
+  lastVisited: null,
+  streak: { count: 0, lastDay: '' },
+  quizAnswers: {},
+}
 
 /** Local calendar date as YYYY-MM-DD. Deliberately not toISOString, which is
  *  UTC and would roll the streak over at the wrong moment for most timezones. */
@@ -45,12 +59,23 @@ interface ProgressContextValue {
   tutorialProgress: (t: string) => { done: number; total: number; percent: number }
   overall: { done: number; total: number; percent: number; minutes: number }
   reset: () => void
+  recordQuizAnswer: (t: string, l: string, blockIndex: number, picked: number, correct: boolean) => void
+  getQuizAnswer: (t: string, l: string, blockIndex: number) => QuizAnswer | undefined
+  /** Every answered quiz across the whole site, most recent first. */
+  quizHistory: (Array<QuizAnswer & { tutorialSlug: string; lessonSlug: string; blockIndex: number }>)
+  /** Serialised snapshot for download, and the inverse for restoring one. */
+  exportState: () => string
+  importState: (json: string) => boolean
 }
 
 const ProgressContext = createContext<ProgressContextValue | null>(null)
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [state, setState, reset] = usePersistentState<ProgressState>('progress:v1', EMPTY)
+  const [rawState, setState, reset] = usePersistentState<ProgressState>('progress:v1', EMPTY)
+  // Defends against a value persisted before `quizAnswers` existed — spreading
+  // over EMPTY fills in any field missing from an older stored shape, rather
+  // than crashing the first time something reads state.quizAnswers.
+  const state = useMemo(() => ({ ...EMPTY, ...rawState }), [rawState])
 
   const isComplete = useCallback((t: string, l: string) => key(t, l) in state.completed, [state.completed])
 
@@ -108,6 +133,42 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [setState],
   )
 
+  const recordQuizAnswer = useCallback(
+    (t: string, l: string, blockIndex: number, picked: number, correct: boolean) =>
+      setState((prev) => {
+        const k = key(t, l)
+        return {
+          ...prev,
+          quizAnswers: {
+            ...prev.quizAnswers,
+            [k]: { ...prev.quizAnswers[k], [blockIndex]: { picked, correct, at: Date.now() } },
+          },
+        }
+      }),
+    [setState],
+  )
+
+  const getQuizAnswer = useCallback(
+    (t: string, l: string, blockIndex: number) => state.quizAnswers[key(t, l)]?.[blockIndex],
+    [state.quizAnswers],
+  )
+
+  const quizHistory = useMemo(
+    () =>
+      Object.entries(state.quizAnswers)
+        .flatMap(([k, byBlock]) => {
+          const [tutorialSlug, lessonSlug] = k.split('/')
+          return Object.entries(byBlock).map(([blockIndex, answer]) => ({
+            tutorialSlug,
+            lessonSlug,
+            blockIndex: Number(blockIndex),
+            ...answer,
+          }))
+        })
+        .sort((a, b) => b.at - a.at),
+    [state.quizAnswers],
+  )
+
   const tutorialProgress = useCallback(
     (slug: string) => {
       const tutorial = tutorialsMeta.find((t) => t.slug === slug)
@@ -134,12 +195,48 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     }
   }, [state.completed])
 
+  const exportState = useCallback(() => JSON.stringify(state, null, 2), [state])
+
+  /**
+   * Accepts a previously exported snapshot. Validated shallowly — this is a
+   * user-supplied file, not a value this app produced in the current session
+   * — so a malformed or foreign JSON blob is rejected rather than partially
+   * applied and corrupting existing progress.
+   */
+  const importState = useCallback(
+    (json: string) => {
+      let parsed: unknown
+      try {
+        parsed = JSON.parse(json)
+      } catch {
+        return false
+      }
+      if (typeof parsed !== 'object' || parsed === null) return false
+      const p = parsed as Partial<ProgressState>
+      if (
+        typeof p.completed !== 'object' ||
+        !Array.isArray(p.bookmarks) ||
+        typeof p.streak !== 'object'
+      ) {
+        return false
+      }
+      setState({ ...EMPTY, ...p })
+      return true
+    },
+    [setState],
+  )
+
   const value = useMemo(
     () => ({
       state, isComplete, toggleComplete, markComplete,
       isBookmarked, toggleBookmark, visit, tutorialProgress, overall, reset,
+      recordQuizAnswer, getQuizAnswer, quizHistory, exportState, importState,
     }),
-    [state, isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark, visit, tutorialProgress, overall, reset],
+    [
+      state, isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark,
+      visit, tutorialProgress, overall, reset, recordQuizAnswer, getQuizAnswer, quizHistory,
+      exportState, importState,
+    ],
   )
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>

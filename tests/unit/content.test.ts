@@ -143,6 +143,21 @@ describe('searchContent', () => {
   it('returns nothing for terms absent from the content', () => {
     expect(searchContent('zzzznonexistentzzz')).toEqual([])
   })
+
+  it('tolerates a one-letter typo via fuzzy fallback', () => {
+    // "gradiant" (typo) should still surface the gradient descent lesson,
+    // even though it never appears verbatim anywhere in the content.
+    const results = searchContent('gradiant')
+    expect(results.length).toBeGreaterThan(0)
+    expect(results.some((r) => r.lessonTitle.toLowerCase().includes('gradient'))).toBe(true)
+  })
+
+  it('ranks an exact match above a fuzzy one when both exist', () => {
+    const exact = searchContent('attention')
+    const fuzzy = searchContent('attension')
+    expect(exact[0].lessonTitle.toLowerCase()).toContain('attention')
+    expect(fuzzy.some((r) => r.lessonTitle.toLowerCase().includes('attention'))).toBe(true)
+  })
 })
 
 describe('content integrity', () => {

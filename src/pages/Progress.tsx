@@ -1,15 +1,43 @@
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/manifest'
+// Progress is a lazy route, so pulling in the full content registry here (for
+// quiz question text) does not affect the eager bundle.
+import { resolveLesson } from '../content'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
 import type { IconName } from '../lib/icons'
 import { card } from '../lib/card'
+import { cn } from '../lib/cn'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 
 export function ProgressPage() {
-  const { state, overall, tutorialProgress, toggleBookmark, reset } = useProgress()
+  const { state, overall, tutorialProgress, toggleBookmark, reset, quizHistory, exportState, importState } =
+    useProgress()
+  const [importMessage, setImportMessage] = useState<{ ok: boolean; text: string } | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleExport = () => {
+    const blob = new Blob([exportState()], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `lumen-progress-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImportFile = async (file: File) => {
+    const text = await file.text()
+    const ok = importState(text)
+    setImportMessage(
+      ok
+        ? { ok: true, text: 'Progress imported.' }
+        : { ok: false, text: 'That file could not be read as a progress export.' },
+    )
+  }
 
   useSEO({
     title: 'My Progress',
@@ -37,6 +65,17 @@ export function ProgressPage() {
   const resume = state.lastVisited
     ? lookup(state.lastVisited.tutorialSlug, state.lastVisited.lessonSlug)
     : null
+
+  // Resolve each saved quiz answer against the live content so a renamed or
+  // removed lesson/question quietly drops out rather than showing stale text.
+  const quizReview = quizHistory
+    .map((entry) => {
+      const resolved = resolveLesson(entry.tutorialSlug, entry.lessonSlug)
+      const block = resolved?.lesson.blocks[entry.blockIndex]
+      if (!resolved || !block || block.type !== 'quiz') return null
+      return { ...entry, tutorial: resolved.tutorial, lesson: resolved.lesson, block }
+    })
+    .filter((v): v is NonNullable<typeof v> => v !== null)
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
@@ -129,6 +168,49 @@ export function ProgressPage() {
         </div>
       </section>
 
+      {/* ── Quiz review ──────────────────────────────────────── */}
+      {quizReview.length > 0 && (
+        <section className="mt-12">
+          <h2 className="mb-5 text-2xl font-bold tracking-tight">Quiz review</h2>
+          <ul className="space-y-2">
+            {quizReview.map(({ tutorial, lesson, blockIndex, block, correct, picked }) => (
+              <li
+                key={`${tutorial.slug}/${lesson.slug}/${blockIndex}`}
+                className={card({ className: 'p-4' })}
+              >
+                <div className="flex items-start gap-3">
+                  <span
+                    className={cn(
+                      'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
+                      correct
+                        ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
+                    )}
+                  >
+                    <Icon name={correct ? 'check' : 'close'} size={12} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium leading-snug">{block.type === 'quiz' && block.question}</p>
+                    <p className="mt-1 text-xs text-fg-muted">
+                      Your answer: {block.type === 'quiz' && block.options[picked]}
+                      {!correct && block.type === 'quiz' && (
+                        <> · Correct: {block.options[block.answer]}</>
+                      )}
+                    </p>
+                    <Link
+                      to={`/tutorials/${tutorial.slug}/${lesson.slug}`}
+                      className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"
+                    >
+                      {lesson.title} <Icon name="arrowRight" size={9} />
+                    </Link>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* ── Bookmarks ────────────────────────────────────────── */}
       <section className="mt-12">
         <h2 className="mb-5 text-2xl font-bold tracking-tight">Saved lessons</h2>
@@ -170,7 +252,32 @@ export function ProgressPage() {
 
       <AdSlot placement="footer" className="mt-14" />
 
-      <div className="mt-12 border-t border-border-token pt-6">
+      <div className="mt-12 flex flex-wrap items-center gap-4 border-t border-border-token pt-6">
+        <button
+          onClick={handleExport}
+          className="flex items-center gap-2 text-sm font-medium text-fg-muted transition-colors hover:text-accent"
+        >
+          <Icon name="file" size={13} /> Export progress
+        </button>
+
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="flex items-center gap-2 text-sm font-medium text-fg-muted transition-colors hover:text-accent"
+        >
+          <Icon name="copy" size={13} /> Import progress
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json"
+          className="sr-only"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) handleImportFile(file)
+            e.target.value = ''
+          }}
+        />
+
         <button
           onClick={() => {
             if (confirm('Reset all progress, bookmarks, and streak? This cannot be undone.')) reset()
@@ -180,6 +287,19 @@ export function ProgressPage() {
           <Icon name="reset" size={13} /> Reset all progress
         </button>
       </div>
+
+      {importMessage && (
+        <p
+          role="status"
+          aria-live="polite"
+          className={cn(
+            'mt-3 text-sm',
+            importMessage.ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500',
+          )}
+        >
+          {importMessage.text}
+        </p>
+      )}
     </div>
   )
 }

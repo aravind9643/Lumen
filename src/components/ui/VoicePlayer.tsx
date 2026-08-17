@@ -21,7 +21,7 @@ export function VoicePlayer({ segments }: { segments: string[] }) {
   const percent = speaking && total ? ((current + 1) / total) * 100 : 0
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div className="no-print pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <AnimatePresence mode="wait">
         {!speaking ? (
           <motion.button

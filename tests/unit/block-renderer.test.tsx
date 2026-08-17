@@ -2,10 +2,15 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BlockRenderer } from '../../src/components/content/BlockRenderer'
+import { ProgressProvider } from '../../src/lib/progress'
 import type { Block } from '../../src/content/types'
 
 const draw = (blocks: Block[]) =>
-  render(<BlockRenderer blocks={blocks} tutorialSlug="t" lessonSlug="l" />)
+  render(
+    <ProgressProvider>
+      <BlockRenderer blocks={blocks} tutorialSlug="t" lessonSlug="l" />
+    </ProgressProvider>,
+  )
 
 describe('BlockRenderer', () => {
   it('renders headings at the requested level with an anchor id', () => {

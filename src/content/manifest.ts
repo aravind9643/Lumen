@@ -211,3 +211,14 @@ export const totalDuration = (tutorial: TutorialMeta) =>
   flatLessonsMeta(tutorial).reduce((sum, { lesson }) => sum + lesson.duration, 0)
 
 export const totalLessonCount = tutorialsMeta.reduce((n, t) => n + lessonCount(t), 0)
+
+/**
+ * Suggests what to take after finishing `tutorial` — prefers another course in
+ * the same category (natural continuation), falling back to any other course
+ * if the category only has this one. Registry order decides ties, since it
+ * already reflects a deliberate beginner-to-advanced sequence.
+ */
+export function nextTutorial(tutorial: TutorialMeta): TutorialMeta | undefined {
+  const sameCategory = tutorialsMeta.find((t) => t.slug !== tutorial.slug && t.category === tutorial.category)
+  return sameCategory ?? tutorialsMeta.find((t) => t.slug !== tutorial.slug)
+}
