@@ -13,7 +13,7 @@ import { extractTutorials } from './parse-content.mjs'
 import { STATIC_ROUTES } from './static-routes.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const siteUrl = (process.env.VITE_SITE_URL || 'https://lumen.tutorial').replace(/\/+$/, '')
+const siteUrl = (process.env.VITE_SITE_URL || 'https://lumen-peach-two.vercel.app').replace(/\/+$/, '')
 
 const dir = join(root, 'src/content/tutorials')
 

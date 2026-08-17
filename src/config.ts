@@ -22,7 +22,7 @@ export const config = {
     tagline: 'Learn it properly.',
     description:
       'In-depth, carefully written tutorials that start from zero and build up. Free, open, and made for people who want to actually understand the subject.',
-    url: stripTrailingSlash(env.VITE_SITE_URL ?? 'https://lumen.tutorial'),
+    url: stripTrailingSlash(env.VITE_SITE_URL ?? 'https://lumen-peach-two.vercel.app'),
     author: 'Lumen',
     twitter: '@lumenlearn',
     /**
@@ -40,7 +40,7 @@ export const config = {
 
   adsense: {
     /** e.g. "ca-pub-1234567890123456" */
-    client: (env.VITE_ADSENSE_CLIENT as string | undefined) ?? '',
+    client: (env.VITE_ADSENSE_CLIENT as string | undefined) ?? 'ca-pub-9316330718026325',
     slots: {
       inArticle: (env.VITE_ADSENSE_SLOT_IN_ARTICLE as string | undefined) ?? '',
       sidebar: (env.VITE_ADSENSE_SLOT_SIDEBAR as string | undefined) ?? '',
