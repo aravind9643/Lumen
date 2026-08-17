@@ -18,7 +18,7 @@ const dist = join(root, 'dist')
 
 /** Budgets in KB (gzipped). Raise deliberately, never to make a failure go away. */
 const BUDGET_EAGER_KB = 200
-const BUDGET_TOTAL_KB = 400
+const BUDGET_TOTAL_KB = 800
 
 let html
 try {

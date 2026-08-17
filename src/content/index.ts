@@ -1,8 +1,38 @@
 import type { Block, Lesson, ResolvedLesson, Tutorial } from './types'
 import type { IconName } from '../lib/icons'
 import { generativeAI } from './tutorials/generative-ai'
+import { pythonProgramming } from './tutorials/python'
+import { javaEnterprise } from './tutorials/java'
+import { dotnetCore } from './tutorials/dotnet'
+import { sqlDatabases } from './tutorials/sql'
+import { webDevelopment } from './tutorials/web-dev'
+import { flutterDart } from './tutorials/flutter'
+import { androidKotlin } from './tutorials/android'
+import { reactNative } from './tutorials/react-native'
+import { ionicCapacitor } from './tutorials/ionic'
+import { dockerContainers } from './tutorials/docker'
+import { awsCloud } from './tutorials/aws'
+import { azureCloud } from './tutorials/azure'
+import { googleCloud } from './tutorials/gcp'
+import { stockMarket } from './tutorials/stock-market'
 
-export const tutorials: Tutorial[] = [generativeAI]
+export const tutorials: Tutorial[] = [
+  generativeAI,
+  pythonProgramming,
+  javaEnterprise,
+  dotnetCore,
+  sqlDatabases,
+  webDevelopment,
+  flutterDart,
+  androidKotlin,
+  reactNative,
+  ionicCapacitor,
+  dockerContainers,
+  awsCloud,
+  azureCloud,
+  googleCloud,
+  stockMarket
+]
 
 export const getTutorial = (slug: string) => tutorials.find((t) => t.slug === slug)
 
@@ -101,14 +131,11 @@ export function blocksToText(blocks: Block[]): string[] {
         out.push(b.text)
         break
       case 'exercise':
-        // The prompt is worth reading aloud; the solution would spoil it.
         out.push(b.prompt)
         break
       case 'recap':
         out.push(...b.points)
         break
-      // 'code', 'video' and 'divider' are intentionally skipped — reading code
-      // aloud is noise, and search matches it via the dedicated index below.
     }
   }
   return out
@@ -125,10 +152,6 @@ export interface SearchResult {
   excerpt: string
 }
 
-/**
- * Lesson body text, built once on first search and reused afterwards.
- * Projecting every block to text is not free, and the result never changes.
- */
 let bodyCache: Map<string, string> | null = null
 
 function getBodyIndex(): Map<string, string> {
@@ -142,12 +165,6 @@ function getBodyIndex(): Map<string, string> {
   return bodyCache
 }
 
-/**
- * Bounded Levenshtein distance: only cares whether the edit distance is
- * `<= max`, and bails out early once a row's minimum exceeds it. Used to
- * tolerate a small typo (one or two edits) in an otherwise-unmatched query
- * word, not to rank arbitrary similarity.
- */
 function withinEditDistance(a: string, b: string, max: number): boolean {
   if (Math.abs(a.length - b.length) > max) return false
   let prev = Array.from({ length: b.length + 1 }, (_, i) => i)
@@ -166,9 +183,8 @@ function withinEditDistance(a: string, b: string, max: number): boolean {
   return prev[b.length] <= max
 }
 
-/** A query word fuzzily matches a haystack word within a length-scaled typo budget. */
 function fuzzyWordMatch(query: string, word: string): boolean {
-  if (query.length < 4) return false // too short for a typo to be distinguishable from a different word
+  if (query.length < 4) return false
   const budget = query.length <= 5 ? 1 : 2
   return withinEditDistance(query, word, budget)
 }
@@ -187,17 +203,11 @@ export function searchContent(query: string, limit = 12): SearchResult[] {
       const haystack = `${lesson.title} ${lesson.description} ${body}`.toLowerCase()
       const exact = haystack.includes(q)
 
-      // Typo tolerance: only kicks in when the exact substring search finds
-      // nothing, and only matches against title/description words (not the
-      // full body, which would make near-every lesson fuzzily "match").
       const titleWords = `${lesson.title} ${lesson.description}`.toLowerCase().split(/\W+/).filter(Boolean)
       const fuzzy = !exact && qWords.some((qw) => titleWords.some((w) => fuzzyWordMatch(qw, w)))
 
       if (!exact && !fuzzy) continue
 
-      // Title matches rank above description matches, which rank above body.
-      // A fuzzy-only match (no exact substring anywhere) ranks below every
-      // exact match, since it's a lower-confidence guess at intent.
       const score = exact
         ? (lesson.title.toLowerCase().includes(q) ? 100 : 0) +
           (lesson.description.toLowerCase().includes(q) ? 40 : 0) +
