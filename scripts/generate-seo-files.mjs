@@ -10,17 +10,26 @@ import { mkdirSync, readdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { extractTutorials } from './parse-content.mjs'
+import { STATIC_ROUTES } from './static-routes.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const siteUrl = (process.env.VITE_SITE_URL || 'https://lumen.tutorial').replace(/\/$/, '')
+const siteUrl = (process.env.VITE_SITE_URL || 'https://lumen.tutorial').replace(/\/+$/, '')
 
 const dir = join(root, 'src/content/tutorials')
-const routes = [
-  { path: '/', priority: '1.0', changefreq: 'weekly' },
-  { path: '/tutorials', priority: '0.9', changefreq: 'weekly' },
-  { path: '/about', priority: '0.4', changefreq: 'monthly' },
-  { path: '/privacy', priority: '0.3', changefreq: 'yearly' },
-]
+
+// Priorities are hand-tuned per path; changefreq roughly matches how often
+// each page's content actually changes.
+const STATIC_SEO = {
+  '/': { priority: '1.0', changefreq: 'weekly' },
+  '/tutorials': { priority: '0.9', changefreq: 'weekly' },
+  '/about': { priority: '0.4', changefreq: 'monthly' },
+  '/privacy': { priority: '0.3', changefreq: 'yearly' },
+}
+
+const routes = STATIC_ROUTES.filter((r) => r.indexable).map((r) => ({
+  path: r.path,
+  ...(STATIC_SEO[r.path] ?? { priority: '0.5', changefreq: 'monthly' }),
+}))
 
 let lessonCount = 0
 

@@ -14,7 +14,7 @@ npm run test:e2e   # Playwright, against the built output
 
 ### Build-time guards
 
-Five invariants are machine-checked, because each fails silently otherwise:
+Six invariants are machine-checked, because each fails silently otherwise:
 
 | Check | Catches | Why it matters |
 |---|---|---|
@@ -23,6 +23,7 @@ Five invariants are machine-checked, because each fails silently otherwise:
 | `check:quiz` | Correct answers clustered at one position; out-of-range indices | A reader can score 100% by pattern-matching instead of learning |
 | `check:bundle` | Eager JS over 200kB gzipped, or lesson prose in the entry chunk | Guards the content-splitting win from silently regressing |
 | `check:prerender` | Pages rendering as the bare shell, or non-per-route titles | The site silently becomes invisible to crawlers again |
+| *(built into `prerender.mjs`)* | `scripts/static-routes.mjs` disagreeing with the routes `prerender.mjs` actually renders | This is exactly how `/progress` silently fell out of the sitemap before the two lists were unified |
 | `typecheck` | A `Block` variant with no `BlockRenderer` case | The block renders as nothing |
 
 CI (`.github/workflows/ci.yml`) runs all of them, plus both test suites, on push and pull request.
@@ -31,7 +32,7 @@ CI (`.github/workflows/ci.yml`) runs all of them, plus both test suites, on push
 
 | Suite | What it covers |
 |---|---|
-| **Unit** (`tests/unit/`, Vitest + jsdom) | 102 tests: content resolution and search, `usePersistentState` including blocked/corrupt storage, progress and streak logic, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, and analytics event forwarding |
+| **Unit** (`tests/unit/`, Vitest + jsdom) | 112 tests: content resolution and search, `usePersistentState` including blocked/corrupt storage, progress and streak logic, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, analytics event forwarding, canonical/og:url construction, and `AdSlot`'s ad-blocker resilience |
 | **E2E** (`tests/e2e/`, Playwright) | 23 tests × 2 viewports: prerendered HTML with JS disabled, hydration without errors, search combobox and focus restoration, progress persistence, theming, category filtering, and recovery from blocked storage and failed chunk loads |
 
 E2E runs against the built output using `tests/e2e/static-server.mjs`. `vite preview` cannot be used — it applies the SPA fallback before checking for nested `index.html`, so prerendered routes never get served.

@@ -1,6 +1,19 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { config, isAdSenseEnabled } from '../../config'
 import { cn } from '../../lib/cn'
+
+/**
+ * Set once the AdSense loader script itself fails — most commonly an ad
+ * blocker rejecting the request outright, which is one of the most-blocked
+ * domains on the web. Module-level because the script is injected once for
+ * the whole app (`useAdSenseScript`), so every `<AdSlot>` should react to it.
+ */
+let scriptBlocked = false
+const blockedListeners = new Set<(blocked: boolean) => void>()
+const markScriptBlocked = () => {
+  scriptBlocked = true
+  blockedListeners.forEach((fn) => fn(true))
+}
 
 type Placement = 'inArticle' | 'sidebar' | 'footer'
 
@@ -30,8 +43,21 @@ export function AdSlot({ placement, className, label = 'Advertisement' }: AdSlot
   const spec = FORMATS[placement]
   const slot = config.adsense.slots[placement]
 
+  // Re-renders once if the loader script is already known to be blocked, or
+  // if it becomes blocked while this slot is mounted. Without this, a blocked
+  // ad blocker request left the reserved minHeight as permanent blank space —
+  // nothing ever told the slot the ad was never coming.
+  const [blocked, setBlocked] = useState(scriptBlocked)
   useEffect(() => {
-    if (!isAdSenseEnabled || !slot || pushed.current) return
+    if (blocked) return
+    blockedListeners.add(setBlocked)
+    return () => {
+      blockedListeners.delete(setBlocked)
+    }
+  }, [blocked])
+
+  useEffect(() => {
+    if (!isAdSenseEnabled || !slot || pushed.current || blocked) return
     // React 18 StrictMode double-invokes effects; pushing twice throws.
     pushed.current = true
     try {
@@ -39,9 +65,9 @@ export function AdSlot({ placement, className, label = 'Advertisement' }: AdSlot
     } catch (err) {
       console.warn('[adsense] push failed', err)
     }
-  }, [slot])
+  }, [slot, blocked])
 
-  if (!isAdSenseEnabled || !slot) {
+  if (!isAdSenseEnabled || !slot || blocked) {
     if (!config.adsense.showPlaceholders) return null
     return (
       <div
@@ -53,7 +79,9 @@ export function AdSlot({ placement, className, label = 'Advertisement' }: AdSlot
         style={{ minHeight: spec.minHeight }}
         aria-hidden="true"
       >
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">Ad placeholder</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">
+          {blocked ? 'Ad blocked' : 'Ad placeholder'}
+        </span>
         <span className="text-xs opacity-60">{placement}</span>
       </div>
     )
@@ -89,6 +117,10 @@ export function useAdSenseScript() {
     script.async = true
     script.src = src
     script.crossOrigin = 'anonymous'
+    // AdSense is one of the most commonly ad-blocked domains on the web.
+    // Without this, a blocked request left every <AdSlot> reserving its
+    // minHeight forever with nothing inside — a permanent blank gap.
+    script.onerror = markScriptBlocked
     document.head.appendChild(script)
   }, [])
 }

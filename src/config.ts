@@ -8,13 +8,21 @@
 
 const env = import.meta.env
 
+/**
+ * Strips a trailing slash so `${url}${path}` never produces a double slash.
+ * Normalising once here — rather than in every place that builds a URL —
+ * is what keeps the client-side `useSEO` hook, the sitemap generator, and
+ * the prerender script from being able to disagree with each other.
+ */
+const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '')
+
 export const config = {
   site: {
     name: 'Lumen',
     tagline: 'Learn it properly.',
     description:
       'In-depth, carefully written tutorials that start from zero and build up. Free, open, and made for people who want to actually understand the subject.',
-    url: env.VITE_SITE_URL ?? 'https://lumen.tutorial',
+    url: stripTrailingSlash(env.VITE_SITE_URL ?? 'https://lumen.tutorial'),
     author: 'Lumen',
     twitter: '@lumenlearn',
     /**

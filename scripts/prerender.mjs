@@ -15,6 +15,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { STATIC_ROUTES } from './static-routes.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -29,7 +30,9 @@ const { config } = await load('server/config.js')
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
 const site = config.site
-const base = site.url.replace(/\/$/, '')
+// config.ts already strips a trailing slash; re-stripping here is cheap
+// idempotent defence in case that ever regresses, not the primary guard.
+const base = site.url.replace(/\/+$/, '')
 
 const esc = (s) =>
   String(s)
@@ -149,6 +152,24 @@ for (const tutorial of tutorials) {
         },
       })
     }
+  }
+}
+
+// Guard against the two static-route lists drifting apart again — this is
+// exactly how the sitemap silently ended up missing `/progress` for a while:
+// nothing checked this list against `static-routes.mjs` after it was added
+// there. Content-derived routes (tutorials/lessons) are exempt, since they
+// are not part of STATIC_ROUTES at all.
+{
+  const expected = new Set(STATIC_ROUTES.map((r) => r.path))
+  const actual = new Set(routes.map((r) => r.path).filter((p) => expected.has(p) || !p.includes('/tutorials/')))
+  const missing = [...expected].filter((p) => !routes.some((r) => r.path === p))
+  const extra = [...actual].filter((p) => !expected.has(p))
+  if (missing.length || extra.length) {
+    console.error('[prerender] static routes are out of sync with scripts/static-routes.mjs')
+    if (missing.length) console.error(`  missing from prerender.mjs: ${missing.join(', ')}`)
+    if (extra.length) console.error(`  missing from static-routes.mjs: ${extra.join(', ')}`)
+    process.exit(1)
   }
 }
 
