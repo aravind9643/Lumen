@@ -1,6 +1,8 @@
 import type { Block, Lesson, ResolvedLesson, Tutorial } from './types'
 import type { IconName } from '../lib/icons'
-export const tutorials: Tutorial[] = []
+import { generativeAI } from './tutorials/generative-ai'
+
+export const tutorials: Tutorial[] = [generativeAI]
 
 export const getTutorial = (slug: string) => tutorials.find((t) => t.slug === slug)
 

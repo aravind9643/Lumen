@@ -13,7 +13,6 @@ import { cn } from '../lib/cn'
 import { card } from '../lib/card'
 import { BlockRenderer } from '../components/content/BlockRenderer'
 import { VoicePlayer } from '../components/ui/VoicePlayer'
-import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 
 export function Lesson() {
@@ -152,6 +151,7 @@ export function Lesson() {
 
   // Highlight the table-of-contents entry nearest the top of the viewport.
   const headings = useMemo(() => (resolved ? extractHeadings(resolved.lesson.blocks) : []), [resolved])
+  const tocListRef = useRef<HTMLUListElement>(null)
 
   useEffect(() => {
     if (!headings.length) return
@@ -170,6 +170,14 @@ export function Lesson() {
     })
     return () => observer.disconnect()
   }, [headings])
+
+  useEffect(() => {
+    if (!activeHeading || !tocListRef.current) return
+    const activeEl = tocListRef.current.querySelector(`a[href="#${activeHeading}"]`) as HTMLElement | null
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [activeHeading])
 
   /**
    * Text-to-speech segments, plus the block each segment came from so the
@@ -408,13 +416,16 @@ export function Lesson() {
 
           {/* ── Sidebar ──────────────────────────────────────── */}
           <aside className="no-print hidden lg:block">
-            <div className="sticky top-24 space-y-6">
+            <div className="sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden">
               {headings.length > 0 && (
-                <nav aria-label="On this page">
-                  <h2 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-fg-muted">
+                <nav aria-label="On this page" className="flex min-h-0 flex-1 flex-col">
+                  <h2 className="mb-3 flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-fg-muted">
                     <Icon name="list" size={12} /> On this page
                   </h2>
-                  <ul className="space-y-1 border-l border-border-token">
+                  <ul
+                    ref={tocListRef}
+                    className="overflow-y-auto pr-2 space-y-1 border-l border-border-token [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]"
+                  >
                     {headings.map((h) => (
                       <li key={h.id}>
                         <a
@@ -434,8 +445,6 @@ export function Lesson() {
                   </ul>
                 </nav>
               )}
-
-              <AdSlot placement="sidebar" />
             </div>
           </aside>
         </div>
