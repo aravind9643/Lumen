@@ -12,21 +12,21 @@ import type { Block } from '../../src/content/types'
 
 describe('resolveLesson', () => {
   it('resolves a lesson with its chapter and position', () => {
-    const r = resolveLesson('ai-fundamentals', 'what-is-ai')
+    const r = resolveLesson('generative-ai', 'what-is-ai-and-machine-learning')
     expect(r).not.toBeNull()
-    expect(r!.lesson.slug).toBe('what-is-ai')
+    expect(r!.lesson.slug).toBe('what-is-ai-and-machine-learning')
     expect(r!.index).toBe(0)
     expect(r!.total).toBeGreaterThan(1)
     expect(r!.chapter.title).toContain('Chapter 1')
   })
 
   it('links prev and next in reading order', () => {
-    const first = resolveLesson('ai-fundamentals', 'what-is-ai')!
+    const first = resolveLesson('generative-ai', 'what-is-ai-and-machine-learning')!
     expect(first.prev).toBeNull()
     expect(first.next).not.toBeNull()
 
-    const second = resolveLesson('ai-fundamentals', first.next!.slug)!
-    expect(second.prev!.slug).toBe('what-is-ai')
+    const second = resolveLesson('generative-ai', first.next!.slug)!
+    expect(second.prev!.slug).toBe('what-is-ai-and-machine-learning')
     expect(second.index).toBe(1)
   })
 
@@ -39,8 +39,8 @@ describe('resolveLesson', () => {
   })
 
   it('returns null for unknown slugs rather than throwing', () => {
-    expect(resolveLesson('nope', 'what-is-ai')).toBeNull()
-    expect(resolveLesson('ai-fundamentals', 'nope')).toBeNull()
+    expect(resolveLesson('nope', 'what-is-ai-and-machine-learning')).toBeNull()
+    expect(resolveLesson('generative-ai', 'nope')).toBeNull()
     expect(resolveLesson('', '')).toBeNull()
   })
 })
@@ -119,19 +119,19 @@ describe('searchContent', () => {
   })
 
   it('finds lessons by body text', () => {
-    const results = searchContent('gradient descent')
+    const results = searchContent('hallucination')
     expect(results.length).toBeGreaterThan(0)
     expect(results[0].lessonTitle).toBeTruthy()
     expect(results[0].tutorialSlug).toBeTruthy()
   })
 
   it('ranks title matches above body-only matches', () => {
-    const results = searchContent('attention')
-    expect(results[0].lessonTitle.toLowerCase()).toContain('attention')
+    const results = searchContent('diffusion')
+    expect(results[0].lessonTitle.toLowerCase()).toContain('diffusion')
   })
 
   it('is case-insensitive', () => {
-    expect(searchContent('TOKENS').length).toBe(searchContent('tokens').length)
+    expect(searchContent('DIFFUSION').length).toBe(searchContent('diffusion').length)
   })
 
   it('returns an excerpt and respects the limit', () => {
@@ -145,18 +145,18 @@ describe('searchContent', () => {
   })
 
   it('tolerates a one-letter typo via fuzzy fallback', () => {
-    // "gradiant" (typo) should still surface the gradient descent lesson,
+    // "diffussion" (typo) should still surface the diffusion lesson,
     // even though it never appears verbatim anywhere in the content.
-    const results = searchContent('gradiant')
+    const results = searchContent('diffussion')
     expect(results.length).toBeGreaterThan(0)
-    expect(results.some((r) => r.lessonTitle.toLowerCase().includes('gradient'))).toBe(true)
+    expect(results.some((r) => r.lessonTitle.toLowerCase().includes('diffusion'))).toBe(true)
   })
 
   it('ranks an exact match above a fuzzy one when both exist', () => {
-    const exact = searchContent('attention')
-    const fuzzy = searchContent('attension')
-    expect(exact[0].lessonTitle.toLowerCase()).toContain('attention')
-    expect(fuzzy.some((r) => r.lessonTitle.toLowerCase().includes('attention'))).toBe(true)
+    const exact = searchContent('diffusion')
+    const fuzzy = searchContent('diffussion')
+    expect(exact[0].lessonTitle.toLowerCase()).toContain('diffusion')
+    expect(fuzzy.some((r) => r.lessonTitle.toLowerCase().includes('diffusion'))).toBe(true)
   })
 })
 

@@ -11,9 +11,9 @@ test.describe('static HTML (no JavaScript)', () => {
   const routes = [
     { path: '/', contains: 'Learn how things' },
     { path: '/tutorials', contains: 'All tutorials' },
-    { path: '/tutorials/ai-fundamentals', contains: 'AI Fundamentals' },
-    { path: '/tutorials/ai-fundamentals/what-is-ai', contains: 'Artificial Intelligence' },
-    { path: '/tutorials/web-fundamentals/what-happens-when-you-visit-a-page', contains: 'What Happens When You Visit' },
+    { path: '/tutorials/generative-ai', contains: 'Generative AI Engineer' },
+    { path: '/tutorials/generative-ai/what-is-ai-and-machine-learning', contains: 'Machine Learning' },
+    { path: '/tutorials/generative-ai/interview-preparation', contains: 'Interview' },
     { path: '/about', contains: 'About' },
     { path: '/privacy', contains: 'Privacy' },
   ]
@@ -43,7 +43,7 @@ test.describe('static HTML (no JavaScript)', () => {
   })
 
   test('lesson pages carry structured data', async ({ page }) => {
-    await page.goto('/tutorials/llm-engineering/rag-systems')
+    await page.goto('/tutorials/generative-ai/fine-tuning-and-rag')
     const blocks = page.locator('script[type="application/ld+json"]')
     await expect(blocks).toHaveCount(1)
 
@@ -55,10 +55,10 @@ test.describe('static HTML (no JavaScript)', () => {
   })
 
   test('og tags are route-specific', async ({ page }) => {
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article')
     const desc = await page.locator('meta[name=description]').getAttribute('content')
-    expect(desc).toMatch(/jargon|define|AI/i)
+    expect(desc).toMatch(/AI|machine learning|jargon/i)
   })
 })
 
@@ -71,7 +71,7 @@ test.describe('hydration', () => {
       if (m.type() === 'error' && !/adsbygoogle|googlesyndication|favicon/i.test(t)) errors.push(t)
     })
 
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await page.waitForLoadState('networkidle')
 
     // A hydration mismatch surfaces as React error #418/#423.

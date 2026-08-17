@@ -121,8 +121,12 @@ export function Home() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Courses"
-          title="Start anywhere. They connect."
-          subtitle="Each course stands alone, but they are ordered so the concepts compound if you take them in sequence."
+          title={tutorialsMeta.length > 1 ? 'Start anywhere. They connect.' : 'One path, start to finish.'}
+          subtitle={
+            tutorialsMeta.length > 1
+              ? 'Each course stands alone, but they are ordered so the concepts compound if you take them in sequence.'
+              : 'A single, deliberately ordered course — each lesson builds on the last, all the way to job-ready.'
+          }
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {tutorialsMeta.map((tutorial, i) => (

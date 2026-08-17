@@ -19,41 +19,42 @@ const localDay = (offsetDays = 0) => {
 describe('completion', () => {
   it('starts empty', () => {
     const { result } = setup()
-    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(false)
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(false)
     expect(result.current.overall.done).toBe(0)
   })
 
   it('marks and unmarks a lesson', () => {
     const { result } = setup()
-    act(() => result.current.toggleComplete('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(true)
-    act(() => result.current.toggleComplete('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(false)
+    act(() => result.current.toggleComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(true)
+    act(() => result.current.toggleComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(false)
   })
 
   it('markComplete is idempotent', () => {
     const { result } = setup()
-    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
-    const first = result.current.state.completed['ai-fundamentals/what-is-ai']
-    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.state.completed['ai-fundamentals/what-is-ai']).toBe(first)
+    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    const first = result.current.state.completed['generative-ai/what-is-ai-and-machine-learning']
+    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.state.completed['generative-ai/what-is-ai-and-machine-learning']).toBe(first)
     expect(result.current.overall.done).toBe(1)
   })
 
   it('scopes lesson slugs to their tutorial', () => {
-    // Two courses may legitimately share a lesson slug.
+    // Two courses may legitimately share a lesson slug — simulate with an
+    // unknown tutorial slug sharing this lesson's slug.
     const { result } = setup()
-    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.isComplete('llm-engineering', 'what-is-ai')).toBe(false)
+    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.isComplete('some-other-course', 'what-is-ai-and-machine-learning')).toBe(false)
   })
 
   it('computes per-course and overall percentages', () => {
     const { result } = setup()
-    const { total } = result.current.tutorialProgress('ai-fundamentals')
+    const { total } = result.current.tutorialProgress('generative-ai')
     expect(total).toBeGreaterThan(0)
 
-    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
-    const after = result.current.tutorialProgress('ai-fundamentals')
+    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
+    const after = result.current.tutorialProgress('generative-ai')
     expect(after.done).toBe(1)
     expect(after.percent).toBe(Math.round((1 / total) * 100))
     expect(result.current.overall.minutes).toBeGreaterThan(0)
@@ -72,10 +73,10 @@ describe('completion', () => {
 describe('bookmarks', () => {
   it('toggles on and off', () => {
     const { result } = setup()
-    act(() => result.current.toggleBookmark('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.isBookmarked('ai-fundamentals', 'what-is-ai')).toBe(true)
-    act(() => result.current.toggleBookmark('ai-fundamentals', 'what-is-ai'))
-    expect(result.current.isBookmarked('ai-fundamentals', 'what-is-ai')).toBe(false)
+    act(() => result.current.toggleBookmark('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.isBookmarked('generative-ai', 'what-is-ai-and-machine-learning')).toBe(true)
+    act(() => result.current.toggleBookmark('generative-ai', 'what-is-ai-and-machine-learning'))
+    expect(result.current.isBookmarked('generative-ai', 'what-is-ai-and-machine-learning')).toBe(false)
     expect(result.current.state.bookmarks).toEqual([])
   })
 })
@@ -84,15 +85,15 @@ describe('streak', () => {
   it('starts at one on the first ever visit', () => {
     // This path once threw: new Date('T00:00:00') on an empty lastDay.
     const { result } = setup()
-    expect(() => act(() => result.current.visit('ai-fundamentals', 'what-is-ai'))).not.toThrow()
+    expect(() => act(() => result.current.visit('generative-ai', 'what-is-ai-and-machine-learning'))).not.toThrow()
     expect(result.current.state.streak.count).toBe(1)
     expect(result.current.state.streak.lastDay).toBe(localDay())
   })
 
   it('does not increment twice in one day', () => {
     const { result } = setup()
-    act(() => result.current.visit('ai-fundamentals', 'what-is-ai'))
-    act(() => result.current.visit('ai-fundamentals', 'understanding-data'))
+    act(() => result.current.visit('generative-ai', 'what-is-ai-and-machine-learning'))
+    act(() => result.current.visit('generative-ai', 'how-models-learn'))
     expect(result.current.state.streak.count).toBe(1)
   })
 
@@ -107,7 +108,7 @@ describe('streak', () => {
       }),
     )
     const { result } = setup()
-    act(() => result.current.visit('ai-fundamentals', 'what-is-ai'))
+    act(() => result.current.visit('generative-ai', 'what-is-ai-and-machine-learning'))
     expect(result.current.state.streak.count).toBe(5)
   })
 
@@ -122,7 +123,7 @@ describe('streak', () => {
       }),
     )
     const { result } = setup()
-    act(() => result.current.visit('ai-fundamentals', 'what-is-ai'))
+    act(() => result.current.visit('generative-ai', 'what-is-ai-and-machine-learning'))
     expect(result.current.state.streak.count).toBe(1)
   })
 
@@ -137,7 +138,7 @@ describe('streak', () => {
       }),
     )
     const { result } = setup()
-    expect(() => act(() => result.current.visit('ai-fundamentals', 'what-is-ai'))).not.toThrow()
+    expect(() => act(() => result.current.visit('generative-ai', 'what-is-ai-and-machine-learning'))).not.toThrow()
     expect(result.current.state.streak.count).toBe(1)
   })
 })
@@ -145,8 +146,8 @@ describe('streak', () => {
 describe('quiz answers', () => {
   it('records and retrieves an answer', () => {
     const { result } = setup()
-    act(() => result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 2, true))
-    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)).toMatchObject({
+    act(() => result.current.recordQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0, 2, true))
+    expect(result.current.getQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0)).toMatchObject({
       picked: 2,
       correct: true,
     })
@@ -155,22 +156,22 @@ describe('quiz answers', () => {
   it('keys answers by block index within the same lesson', () => {
     const { result } = setup()
     act(() => {
-      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 1, false)
-      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 3, 2, true)
+      result.current.recordQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0, 1, false)
+      result.current.recordQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 3, 2, true)
     })
-    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)?.correct).toBe(false)
-    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 3)?.correct).toBe(true)
+    expect(result.current.getQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0)?.correct).toBe(false)
+    expect(result.current.getQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 3)?.correct).toBe(true)
   })
 
   it('surfaces every answer through quizHistory', () => {
     const { result } = setup()
     act(() => {
-      result.current.recordQuizAnswer('ai-fundamentals', 'what-is-ai', 0, 1, false)
-      result.current.recordQuizAnswer('llm-engineering', 'rag-systems', 2, 0, true)
+      result.current.recordQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0, 1, false)
+      result.current.recordQuizAnswer('generative-ai', 'fine-tuning-and-rag', 2, 0, true)
     })
     expect(result.current.quizHistory).toHaveLength(2)
     expect(result.current.quizHistory).toContainEqual(
-      expect.objectContaining({ tutorialSlug: 'llm-engineering', lessonSlug: 'rag-systems' }),
+      expect.objectContaining({ tutorialSlug: 'generative-ai', lessonSlug: 'fine-tuning-and-rag' }),
     )
     // Sorted newest-first: never increasing in `at`.
     for (let i = 1; i < result.current.quizHistory.length; i++) {
@@ -180,7 +181,7 @@ describe('quiz answers', () => {
 
   it('reading an unanswered quiz returns undefined rather than throwing', () => {
     const { result } = setup()
-    expect(result.current.getQuizAnswer('ai-fundamentals', 'what-is-ai', 0)).toBeUndefined()
+    expect(result.current.getQuizAnswer('generative-ai', 'what-is-ai-and-machine-learning', 0)).toBeUndefined()
   })
 })
 
@@ -188,8 +189,8 @@ describe('export and import', () => {
   it('round-trips state through export then import', () => {
     const { result } = setup()
     act(() => {
-      result.current.markComplete('ai-fundamentals', 'what-is-ai')
-      result.current.toggleBookmark('ai-fundamentals', 'understanding-data')
+      result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning')
+      result.current.toggleBookmark('generative-ai', 'how-models-learn')
     })
     const snapshot = result.current.exportState()
 
@@ -200,19 +201,19 @@ describe('export and import', () => {
       const ok = result.current.importState(snapshot)
       expect(ok).toBe(true)
     })
-    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(true)
-    expect(result.current.isBookmarked('ai-fundamentals', 'understanding-data')).toBe(true)
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(true)
+    expect(result.current.isBookmarked('generative-ai', 'how-models-learn')).toBe(true)
   })
 
   it('rejects malformed JSON without touching existing state', () => {
     const { result } = setup()
-    act(() => result.current.markComplete('ai-fundamentals', 'what-is-ai'))
+    act(() => result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning'))
 
     act(() => {
       const ok = result.current.importState('{not valid json')
       expect(ok).toBe(false)
     })
-    expect(result.current.isComplete('ai-fundamentals', 'what-is-ai')).toBe(true)
+    expect(result.current.isComplete('generative-ai', 'what-is-ai-and-machine-learning')).toBe(true)
   })
 
   it('rejects a well-formed but foreign JSON shape', () => {
@@ -228,19 +229,19 @@ describe('export and import', () => {
 describe('visit and reset', () => {
   it('records the last visited lesson', () => {
     const { result } = setup()
-    act(() => result.current.visit('llm-engineering', 'rag-systems'))
+    act(() => result.current.visit('generative-ai', 'fine-tuning-and-rag'))
     expect(result.current.state.lastVisited).toMatchObject({
-      tutorialSlug: 'llm-engineering',
-      lessonSlug: 'rag-systems',
+      tutorialSlug: 'generative-ai',
+      lessonSlug: 'fine-tuning-and-rag',
     })
   })
 
   it('reset clears everything', () => {
     const { result } = setup()
     act(() => {
-      result.current.markComplete('ai-fundamentals', 'what-is-ai')
-      result.current.toggleBookmark('ai-fundamentals', 'understanding-data')
-      result.current.visit('ai-fundamentals', 'what-is-ai')
+      result.current.markComplete('generative-ai', 'what-is-ai-and-machine-learning')
+      result.current.toggleBookmark('generative-ai', 'how-models-learn')
+      result.current.visit('generative-ai', 'what-is-ai-and-machine-learning')
     })
     act(() => result.current.reset())
     expect(result.current.overall.done).toBe(0)

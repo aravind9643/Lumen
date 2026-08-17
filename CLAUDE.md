@@ -1,6 +1,6 @@
 # Working in this repo
 
-A React tutorial site for **any subject** — not an AI site. Content is data; one renderer draws it. Read this before editing.
+A React tutorial site whose rendering engine is subject-agnostic — the shell has no AI-specific code anywhere. Content is currently a single AI-focused course, but that is a content choice, not an architectural one: nothing stops a non-AI course being added the same way `web-fundamentals.ts` previously proved out. Read this before editing.
 
 > Courses are grouped by their `category` field, which drives the subject filter and the
 > grouped sections on `/tutorials`. Keep UI copy subject-neutral: the hero, taglines, and
@@ -78,7 +78,7 @@ Then add the lesson to `manifest.ts`. Routing, search, table of contents, progre
 
 ### Adding a new subject
 
-Set a new `category` on the course. The subject filter, grouped sections, sitemap, and card labels all derive from it — no UI change needed. `src/content/tutorials/web-fundamentals.ts` is a worked reference for a non-AI course.
+Set a new `category` on the course. The subject filter, grouped sections, sitemap, and card labels all derive from it — no UI change needed. With a single course currently in the registry, the subject-filter row in `Tutorials.tsx` hides itself automatically (`allCategories.length > 1`) — check that logic if you add a second category and the filter still doesn't appear.
 
 ### Adding a block type
 
@@ -211,7 +211,7 @@ Add it to `scripts/static-routes.mjs` first, with `indexable: true` unless the p
 - **No user accounts or cross-device sync.** Progress, bookmarks, and quiz answers are `localStorage`-only. Export/import (see Progress page) covers manual device-to-device transfer; there is no server-backed account system, and adding one is a real architectural decision, not a quick fix.
 - **Bookmarks are lesson-level only.** There is no way to bookmark a specific block or paragraph inside a lesson.
 
-122 unit tests cover content resolution (including fuzzy search), storage, progress (including quiz-answer persistence and export/import round-tripping), the quiz, the block renderer, TTS (including the session-token race conditions), analytics, SEO URL construction, and AdSlot's ad-blocker resilience; 52 E2E tests (2 viewports) cover prerendering, hydration, search, theming, category browsing, resilience, and visual regression on the homepage, tutorials grid, and a lesson page.
+123 unit tests cover content resolution (including fuzzy search and a reading-time-accuracy sanity check against actual word count), storage, progress (including quiz-answer persistence and export/import round-tripping), the quiz, the block renderer, TTS (including the session-token race conditions), analytics, SEO URL construction, and AdSlot's ad-blocker resilience; 52 E2E tests (2 viewports) cover prerendering, hydration, search, theming, category browsing, resilience, and visual regression on the homepage, tutorials grid, and a lesson page.
 
 If you find a real gap, add it here rather than fixing it silently — this list is what stops the same thing being "discovered" repeatedly.
 

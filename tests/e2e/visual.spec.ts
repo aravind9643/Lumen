@@ -29,7 +29,7 @@ test.describe('visual regression', () => {
   })
 
   test('a lesson page renders its reading layout consistently', async ({ page }) => {
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await page.waitForLoadState('networkidle')
     await expect(page).toHaveScreenshot('lesson-reading.png', screenshotOptions)
   })

@@ -40,141 +40,79 @@ export interface TutorialMeta {
 
 export const tutorialsMeta: TutorialMeta[] = [
   {
-    slug: 'ai-fundamentals',
-    title: 'AI Fundamentals: A Complete Beginner’s Course',
-    shortTitle: 'AI Fundamentals',
+    slug: 'generative-ai',
+    title: 'Generative AI Engineer: Zero to Job-Ready',
+    shortTitle: 'Generative AI Engineer',
     description:
-      'Start with zero background and finish understanding how artificial intelligence actually works. Every term explained, every idea built from the ground up, nothing assumed.',
+      'A complete, job-focused path from zero background to building, evaluating, and shipping real generative AI systems — covering the core mechanisms, hands-on engineering with real APIs, production concerns, and how to actually land the role.',
     category: 'Artificial Intelligence',
     difficulty: 'beginner',
-    icon: 'brain',
-    tags: ['AI', 'Machine Learning', 'Concepts', 'Foundations'],
-    color: '#4f46e5',
-    updated: '2026-08-14',
+    icon: 'palette',
+    tags: ['Generative AI', 'Career', 'Diffusion Models', 'LLMs', 'Fine-Tuning', 'MLOps'],
+    color: '#db2777',
+    updated: '2026-08-17',
     chapters: [
       {
-        title: 'Chapter 1 — What Is This Thing?',
+        title: 'Chapter 1 — Foundations for Absolute Beginners',
         lessons: [
-          { slug: 'what-is-ai', title: 'What Artificial Intelligence Actually Is', duration: 10 },
-          { slug: 'understanding-data', title: 'Data: The Raw Material of Learning', duration: 11 },
+          { slug: 'what-is-ai-and-machine-learning', title: 'What AI and Machine Learning Actually Are', duration: 10 },
+          { slug: 'how-models-learn', title: 'How a Model Actually Learns From Data', duration: 11 },
         ],
       },
       {
-        title: 'Chapter 2 — How Machines Actually Learn',
+        title: 'Chapter 2 — How Generative AI Actually Works',
         lessons: [
-          { slug: 'first-model', title: 'Your First Model, Drawn by Hand', duration: 12 },
-          { slug: 'how-models-learn', title: 'How Learning Actually Happens: Gradient Descent', duration: 14 },
-          { slug: 'overfitting-and-generalisation', title: 'Why a Perfect Score Can Mean Failure', duration: 13 },
+          { slug: 'discriminative-vs-generative', title: 'Two Kinds of Model: Judging and Making', duration: 11 },
         ],
       },
       {
-        title: 'Chapter 3 — Neural Networks Demystified',
+        title: 'Chapter 3 — The Transformer Architecture',
         lessons: [
-          { slug: 'neural-networks', title: 'What a Neural Network Really Is', duration: 15 },
+          { slug: 'self-attention-and-qkv', title: 'Self-Attention: The Idea Behind Every Modern Model', duration: 14 },
+          { slug: 'transformer-block-and-architecture', title: 'Multi-Head Attention, Position, and the Full Transformer Block', duration: 15 },
         ],
       },
       {
-        title: 'Chapter 4 — Using AI in the Real World',
+        title: 'Chapter 4 — Large Language Models',
         lessons: [
-          { slug: 'evaluating-models', title: 'Measuring Success Properly', duration: 13 },
-          { slug: 'ai-in-practice', title: 'Putting It All Together', duration: 14 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'prompt-engineering',
-    title: 'Prompt Engineering: From First Message to Expert',
-    shortTitle: 'Prompt Engineering',
-    description:
-      'Learn to get reliable, high-quality results from AI chat tools. No coding needed — just a clear method, taught from your very first prompt through to professional techniques.',
-    category: 'Artificial Intelligence',
-    difficulty: 'beginner',
-    icon: 'sparkles',
-    tags: ['Prompting', 'LLM', 'Best Practices', 'Evaluation'],
-    color: '#d97706',
-    updated: '2026-08-14',
-    chapters: [
-      {
-        title: 'Chapter 1 — Getting Started',
-        lessons: [
-          { slug: 'what-is-a-prompt', title: 'What a Prompt Is and Why Yours Isn’t Working', duration: 10 },
-          { slug: 'anatomy-of-a-prompt', title: 'The Five Parts of a Reliable Prompt', duration: 12 },
+          { slug: 'how-llms-generate-and-are-trained', title: 'How LLMs Generate Text and How They Are Trained', duration: 15 },
+          { slug: 'llm-families-and-apis', title: 'Choosing a Model Family and Calling Its API', duration: 10 },
         ],
       },
       {
-        title: 'Chapter 2 — Core Techniques',
+        title: 'Chapter 5 — Prompt Engineering',
         lessons: [
-          { slug: 'examples-and-patterns', title: 'Teaching by Example', duration: 11 },
-          { slug: 'reasoning-and-thinking', title: 'Getting the AI to Think Before It Answers', duration: 12 },
+          { slug: 'prompt-engineering-techniques', title: 'Prompt Engineering: Getting Reliable Results Without Retraining', duration: 14 },
         ],
       },
       {
-        title: 'Chapter 3 — Getting Reliable Results',
+        title: 'Chapter 6 — Generating Images: Diffusion, GANs, and VAEs',
         lessons: [
-          { slug: 'hallucination', title: 'When AI Makes Things Up', duration: 12 },
-          { slug: 'testing-prompts', title: 'Testing Prompts Properly', duration: 11 },
-          { slug: 'putting-it-together', title: 'Your Prompting Playbook', duration: 10 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'llm-engineering',
-    title: 'How Language Models Work: A Complete Guide',
-    shortTitle: 'LLM Engineering',
-    description:
-      'Open up ChatGPT and see the machinery. Tokens, embeddings, attention, and context windows explained from scratch — then how to build real applications on top of them.',
-    category: 'Artificial Intelligence',
-    difficulty: 'intermediate',
-    icon: 'robot',
-    tags: ['LLM', 'Transformers', 'RAG', 'Embeddings', 'Production'],
-    color: '#0284c7',
-    updated: '2026-08-14',
-    chapters: [
-      {
-        title: 'Chapter 1 — From Text to Numbers',
-        lessons: [
-          { slug: 'what-is-an-llm', title: 'What a Language Model Actually Does', duration: 11 },
-          { slug: 'tokens-and-embeddings', title: 'Tokens: Why AI Can’t Count Letters', duration: 12 },
+          { slug: 'diffusion-models-explained', title: 'Diffusion Models: How Image Generators Actually Create', duration: 12 },
+          { slug: 'gans-vaes-and-the-generative-landscape', title: 'GANs, VAEs, and the Wider Generative Landscape', duration: 9 },
         ],
       },
       {
-        title: 'Chapter 2 — Inside the Transformer',
+        title: 'Chapter 7 — Engineering With Real APIs',
         lessons: [
-          { slug: 'attention-and-context', title: 'Attention: How Models Handle Long Text', duration: 14 },
+          { slug: 'calling-text-generation-apis', title: 'Calling Text Generation APIs Like a Professional', duration: 12 },
+          { slug: 'calling-image-generation-apis', title: 'Calling Image Generation APIs and Prompting Them Well', duration: 10 },
+          { slug: 'fine-tuning-and-rag', title: 'Fine-Tuning and Retrieval-Augmented Generation', duration: 13 },
         ],
       },
       {
-        title: 'Chapter 3 — Building Real Applications',
+        title: 'Chapter 8 — Evaluation, Safety, and Production',
         lessons: [
-          { slug: 'rag-systems', title: 'Answering From Your Own Documents', duration: 16 },
-          { slug: 'production-considerations', title: 'Running This in Production', duration: 14 },
+          { slug: 'evaluating-generative-systems', title: 'Evaluating a Generative System Properly', duration: 11 },
+          { slug: 'safety-bias-and-misuse', title: 'Safety, Bias, and Misuse: A Job-Ready Understanding', duration: 13 },
+          { slug: 'cost-latency-and-deployment', title: 'Cost, Latency, and Shipping to Production', duration: 12 },
         ],
       },
-    ],
-  },
-  {
-    slug: 'web-fundamentals',
-    title: 'How the Web Works: From URL to Pixels',
-    shortTitle: 'Web Fundamentals',
-    description:
-      'What actually happens between typing an address and seeing a page. No prior knowledge assumed — every term defined, every step traced.',
-    category: 'Web Development',
-    difficulty: 'beginner',
-    icon: 'code',
-    tags: ['Web', 'HTTP', 'Browsers', 'Foundations'],
-    color: '#0d9488',
-    updated: '2026-08-15',
-    chapters: [
       {
-        title: 'Chapter 1 — The Journey of a Request',
+        title: 'Chapter 9 — Getting Hired as a Generative AI Engineer',
         lessons: [
-          {
-            slug: 'what-happens-when-you-visit-a-page',
-            title: 'What Happens When You Visit a Page',
-            duration: 11,
-          },
+          { slug: 'building-a-portfolio-project', title: 'Building a Portfolio Project That Demonstrates Real Skill', duration: 10 },
+          { slug: 'interview-preparation', title: 'Preparing for the Generative AI Engineer Interview', duration: 12 },
         ],
       },
     ],

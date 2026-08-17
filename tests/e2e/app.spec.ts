@@ -48,25 +48,25 @@ test.describe('search', () => {
 
 test.describe('progress', () => {
   test('marking complete persists across navigation', async ({ page }) => {
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await page.waitForLoadState('networkidle')
 
     await page.getByRole('button', { name: /mark complete/i }).click()
     await expect(page.getByRole('button', { name: /completed/i })).toBeVisible()
 
     await page.goto('/progress')
-    await expect(page.getByText('1/21')).toBeVisible()
+    await expect(page.getByRole('paragraph').filter({ hasText: '1/18' })).toBeVisible()
     await expect(page.getByText(/pick up where you left off/i)).toBeVisible()
   })
 
   test('bookmarks appear on the progress page and can be removed', async ({ page }) => {
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await page.waitForLoadState('networkidle')
     await page.getByRole('button', { name: /^save$/i }).click()
     await expect(page.getByRole('button', { name: /saved/i })).toBeVisible()
 
     await page.goto('/progress')
-    const saved = page.getByRole('heading', { name: 'What Artificial Intelligence Actually Is' })
+    const saved = page.getByRole('heading', { name: 'What AI and Machine Learning Actually Are' })
     await expect(saved).toBeVisible()
 
     await page.getByRole('button', { name: /remove .* from saved/i }).click()
@@ -110,19 +110,20 @@ test.describe('theming', () => {
 })
 
 test.describe('category browsing', () => {
-  test('groups by subject and filters', async ({ page }) => {
+  test('shows the course and its sort/filter controls', async ({ page }) => {
     await page.goto('/tutorials')
     await page.waitForLoadState('networkidle')
 
-    await expect(page.getByRole('heading', { name: /artificial intelligence/i })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /web development/i })).toBeVisible()
-    await expect(page.locator('article')).toHaveCount(4)
-
-    await page.getByRole('button', { name: 'Web Development', exact: true }).click()
+    await expect(page.getByRole('heading', { name: /artificial intelligence/i })).toBeHidden()
     await expect(page.locator('article')).toHaveCount(1)
 
-    await page.getByRole('button', { name: /all subjects/i }).click()
-    await expect(page.locator('article')).toHaveCount(4)
+    // With a single course, the subject filter row is not shown — there is
+    // nothing to filter between. Level filtering still applies.
+    await page.getByRole('button', { name: 'beginner', exact: true }).click()
+    await expect(page.locator('article')).toHaveCount(1)
+
+    await page.getByRole('button', { name: /all levels/i }).click()
+    await expect(page.locator('article')).toHaveCount(1)
   })
 })
 
@@ -142,7 +143,7 @@ test.describe('resilience', () => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
 
-    await page.goto('/tutorials/ai-fundamentals/what-is-ai')
+    await page.goto('/tutorials/generative-ai/what-is-ai-and-machine-learning')
     await page.waitForLoadState('networkidle')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 
@@ -172,7 +173,7 @@ test.describe('resilience', () => {
 
     await page.evaluate(() => {
       const a = document.createElement('a')
-      a.href = '/tutorials/ai-fundamentals/what-is-ai'
+      a.href = '/tutorials/generative-ai/what-is-ai-and-machine-learning'
       document.body.appendChild(a)
       a.click()
     })

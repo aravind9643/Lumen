@@ -72,10 +72,16 @@ if (errors.length) {
 
 // Sanity: lesson prose must not be in the eager graph. Cheap direct assertion
 // alongside check-imports, which proves the same thing structurally.
+//
+// The sentinel phrase must only ever appear in lesson *body* text (inside
+// `blocks`), never in `manifest.ts` (slug/title/tags), since the manifest is
+// legitimately eager — that split is the entire point of check:imports. Pick
+// a phrase from deep lesson prose, not a lesson or course title, or this
+// check will false-positive the moment a title happens to reuse the phrase.
 for (const file of referenced) {
   if (!file.endsWith('.js')) continue
   const src = readFileSync(join(dist, 'assets', file), 'utf8')
-  if (src.includes('gradient descent') || src.includes('Retrieval-Augmented')) {
+  if (src.includes('denoising step')) {
     console.error(`\n[bundle] lesson prose found in eagerly-loaded ${file}\n`)
     process.exit(1)
   }

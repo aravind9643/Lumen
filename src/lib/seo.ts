@@ -4,7 +4,7 @@ import { config } from '../config'
 interface SEOOptions {
   title: string
   description?: string
-  /** Path only, e.g. "/tutorials/ai-fundamentals". */
+  /** Path only, e.g. "/tutorials/generative-ai". */
   path?: string
   type?: 'website' | 'article'
   /** JSON-LD structured data injected for rich results. */

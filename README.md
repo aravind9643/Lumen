@@ -32,7 +32,7 @@ CI (`.github/workflows/ci.yml`) runs all of them, plus both test suites, on push
 
 | Suite | What it covers |
 |---|---|
-| **Unit** (`tests/unit/`, Vitest + jsdom) | 122 tests: content resolution and search (including the fuzzy-match fallback), `usePersistentState` including blocked/corrupt storage, progress and streak logic, quiz-answer persistence and progress export/import round-tripping, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, analytics event forwarding, canonical/og:url construction, and `AdSlot`'s ad-blocker resilience |
+| **Unit** (`tests/unit/`, Vitest + jsdom) | 123 tests: content resolution and search (including the fuzzy-match fallback and a reading-time-accuracy check against real word counts), `usePersistentState` including blocked/corrupt storage, progress and streak logic, quiz-answer persistence and progress export/import round-tripping, the quiz component, every block type in `BlockRenderer` (including a heading-hierarchy regression test), TTS queue playback with a controllable fake `speechSynthesis`, analytics event forwarding, canonical/og:url construction, and `AdSlot`'s ad-blocker resilience |
 | **E2E** (`tests/e2e/`, Playwright) | 52 tests × 2 viewports (26 unique specs): prerendered HTML with JS disabled, hydration without errors, search combobox and focus restoration, progress persistence, theming, category filtering, recovery from blocked storage and failed chunk loads, and visual regression on the homepage, tutorials grid, and a lesson page |
 
 E2E runs against the built output using `tests/e2e/static-server.mjs`. `vite preview` cannot be used — it applies the SPA fallback before checking for nested `index.html`, so prerendered routes never get served.
@@ -175,26 +175,43 @@ Both set the same policy: security headers site-wide, `immutable` year-long cach
 
 ## Content included
 
-Four courses across two subjects, **21 lessons**, written zero-to-hero: no background is assumed, and every technical term is defined the first time it appears.
+One course, **18 lessons** across 9 chapters, written zero-to-hero: no background is assumed, and every technical term is defined the first time it appears. This is a job-oriented track, not a survey — it is written to take a genuine beginner through the real mechanisms (Transformers, LLM training, diffusion) to hands-on API engineering and an interview-ready understanding of the Generative AI Engineer role.
 
-The Web Development course is deliberately included as a second subject — it proves the platform is not AI-specific, and serves as a worked reference for adding a new field.
+**Generative AI Engineer: Zero to Job-Ready** (18 lessons) — assumes literally nothing
 
-**AI Fundamentals** (8 lessons) — assumes literally nothing
-1. What AI actually is · 2. Data, features and labels
-3. Your first model, drawn by hand · 4. Gradient descent
-5. Overfitting and honest evaluation
-6. What a neural network really is
-7. Measuring success properly · 8. Putting it all together
+Chapter 1 — Foundations for Absolute Beginners
+1. What AI and machine learning actually are · 2. How a model actually learns from data
 
-**Prompt Engineering** (6 lessons) — no coding required
-1. What a prompt is and why yours isn't working
-2. The five parts of a reliable prompt · 3. Teaching by example
-4. Getting the AI to think first · 5. When AI makes things up
-6. Testing prompts properly · plus a reusable playbook
+Chapter 2 — How Generative AI Actually Works
+3. Discriminative vs generative models
 
-**LLM Engineering** (6 lessons) — assumes AI Fundamentals
-1. What a language model does · 2. Tokens and embeddings
-3. Attention and the cost of context
-4. Building a RAG system · 5. Running it in production
+Chapter 3 — The Transformer Architecture
+4. Self-attention: the idea behind every modern model
+5. Multi-head attention, position, and the full Transformer block
 
-Each lesson opens with a recap, defines its jargon, gives an analogy before the mechanism, and ends with an exercise and a quiz that explains its answer.
+Chapter 4 — Large Language Models
+6. How LLMs generate text and how they are trained
+7. Choosing a model family and calling its API
+
+Chapter 5 — Prompt Engineering
+8. Prompt engineering: getting reliable results without retraining
+
+Chapter 6 — Generating Images: Diffusion, GANs, and VAEs
+9. Diffusion models explained · 10. GANs, VAEs, and the wider generative landscape
+
+Chapter 7 — Engineering With Real APIs
+11. Calling text generation APIs like a professional
+12. Calling image generation APIs and prompting them well
+13. Fine-tuning and retrieval-augmented generation (RAG)
+
+Chapter 8 — Evaluation, Safety, and Production
+14. Evaluating a generative system properly · 15. Safety, bias, and misuse
+16. Cost, latency, and shipping to production
+
+Chapter 9 — Getting Hired as a Generative AI Engineer
+17. Building a portfolio project that demonstrates real skill
+18. Preparing for the Generative AI Engineer interview
+
+Each lesson opens with a recap, defines its jargon, gives an analogy before the mechanism, and ends with an exercise and a quiz that explains its answer. The engine itself remains subject-agnostic — a second course on any other subject is a content addition, not a rebuild — but the content currently ships is this single, deliberately-ordered track.
+
+> This course is being progressively deepened to match a broader reference GenAI-engineer curriculum (fine-tuning depth, RAG/vector-DB internals, LangChain, AI agents, deployment/MLOps, evaluation metrics, security/guardrails, model serving, and advanced topics). Chapters 3–5 (Transformers, LLMs, Prompt Engineering) are the first pass; later chapters will be added incrementally.
