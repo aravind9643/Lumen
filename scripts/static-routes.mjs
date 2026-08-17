@@ -17,6 +17,7 @@
 export const STATIC_ROUTES = [
   { path: '/', indexable: true },
   { path: '/tutorials', indexable: true },
+  { path: '/roadmaps', indexable: true },
   { path: '/about', indexable: true },
   { path: '/privacy', indexable: true },
   { path: '/progress', indexable: false },

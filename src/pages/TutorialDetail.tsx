@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { flatLessons, getTutorial, lessonCount, totalDuration } from '../content'
@@ -8,11 +9,14 @@ import { cn } from '../lib/cn'
 import { card } from '../lib/card'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
+import { CertificateModal } from '../components/ui/CertificateModal'
+import { triggerConfetti } from '../components/ui/Confetti'
 
 export function TutorialDetail() {
   const { tutorialSlug = '' } = useParams()
   const tutorial = getTutorial(tutorialSlug)
   const { isComplete, tutorialProgress } = useProgress()
+  const [showCert, setShowCert] = useState(false)
 
   useSEO({
     title: tutorial?.title ?? 'Not found',
@@ -39,7 +43,15 @@ export function TutorialDetail() {
   const nextUp = flat.find(({ lesson }) => !isComplete(tutorial.slug, lesson.slug)) ?? flat[0]
 
   return (
-    <div>
+    <>
+      {showCert && (
+        <CertificateModal
+          courseTitle={tutorial.title}
+          courseSlug={tutorial.slug}
+          onClose={() => setShowCert(false)}
+        />
+      )}
+
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-border-token">
         {/* Flat colour band identifying the course */}
@@ -88,6 +100,19 @@ export function TutorialDetail() {
                 {done === 0 ? 'Start course' : done === total ? 'Review course' : 'Continue course'}
                 <Icon name="arrowRight" size={15} className="transition-transform group-hover:translate-x-1" />
               </Link>
+
+              {percent === 100 && (
+                <button
+                  onClick={() => {
+                    setShowCert(true)
+                    triggerConfetti()
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-500 bg-emerald-500/10 px-6 py-3 font-bold text-emerald-600 dark:text-emerald-400 transition-all hover:scale-[1.03]"
+                >
+                  <Icon name="award" size={15} />
+                  Claim Certificate
+                </button>
+              )}
 
               {percent > 0 && (
                 <div className="min-w-[180px] flex-1 sm:max-w-xs">
@@ -186,7 +211,7 @@ export function TutorialDetail() {
 
         <AdSlot placement="footer" className="mt-14" />
       </div>
-    </div>
+    </>
   )
 }
 

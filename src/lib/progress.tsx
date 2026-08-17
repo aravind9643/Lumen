@@ -61,6 +61,7 @@ interface ProgressContextValue {
   reset: () => void
   recordQuizAnswer: (t: string, l: string, blockIndex: number, picked: number, correct: boolean) => void
   getQuizAnswer: (t: string, l: string, blockIndex: number) => QuizAnswer | undefined
+  weeklyMinutes: number
   /** Every answered quiz across the whole site, most recent first. */
   quizHistory: (Array<QuizAnswer & { tutorialSlug: string; lessonSlug: string; blockIndex: number }>)
   /** Serialised snapshot for download, and the inverse for restoring one. */
@@ -226,15 +227,27 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [setState],
   )
 
+  const weeklyMinutes = useMemo(() => {
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const all = tutorialsMeta.flatMap((t) => flatLessonsMeta(t).map(({ lesson }) => ({ t, lesson })))
+    return Object.entries(state.completed).reduce((sum, [k, timestamp]) => {
+      if (timestamp >= oneWeekAgo) {
+        const found = all.find(({ t, lesson }) => key(t.slug, lesson.slug) === k)
+        return sum + (found?.lesson.duration ?? 0)
+      }
+      return sum
+    }, 0)
+  }, [state.completed])
+
   const value = useMemo(
     () => ({
       state, isComplete, toggleComplete, markComplete,
-      isBookmarked, toggleBookmark, visit, tutorialProgress, overall, reset,
+      isBookmarked, toggleBookmark, visit, tutorialProgress, overall, weeklyMinutes, reset,
       recordQuizAnswer, getQuizAnswer, quizHistory, exportState, importState,
     }),
     [
       state, isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark,
-      visit, tutorialProgress, overall, reset, recordQuizAnswer, getQuizAnswer, quizHistory,
+      visit, tutorialProgress, overall, weeklyMinutes, reset, recordQuizAnswer, getQuizAnswer, quizHistory,
       exportState, importState,
     ],
   )

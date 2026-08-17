@@ -14,6 +14,8 @@ import { card } from '../lib/card'
 import { BlockRenderer } from '../components/content/BlockRenderer'
 import { VoicePlayer } from '../components/ui/VoicePlayer'
 import { Icon } from '../components/ui/Icon'
+import { ReaderSettings, useReaderPreferences } from '../components/ui/ReaderSettings'
+import { triggerConfetti } from '../components/ui/Confetti'
 
 export function Lesson() {
   const { tutorialSlug = '', lessonSlug = '' } = useParams()
@@ -22,6 +24,7 @@ export function Lesson() {
 
   const { isComplete, toggleComplete, markComplete, isBookmarked, toggleBookmark, visit } = useProgress()
   const { current: speakingSegment, speaking, speak, supported: ttsSupported } = useTTS()
+  const [readerPrefs, setReaderPrefs] = useReaderPreferences()
   const [activeHeading, setActiveHeading] = useState<string>('')
   const [scrollPercent, setScrollPercent] = useState(0)
   const [seenTip, setSeenTip] = usePersistentState('lesson:seen-first-visit-tip', false)
@@ -231,22 +234,50 @@ export function Lesson() {
   const bookmarked = isBookmarked(tutorialSlug, lessonSlug)
   const speakingBlock = speaking && speakingSegment >= 0 ? segmentToBlock[speakingSegment] ?? -1 : -1
 
+  const fontClass =
+    readerPrefs.fontFamily === 'serif'
+      ? 'font-serif'
+      : readerPrefs.fontFamily === 'mono'
+        ? 'font-mono'
+        : 'font-sans'
+
+  const sizeClass =
+    readerPrefs.fontSize === 'sm'
+      ? 'text-sm leading-relaxed'
+      : readerPrefs.fontSize === 'lg'
+        ? 'text-lg leading-relaxed'
+        : readerPrefs.fontSize === 'xl'
+          ? 'text-xl leading-relaxed'
+          : 'text-base leading-relaxed'
+
   return (
     <>
+      {/* ── Sticky Top Reading Progress Bar ─────────────────── */}
+      <div
+        className="fixed left-0 top-0 z-[60] h-[3px] bg-accent transition-all duration-150"
+        style={{ width: `${scrollPercent}%` }}
+        role="progressbar"
+        aria-valuenow={scrollPercent}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      />
+
       {/* Bottom padding clears the floating voice player so it never covers text. */}
-      <div className="mx-auto max-w-7xl px-4 pb-28 pt-10 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
+      <div className={cn('mx-auto px-4 pb-28 pt-10 sm:px-6 lg:px-8', readerPrefs.focusMode ? 'max-w-3xl' : 'max-w-7xl')}>
+        <div className={cn(!readerPrefs.focusMode && 'lg:grid lg:grid-cols-[1fr_280px] lg:gap-12')}>
           {/* ── Article ──────────────────────────────────────── */}
-          <div className="min-w-0 max-w-3xl">
-            <nav className="no-print mb-5 flex flex-wrap items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
-              <Link to="/tutorials" className="transition-colors hover:text-accent">Tutorials</Link>
-              <Icon name="chevronRight" size={10} />
-              <Link to={`/tutorials/${tutorial.slug}`} className="transition-colors hover:text-accent">
-                {tutorial.shortTitle ?? tutorial.title}
-              </Link>
-              <Icon name="chevronRight" size={10} />
-              <span className="text-fg-muted/70">{chapter.title}</span>
-            </nav>
+          <div className={cn('min-w-0', !readerPrefs.focusMode && 'max-w-3xl')}>
+            {!readerPrefs.focusMode && (
+              <nav className="no-print mb-5 flex flex-wrap items-center gap-1.5 text-sm text-fg-muted" aria-label="Breadcrumb">
+                <Link to="/tutorials" className="transition-colors hover:text-accent">Tutorials</Link>
+                <Icon name="chevronRight" size={10} />
+                <Link to={`/tutorials/${tutorial.slug}`} className="transition-colors hover:text-accent">
+                  {tutorial.shortTitle ?? tutorial.title}
+                </Link>
+                <Icon name="chevronRight" size={10} />
+                <span className="text-fg-muted/70">{chapter.title}</span>
+              </nav>
+            )}
 
             <motion.header
               initial={{ opacity: 0, y: 16 }}
@@ -276,8 +307,12 @@ export function Lesson() {
 
                 <button
                   onClick={() => {
+                    const willBeComplete = !complete
                     toggleComplete(tutorialSlug, lessonSlug)
-                    if (!complete) events.lessonComplete(tutorialSlug, lessonSlug)
+                    if (willBeComplete) {
+                      triggerConfetti()
+                      events.lessonComplete(tutorialSlug, lessonSlug)
+                    }
                   }}
                   className={cn(
                     'flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all',
@@ -303,6 +338,8 @@ export function Lesson() {
                   {bookmarked ? 'Saved' : 'Save'}
                 </button>
 
+                <ReaderSettings prefs={readerPrefs} onChange={setReaderPrefs} />
+
                 <button
                   onClick={() => {
                     events.lessonPrint(tutorialSlug, lessonSlug)
@@ -325,9 +362,7 @@ export function Lesson() {
                 <Icon name="sparkles" size={15} className="mt-0.5 shrink-0 text-accent" />
                 <div className="min-w-0 flex-1 text-sm leading-relaxed">
                   <p>
-                    New here? You can have any lesson read aloud (bottom of the page), save it for
-                    later with the Save button above, and your progress is tracked automatically —
-                    all stored only in this browser.
+                    New here? You can have any lesson read aloud (bottom of the page), customize font size & typography with the <strong>Aa Reader</strong> menu, save it for later, and your progress is tracked automatically.
                   </p>
                 </div>
                 <button
@@ -340,7 +375,7 @@ export function Lesson() {
               </motion.div>
             )}
 
-            <article className="pb-8" style={{ fontSize: 'calc(1rem * var(--font-scale, 1))' }}>
+            <article className={cn('pb-8', fontClass, sizeClass)}>
               <BlockRenderer
                 blocks={lesson.blocks}
                 tutorialSlug={tutorialSlug}
@@ -414,39 +449,41 @@ export function Lesson() {
             )}
           </div>
 
-          {/* ── Sidebar ──────────────────────────────────────── */}
-          <aside className="no-print hidden lg:block">
-            <div className="sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden">
-              {headings.length > 0 && (
-                <nav aria-label="On this page" className="flex min-h-0 flex-1 flex-col">
-                  <h2 className="mb-3 flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-fg-muted">
-                    <Icon name="list" size={12} /> On this page
-                  </h2>
-                  <ul
-                    ref={tocListRef}
-                    className="overflow-y-auto pr-2 space-y-1 border-l border-border-token [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]"
-                  >
-                    {headings.map((h) => (
-                      <li key={h.id}>
-                        <a
-                          href={`#${h.id}`}
-                          className={cn(
-                            '-ml-px block border-l-2 py-1.5 text-sm leading-snug transition-all',
-                            h.level === 3 ? 'pl-6' : 'pl-4',
-                            activeHeading === h.id
-                              ? 'border-accent font-medium text-accent'
-                              : 'border-transparent text-fg-muted hover:border-fg-muted/40 hover:text-fg',
-                          )}
-                        >
-                          {h.text}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              )}
-            </div>
-          </aside>
+          {/* ── Sidebar (hidden in focus mode) ──────────────── */}
+          {!readerPrefs.focusMode && (
+            <aside className="no-print hidden lg:block">
+              <div className="sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden">
+                {headings.length > 0 && (
+                  <nav aria-label="On this page" className="flex min-h-0 flex-1 flex-col">
+                    <h2 className="mb-3 flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-fg-muted">
+                      <Icon name="list" size={12} /> On this page
+                    </h2>
+                    <ul
+                      ref={tocListRef}
+                      className="overflow-y-auto pr-2 space-y-1 border-l border-border-token [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]"
+                    >
+                      {headings.map((h) => (
+                        <li key={h.id}>
+                          <a
+                            href={`#${h.id}`}
+                            className={cn(
+                              '-ml-px block border-l-2 py-1.5 text-sm leading-snug transition-all',
+                              h.level === 3 ? 'pl-6' : 'pl-4',
+                              activeHeading === h.id
+                                ? 'border-accent font-medium text-accent'
+                                : 'border-transparent text-fg-muted hover:border-fg-muted/40 hover:text-fg',
+                            )}
+                          >
+                            {h.text}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                )}
+              </div>
+            </aside>
+          )}
         </div>
       </div>
 

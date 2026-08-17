@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '../../lib/cn'
 import { events } from '../../lib/analytics'
 import { useProgress } from '../../lib/progress'
+import { triggerConfetti } from '../ui/Confetti'
 import { Icon } from '../ui/Icon'
 
 interface QuizProps {
@@ -27,8 +28,10 @@ export function Quiz({ question, options, answer, explanation, tutorialSlug, les
   const choose = (i: number) => {
     if (submitted) return
     setPicked(i)
-    events.quizAnswer(tutorialSlug, lessonSlug, i === answer)
-    recordQuizAnswer(tutorialSlug, lessonSlug, blockIndex, i, i === answer)
+    const isCorrect = i === answer
+    if (isCorrect) triggerConfetti()
+    events.quizAnswer(tutorialSlug, lessonSlug, isCorrect)
+    recordQuizAnswer(tutorialSlug, lessonSlug, blockIndex, i, isCorrect)
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { searchContent } from '../../content'
@@ -24,6 +24,60 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     return () => window.clearTimeout(id)
   }, [query])
 
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('lumen:recent-searches')
+      return stored ? JSON.parse(stored) : []
+    } catch {
+      return []
+    }
+  })
+
+  const saveRecentSearch = useCallback((term: string) => {
+    const trimmed = term.trim()
+    if (!trimmed) return
+    setRecentSearches((prev) => {
+      const updated = [trimmed, ...prev.filter((s) => s.toLowerCase() !== trimmed.toLowerCase())].slice(0, 5)
+      try {
+        localStorage.setItem('lumen:recent-searches', JSON.stringify(updated))
+      } catch {
+        // ignore
+      }
+      return updated
+    })
+  }, [])
+
+  const clearRecentSearches = () => {
+    setRecentSearches([])
+    try {
+      localStorage.removeItem('lumen:recent-searches')
+    } catch {
+      // ignore
+    }
+  }
+
+  const TRENDING_TOPICS = [
+    'LoRA & QLoRA',
+    'FastAPI',
+    'Spring Boot',
+    'Docker Compose',
+    'RAG & Vector DBs',
+    'Transformers',
+    'Options Greeks',
+    'PySpark',
+    'Jetpack Compose',
+    'Entity Framework',
+  ]
+
+  const QUICK_TRACKS = [
+    { label: 'Generative AI', slug: 'generative-ai', icon: 'brain' as const, color: '#6366f1' },
+    { label: 'Python Mastery', slug: 'python-programming', icon: 'code' as const, color: '#0ea5e9' },
+    { label: 'Java Enterprise', slug: 'java-enterprise', icon: 'code' as const, color: '#f97316' },
+    { label: 'AWS Cloud Architecture', slug: 'aws-cloud', icon: 'chart' as const, color: '#f59e0b' },
+    { label: 'Full-Stack Web Dev', slug: 'web-development', icon: 'code' as const, color: '#10b981' },
+    { label: 'Flutter Mobile', slug: 'flutter-dart', icon: 'robot' as const, color: '#0284c7' },
+  ]
+
   const results = useMemo(() => searchContent(debounced), [debounced])
 
   useEffect(() => {
@@ -35,8 +89,6 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     const id = window.setTimeout(() => inputRef.current?.focus(), 60)
     return () => {
       window.clearTimeout(id)
-      // Return focus to whatever opened the dialog, so keyboard users are not
-      // dumped at the top of the document.
       restoreFocusTo.current?.focus?.()
     }
   }, [open])
@@ -58,6 +110,12 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     return () => window.clearTimeout(id)
   }, [query, results.length])
 
+  const handleSelectResult = useCallback((r: (typeof results)[0]) => {
+    saveRecentSearch(query || r.lessonTitle)
+    navigate(`/tutorials/${r.tutorialSlug}/${r.lessonSlug}`)
+    onClose()
+  }, [navigate, onClose, query, saveRecentSearch])
+
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
@@ -70,14 +128,12 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
         setActive((i) => Math.max(i - 1, 0))
       } else if (e.key === 'Enter' && results[active]) {
         e.preventDefault()
-        const r = results[active]
-        navigate(`/tutorials/${r.tutorialSlug}/${r.lessonSlug}`)
-        onClose()
+        handleSelectResult(results[active])
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, results, active, navigate, onClose])
+  }, [open, results, active, onClose, handleSelectResult])
 
   // Prevent the page behind the dialog from scrolling.
   useEffect(() => {
@@ -90,13 +146,13 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[12vh]">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-[10vh]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             aria-hidden="true"
           />
 
@@ -116,7 +172,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search lessons, concepts, code…"
+                placeholder="Search lessons, concepts, code, or topics…"
                 className="flex-1 bg-transparent py-4 text-[15px] outline-none placeholder:text-fg-muted"
                 aria-label="Search query"
                 role="combobox"
@@ -125,6 +181,15 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                 aria-activedescendant={results[active] ? `search-result-${active}` : undefined}
                 aria-autocomplete="list"
               />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="rounded-lg p-1 text-fg-muted hover:text-fg"
+                  aria-label="Clear query"
+                >
+                  <Icon name="close" size={13} />
+                </button>
+              )}
               <button
                 onClick={onClose}
                 className="rounded-lg p-1.5 text-fg-muted transition-colors hover:bg-bg-subtle hover:text-fg"
@@ -139,16 +204,92 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               id="search-results"
               role="listbox"
               aria-label="Search results"
-              className="max-h-[55vh] overflow-y-auto p-2"
+              className="max-h-[55vh] overflow-y-auto p-3"
             >
               {query.trim().length < 2 ? (
-                <p className="px-3 py-10 text-center text-sm text-fg-muted">
-                  Type at least two characters to search.
-                </p>
+                <div className="space-y-5 p-2">
+                  {/* Recent Searches */}
+                  {recentSearches.length > 0 && (
+                    <div>
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-fg-muted">
+                          <Icon name="clock" size={11} /> Recent Searches
+                        </span>
+                        <button
+                          onClick={clearRecentSearches}
+                          className="text-[11px] text-fg-muted hover:text-accent hover:underline"
+                        >
+                          Clear
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {recentSearches.map((s) => (
+                          <button
+                            key={s}
+                            onClick={() => setQuery(s)}
+                            className="flex items-center gap-1.5 rounded-lg border border-border-token bg-bg px-2.5 py-1 text-xs text-fg hover:border-accent hover:text-accent"
+                          >
+                            <Icon name="clock" size={10} className="text-fg-muted" />
+                            <span>{s}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Trending Topics */}
+                  <div>
+                    <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-fg-muted">
+                      Trending Topics
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {TRENDING_TOPICS.map((t) => (
+                        <button
+                          key={t}
+                          onClick={() => setQuery(t)}
+                          className="rounded-lg border border-border-token/80 bg-bg-subtle px-2.5 py-1 text-xs text-fg-muted transition-colors hover:border-accent hover:text-accent"
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Quick Jump Tracks */}
+                  <div>
+                    <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-fg-muted">
+                      Quick Jump Tracks
+                    </span>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {QUICK_TRACKS.map((track) => (
+                        <button
+                          key={track.slug}
+                          onClick={() => {
+                            navigate(`/tutorials/${track.slug}`)
+                            onClose()
+                          }}
+                          className="flex items-center gap-2.5 rounded-xl border border-border-token/80 bg-bg p-2.5 text-left text-xs font-semibold text-fg transition-all hover:border-accent hover:text-accent"
+                        >
+                          <span
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-white text-[11px]"
+                            style={{ background: track.color }}
+                          >
+                            <Icon name={track.icon} size={11} />
+                          </span>
+                          <span className="truncate">{track.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : results.length === 0 ? (
-                <p className="px-3 py-10 text-center text-sm text-fg-muted">
-                  No results for “{query}”.
-                </p>
+                <div className="py-12 text-center text-sm text-fg-muted">
+                  <Icon name="search" size={24} className="mx-auto mb-2 opacity-50" />
+                  <p>No results found for &ldquo;{query}&rdquo;</p>
+                  <p className="mt-1 text-xs text-fg-muted/70">
+                    Try searching for a different keyword or topic tag.
+                  </p>
+                </div>
               ) : (
                 results.map((r, i) => (
                   <button
@@ -157,14 +298,9 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                     data-index={i}
                     role="option"
                     aria-selected={i === active}
-                    // Arrow keys drive selection from the input, which keeps
-                    // focus; results are reachable without being tab stops.
                     tabIndex={-1}
                     onMouseEnter={() => setActive(i)}
-                    onClick={() => {
-                      navigate(`/tutorials/${r.tutorialSlug}/${r.lessonSlug}`)
-                      onClose()
-                    }}
+                    onClick={() => handleSelectResult(r)}
                     className={cn(
                       'flex w-full items-start gap-3 rounded-xl p-3 text-left transition-colors',
                       i === active ? 'bg-accent-soft' : 'hover:bg-bg-subtle',

@@ -17,6 +17,7 @@ const SearchDialog = lazy(() =>
 const NAV = [
   { to: '/', label: 'Home', end: true },
   { to: '/tutorials', label: 'Tutorials' },
+  { to: '/roadmaps', label: 'Roadmaps' },
   { to: '/progress', label: 'My Progress' },
   { to: '/about', label: 'About' },
 ]

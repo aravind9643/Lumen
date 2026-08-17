@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { flatLessonsMeta, getTutorialMeta, tutorialsMeta } from '../content/manifest'
-// Progress is a lazy route, so pulling in the full content registry here (for
-// quiz question text) does not affect the eager bundle.
 import { resolveLesson } from '../content'
 import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
@@ -13,11 +11,17 @@ import { card } from '../lib/card'
 import { cn } from '../lib/cn'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
+import { CertificateModal } from '../components/ui/CertificateModal'
+import { triggerConfetti } from '../components/ui/Confetti'
 
 export function ProgressPage() {
-  const { state, overall, tutorialProgress, toggleBookmark, reset, quizHistory, exportState, importState } =
+  const { state, overall, weeklyMinutes, tutorialProgress, toggleBookmark, reset, quizHistory, exportState, importState } =
     useProgress()
   const [importMessage, setImportMessage] = useState<{ ok: boolean; text: string } | null>(null)
+  const [certCourse, setCertCourse] = useState<{ title: string; slug: string } | null>(null)
+  const [flashcardOpen, setFlashcardOpen] = useState(false)
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const [flipped, setFlipped] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleExport = () => {
@@ -44,7 +48,7 @@ export function ProgressPage() {
 
   useSEO({
     title: 'My Progress',
-    description: 'Track completed lessons, saved bookmarks, and your study streak.',
+    description: 'Track completed lessons, weekly goals, certificates, and practice flashcards.',
     path: '/progress',
   })
 
@@ -56,8 +60,6 @@ export function ProgressPage() {
     return lesson ? { tutorial, lesson } : null
   }
 
-  // Saved keys can outlive a renamed course or lesson, so anything that no
-  // longer resolves is dropped rather than rendered as a broken link.
   const bookmarks = state.bookmarks
     .map((key) => {
       const [tutorialSlug, lessonSlug] = key.split('/')
@@ -69,8 +71,6 @@ export function ProgressPage() {
     ? lookup(state.lastVisited.tutorialSlug, state.lastVisited.lessonSlug)
     : null
 
-  // Resolve each saved quiz answer against the live content so a renamed or
-  // removed lesson/question quietly drops out rather than showing stale text.
   const quizReview = quizHistory
     .map((entry) => {
       const resolved = resolveLesson(entry.tutorialSlug, entry.lessonSlug)
@@ -80,8 +80,11 @@ export function ProgressPage() {
     })
     .filter((v): v is NonNullable<typeof v> => v !== null)
 
-  // Depend on the count, not the derived `quizReview` array (a new reference
-  // every render) — this should fire once per page visit, not once per render.
+  const completedCourses = tutorialsMeta.filter((t) => {
+    const p = tutorialProgress(t.slug)
+    return p.total > 0 && p.percent === 100
+  })
+
   useEffect(() => {
     if (quizReview.length > 0) events.quizReviewView(quizReview.length)
   }, [quizReview.length])
@@ -93,18 +96,19 @@ export function ProgressPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
-        <h1 className="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Your progress</h1>
-        <p className="mt-3 text-lg text-fg-muted">
-          Stored only in this browser. Nothing is uploaded anywhere.
+        <span className="text-xs font-bold uppercase tracking-[0.14em] text-accent">Personal Dashboard</span>
+        <h1 className="mt-1 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Your Progress</h1>
+        <p className="mt-2 text-lg text-fg-muted">
+          Continuous tracking, streaks, weekly targets, and certificates stored private to your browser.
         </p>
       </motion.header>
 
-      {/* ── Stats ────────────────────────────────────────────── */}
+      {/* ── Stats & Weekly Target ────────────────────────────── */}
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat icon="target" label="Lessons complete" value={`${overall.done}/${overall.total}`} />
-        <Stat icon="award" label="Overall" value={`${overall.percent}%`} />
-        <Stat icon="clock" label="Time studied" value={`${overall.minutes} min`} />
-        <Stat icon="fire" label="Day streak" value={String(state.streak.count)} />
+        <Stat icon="award" label="Curriculum mastery" value={`${overall.percent}%`} />
+        <Stat icon="clock" label="This week" value={`${weeklyMinutes} / 60 min`} />
+        <Stat icon="fire" label="Day streak" value={`${state.streak.count} ${state.streak.count === 1 ? 'day' : 'days'}`} />
       </div>
 
       {resume && (
@@ -112,19 +116,69 @@ export function ProgressPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="mt-6 rounded-2xl border border-accent/30 bg-accent-soft/25 p-5"
+          className="mt-6 flex flex-col gap-3 rounded-2xl border border-accent/30 bg-accent-soft/25 p-5 sm:flex-row sm:items-center sm:justify-between"
         >
-          <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-accent">Pick up where you left off</p>
+          <div>
+            <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-accent">Pick up where you left off</p>
+            <Link
+              to={`/tutorials/${resume.tutorial.slug}/${resume.lesson.slug}`}
+              className="text-lg font-bold transition-colors hover:text-accent"
+            >
+              {resume.lesson.title}
+            </Link>
+            <p className="mt-0.5 text-xs text-fg-muted">
+              {resume.tutorial.shortTitle ?? resume.tutorial.title}
+            </p>
+          </div>
           <Link
             to={`/tutorials/${resume.tutorial.slug}/${resume.lesson.slug}`}
-            className="text-lg font-semibold transition-colors hover:text-accent"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-xs font-semibold text-accent-fg shadow-sm transition-all hover:opacity-90 self-start sm:self-auto"
           >
-            {resume.lesson.title}
+            <span>Resume Lesson</span>
+            <Icon name="arrowRight" size={11} />
           </Link>
-          <p className="mt-0.5 text-sm text-fg-muted">
-            {resume.tutorial.shortTitle ?? resume.tutorial.title}
-          </p>
         </motion.div>
+      )}
+
+      {/* ── Completed Course Certificates ────────────────────── */}
+      {completedCourses.length > 0 && (
+        <section className="mt-12">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-tight">Earned Certificates</h2>
+            <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent">
+              {completedCourses.length} Unlocked
+            </span>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {completedCourses.map((tut) => (
+              <div
+                key={tut.slug}
+                className="flex items-center justify-between rounded-2xl border border-emerald-500/40 bg-emerald-500/5 p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm">
+                    <Icon name="award" size={16} />
+                  </span>
+                  <div>
+                    <h4 className="text-sm font-bold text-fg">{tut.shortTitle ?? tut.title}</h4>
+                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                      100% Completed
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setCertCourse({ title: tut.title, slug: tut.slug })
+                    triggerConfetti()
+                  }}
+                  className="rounded-xl bg-accent px-3 py-1.5 text-xs font-semibold text-accent-fg shadow-sm hover:opacity-90"
+                >
+                  View Certificate
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* ── Per-course ───────────────────────────────────────── */}
@@ -177,10 +231,27 @@ export function ProgressPage() {
         </div>
       </section>
 
-      {/* ── Quiz review ──────────────────────────────────────── */}
+      {/* ── Quiz Review & Flashcards ────────────────────────── */}
       {quizReview.length > 0 && (
         <section className="mt-12">
-          <h2 className="mb-5 text-2xl font-bold tracking-tight">Quiz review</h2>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Quiz Review & Practice</h2>
+              <p className="text-xs text-fg-muted">Review questions you answered across completed lessons.</p>
+            </div>
+            <button
+              onClick={() => {
+                setFlashcardOpen(true)
+                setCurrentCardIndex(0)
+                setFlipped(false)
+              }}
+              className="flex items-center gap-2 rounded-xl bg-accent px-4 py-2 text-xs font-semibold text-accent-fg shadow-sm hover:opacity-90 self-start sm:self-auto"
+            >
+              <Icon name="sparkles" size={12} />
+              <span>Practice Flashcards ({quizReview.length})</span>
+            </button>
+          </div>
+
           <ul className="space-y-2">
             {quizReview.map(({ tutorial, lesson, blockIndex, block, correct, picked }) => (
               <li
@@ -218,6 +289,122 @@ export function ProgressPage() {
             ))}
           </ul>
         </section>
+      )}
+
+      {/* ── Interactive Flashcard Practice Modal ─────────────── */}
+      <AnimatePresence>
+        {flashcardOpen && quizReview.length > 0 && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-lg rounded-3xl border border-border-token bg-bg-elev p-6 shadow-2xl sm:p-8"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-border-token pb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent">
+                  Flashcard {currentCardIndex + 1} of {quizReview.length}
+                </span>
+                <button
+                  onClick={() => setFlashcardOpen(false)}
+                  className="rounded-lg p-1.5 text-fg-muted hover:bg-bg-subtle hover:text-fg"
+                >
+                  <Icon name="close" size={14} />
+                </button>
+              </div>
+
+              {/* Flashcard Body */}
+              {(() => {
+                const current = quizReview[currentCardIndex]
+                if (!current || current.block.type !== 'quiz') return null
+                return (
+                  <div className="mt-6">
+                    <div className="mb-2 flex items-center gap-2 text-xs text-fg-muted">
+                      <span>{current.tutorial.shortTitle ?? current.tutorial.title}</span>
+                      <span>·</span>
+                      <span className="font-semibold text-fg">{current.lesson.title}</span>
+                    </div>
+
+                    <div
+                      onClick={() => setFlipped(!flipped)}
+                      className={cn(
+                        'flex min-h-[220px] cursor-pointer flex-col justify-between rounded-2xl border p-6 text-center transition-all',
+                        flipped
+                          ? 'border-emerald-500/50 bg-emerald-500/10'
+                          : 'border-border-token bg-bg hover:border-accent hover:shadow-md',
+                      )}
+                    >
+                      {!flipped ? (
+                        <div className="my-auto">
+                          <p className="text-base font-bold leading-relaxed text-fg sm:text-lg">
+                            {current.block.question}
+                          </p>
+                          <p className="mt-4 text-xs font-semibold text-accent">
+                            (Click card to reveal correct answer & explanation)
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="my-auto">
+                          <span className="inline-block rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-bold text-white mb-2">
+                            Correct Answer
+                          </span>
+                          <p className="text-base font-extrabold text-fg sm:text-lg">
+                            {current.block.options[current.block.answer]}
+                          </p>
+                          {current.block.explanation && (
+                            <p className="mt-3 text-xs leading-relaxed text-fg-muted">
+                              {current.block.explanation}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    <div className="mt-6 flex items-center justify-between">
+                      <button
+                        disabled={currentCardIndex === 0}
+                        onClick={() => {
+                          setCurrentCardIndex((i) => Math.max(0, i - 1))
+                          setFlipped(false)
+                        }}
+                        className="flex items-center gap-1.5 rounded-xl border border-border-token bg-bg px-3.5 py-2 text-xs font-semibold text-fg-muted disabled:opacity-30 hover:border-accent hover:text-accent"
+                      >
+                        <Icon name="arrowLeft" size={11} /> Previous
+                      </button>
+                      <button
+                        onClick={() => setFlipped(!flipped)}
+                        className="rounded-xl border border-border-token bg-bg px-3.5 py-2 text-xs font-semibold text-fg hover:border-accent"
+                      >
+                        {flipped ? 'Hide Answer' : 'Flip Card'}
+                      </button>
+                      <button
+                        disabled={currentCardIndex >= quizReview.length - 1}
+                        onClick={() => {
+                          setCurrentCardIndex((i) => Math.min(quizReview.length - 1, i + 1))
+                          setFlipped(false)
+                        }}
+                        className="flex items-center gap-1.5 rounded-xl bg-accent px-3.5 py-2 text-xs font-semibold text-accent-fg disabled:opacity-30 hover:opacity-90"
+                      >
+                        Next <Icon name="arrowRight" size={11} />
+                      </button>
+                    </div>
+                  </div>
+                )
+              })()}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Certificate Modal ─────────────────────────────────── */}
+      {certCourse && (
+        <CertificateModal
+          courseTitle={certCourse.title}
+          courseSlug={certCourse.slug}
+          onClose={() => setCertCourse(null)}
+        />
       )}
 
       {/* ── Bookmarks ────────────────────────────────────────── */}

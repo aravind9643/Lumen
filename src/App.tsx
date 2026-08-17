@@ -14,12 +14,14 @@ import { Home } from './pages/Home'
 // Route-level code splitting: the lesson reader and its tutorial content are
 // the bulk of the bundle and are not needed to paint the landing page.
 const Tutorials = lazy(() => import('./pages/Tutorials').then((m) => ({ default: m.Tutorials })))
+const Roadmaps = lazy(() => import('./pages/Roadmaps').then((m) => ({ default: m.Roadmaps })))
 const TutorialDetail = lazy(() => import('./pages/TutorialDetail').then((m) => ({ default: m.TutorialDetail })))
 const Lesson = lazy(() => import('./pages/Lesson').then((m) => ({ default: m.Lesson })))
 const ProgressPage = lazy(() => import('./pages/Progress').then((m) => ({ default: m.ProgressPage })))
 const About = lazy(() => import('./pages/Static').then((m) => ({ default: m.About })))
 const Privacy = lazy(() => import('./pages/Static').then((m) => ({ default: m.Privacy })))
 const NotFound = lazy(() => import('./pages/Static').then((m) => ({ default: m.NotFound })))
+import { Confetti } from './components/ui/Confetti'
 
 /**
  * Content-shaped skeleton so a lazy route swap reads as "the page is arriving"
@@ -77,6 +79,7 @@ function AnimatedRoutes() {
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/tutorials" element={<Tutorials />} />
+          <Route path="/roadmaps" element={<Roadmaps />} />
           <Route path="/tutorials/:tutorialSlug" element={<TutorialDetail />} />
           <Route path="/tutorials/:tutorialSlug/:lessonSlug" element={<Lesson />} />
           <Route path="/progress" element={<ProgressPage />} />
@@ -100,6 +103,7 @@ function Shell() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <Confetti />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-accent-fg"
