@@ -150,49 +150,69 @@ export const androidKotlinMeta: TutorialMeta = {
 
 export const angularMeta: TutorialMeta = {
   "slug": "angular",
-  "title": "Angular Enterprise: Signals, Standalone Components & RxJS",
+  "title": "Angular Enterprise Architecture: Signals & Standalone",
   "shortTitle": "Angular",
-  "description": "Master enterprise Angular development: Standalone components, modern Signals reactivity, Dependency Injection, RxJS, reactive forms, and routing.",
+  "description": "A complete, beginner-to-mastery path covering enterprise Angular architecture: Standalone components, data binding, modern control flow (@if/@for), Signals reactivity engine, Dependency Injection, and Reactive Forms.",
   "category": "Web Development",
   "difficulty": "intermediate",
   "icon": "code",
   "tags": [
     "Angular",
-    "TypeScript",
     "Signals",
-    "RxJS",
+    "TypeScript",
+    "Dependency Injection",
     "Enterprise",
-    "Standalone"
+    "RxJS"
   ],
   "color": "#dd0031",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Standalone Components & Modern Signals",
+      "title": "Chapter 1: Standalone Architecture & Template Bindings (Beginner)",
       "lessons": [
         {
-          "slug": "standalone-components-and-signals",
-          "title": "Standalone Components & Angular Signals",
+          "slug": "what-is-angular-and-project-architecture",
+          "title": "What is Angular & Modern Standalone Architecture?",
+          "duration": 20
+        },
+        {
+          "slug": "templates-interpolation-and-data-binding",
+          "title": "Templates, Interpolation & Data Binding",
           "duration": 25
         },
         {
-          "slug": "dependency-injection-and-services",
-          "title": "Modern Dependency Injection & inject() API",
+          "slug": "modern-control-flow-if-for-switch",
+          "title": "Modern Built-In Control Flow: @if, @for & @switch",
           "duration": 25
+        },
+        {
+          "slug": "signals-reactivity-engine",
+          "title": "Signals Reactivity Engine (signal, computed, effect)",
+          "duration": 30
         }
       ]
     },
     {
-      "title": "Phase 2: Reactive Forms, RxJS & Enterprise Routing",
+      "title": "Chapter 2: Dependency Injection, Forms & Routing (Mastery)",
       "lessons": [
         {
-          "slug": "reactive-forms-and-validation",
-          "title": "Type-Safe Reactive Forms & Validation",
+          "slug": "dependency-injection-and-services",
+          "title": "Dependency Injection (DI) & Services",
           "duration": 25
         },
         {
-          "slug": "rxjs-and-http-interceptors",
-          "title": "RxJS Streams, Operators & HTTP Interceptors",
+          "slug": "reactive-forms-and-validation",
+          "title": "Reactive Forms & Custom Form Validation",
+          "duration": 30
+        },
+        {
+          "slug": "angular-routing-and-functional-guards",
+          "title": "Angular Routing, Parameters & Functional Route Guards",
+          "duration": 25
+        },
+        {
+          "slug": "httpclient-and-api-integration",
+          "title": "HttpClient, Functional Interceptors & RxJS Observables",
           "duration": 25
         }
       ]
@@ -469,50 +489,70 @@ export const azureCloudMeta: TutorialMeta = {
 
 export const cssMeta: TutorialMeta = {
   "slug": "css",
-  "title": "CSS3 & Modern Layouts: Flexbox, Grid & Animations",
+  "title": "CSS3 & Modern Layout Systems: Zero to Mastery",
   "shortTitle": "CSS3",
-  "description": "Master modern CSS layout systems, Flexbox, CSS Grid, Cascade Layers, Custom Properties, container queries, and GPU-accelerated transitions.",
+  "description": "A complete, beginner-to-mastery path covering how CSS styles HTML, selectors, the box model, Flexbox 1D layouts, CSS Grid 2D layouts, responsive design, and CSS variables.",
   "category": "Web Development",
   "difficulty": "beginner",
-  "icon": "palette",
+  "icon": "code",
   "tags": [
     "CSS3",
     "Flexbox",
     "CSS Grid",
-    "Responsive",
+    "Custom Properties",
     "Animations",
-    "Design Systems"
+    "Responsive Design"
   ],
   "color": "#264de4",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Box Model & Modern Layouts",
+      "title": "Chapter 1: CSS Foundations & The Box Model (Beginner)",
       "lessons": [
         {
-          "slug": "box-model-and-custom-properties",
-          "title": "The CSS Box Model & Custom Properties",
+          "slug": "what-is-css-and-how-it-works",
+          "title": "What is CSS & How Does Styling Work?",
+          "duration": 20
+        },
+        {
+          "slug": "css-selectors-classes-and-ids",
+          "title": "CSS Selectors: Element, Class, ID & Pseudo-Classes",
           "duration": 25
         },
         {
-          "slug": "flexbox-deep-dive",
-          "title": "Flexbox Architecture: 1D Alignment & Distribution",
+          "slug": "colors-typography-and-google-fonts",
+          "title": "Colors, Typography & Font Management",
+          "duration": 20
+        },
+        {
+          "slug": "the-css-box-model-and-sizing",
+          "title": "The CSS Box Model: Margin, Border, Padding & Content",
           "duration": 25
         }
       ]
     },
     {
-      "title": "Phase 2: CSS Grid & Fluid Animations",
+      "title": "Chapter 2: Modern Layout Systems & Responsive Design (Mastery)",
       "lessons": [
         {
-          "slug": "css-grid-mastery",
-          "title": "CSS Grid Mastery: 2D Complex Layout Systems",
+          "slug": "display-property-and-positioning",
+          "title": "Display Property & CSS Positioning",
+          "duration": 25
+        },
+        {
+          "slug": "flexbox-one-dimensional-layouts",
+          "title": "Flexbox: 1D Alignment, Direction & Distribution",
           "duration": 30
         },
         {
-          "slug": "animations-and-transitions",
-          "title": "Hardware-Accelerated Transitions & Keyframes",
-          "duration": 20
+          "slug": "css-grid-two-dimensional-layouts",
+          "title": "CSS Grid: 2D Spatial Layouts & Auto-Fit",
+          "duration": 30
+        },
+        {
+          "slug": "responsive-design-and-css-custom-properties",
+          "title": "Responsive Media Queries & CSS Variables",
+          "duration": 25
         }
       ]
     }
@@ -1207,7 +1247,7 @@ export const htmlMeta: TutorialMeta = {
   "slug": "html",
   "title": "HTML5 & Modern Web Semantics: Zero to Mastery",
   "shortTitle": "HTML5",
-  "description": "Master semantic markup, modern document structure, accessible forms, audio/video integration, and SEO best practices from first principles.",
+  "description": "A complete, beginner-to-mastery path covering how the web works, HTML document structure, text formatting, links, lists, media, accessible forms, and modern semantic architecture.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
@@ -1220,35 +1260,55 @@ export const htmlMeta: TutorialMeta = {
     "Semantic Web"
   ],
   "color": "#e34f26",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Foundations & Document Structure",
+      "title": "Chapter 1: Web Foundations & Document Structure (Beginner)",
       "lessons": [
         {
-          "slug": "document-structure-and-metadata",
-          "title": "HTML5 Document Structure & Metadata",
+          "slug": "how-the-web-works-and-html-basics",
+          "title": "How the Web Works & What is HTML?",
           "duration": 20
         },
         {
-          "slug": "semantic-elements-and-hierarchy",
-          "title": "Semantic Elements & Content Hierarchy",
+          "slug": "html-document-skeleton-and-head-metadata",
+          "title": "Document Skeleton & Head Metadata",
+          "duration": 20
+        },
+        {
+          "slug": "headings-paragraphs-and-text-formatting",
+          "title": "Headings, Paragraphs & Text Formatting",
+          "duration": 20
+        },
+        {
+          "slug": "links-lists-and-navigation",
+          "title": "Hyperlinks, Lists & Web Navigation",
           "duration": 25
         }
       ]
     },
     {
-      "title": "Phase 2: Forms, Media & Web Accessibility",
+      "title": "Chapter 2: Semantic Layout, Media & Forms (Mastery)",
       "lessons": [
         {
-          "slug": "modern-forms-and-validation",
-          "title": "Modern Forms, Input Types & Native Validation",
+          "slug": "images-audio-and-video-media",
+          "title": "Images, Audio & Video Media Elements",
           "duration": 25
         },
         {
-          "slug": "multimedia-and-canvas",
-          "title": "Responsive Images, Video & Canvas Graphics",
+          "slug": "html-tables-and-data-presentation",
+          "title": "Tables & Structured Data Presentation",
           "duration": 20
+        },
+        {
+          "slug": "html5-forms-and-input-validation",
+          "title": "HTML5 Forms, Inputs & Native Validation",
+          "duration": 25
+        },
+        {
+          "slug": "semantic-html5-layout-and-seo",
+          "title": "Semantic HTML5 Layout, SEO & Accessibility",
+          "duration": 25
         }
       ]
     }
@@ -1482,51 +1542,70 @@ export const javaEnterpriseMeta: TutorialMeta = {
 
 export const javascriptMeta: TutorialMeta = {
   "slug": "javascript",
-  "title": "Modern JavaScript: ES6+, Async Patterns & DOM",
+  "title": "Modern JavaScript (ES6+): Zero to Mastery",
   "shortTitle": "JavaScript",
-  "description": "Deep dive into modern JavaScript engineering: closures, prototypes, event loops, Promises, async/await, ES modules, and modern web APIs.",
+  "description": "A complete, beginner-to-mastery path covering JavaScript fundamentals, variables, control flow, functions, objects, DOM manipulation, asynchronous programming, and modern ES6+ features.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
   "tags": [
     "JavaScript",
     "ES6+",
-    "Async",
     "Event Loop",
-    "Closures",
-    "Promises",
-    "DOM"
+    "DOM",
+    "Async/Await",
+    "V8"
   ],
   "color": "#f7df1e",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Language Primitives & Closures",
+      "title": "Chapter 1: JavaScript Fundamentals & Control Flow (Beginner)",
       "lessons": [
         {
-          "slug": "scope-closures-and-execution-context",
-          "title": "Execution Context, Scope Chains & Closures",
+          "slug": "what-is-javascript-and-running-code",
+          "title": "What is JavaScript & How Does Code Run?",
+          "duration": 20
+        },
+        {
+          "slug": "variables-and-data-types",
+          "title": "Variables, Constants & Primitive Data Types",
           "duration": 25
         },
         {
-          "slug": "prototypes-and-modern-classes",
-          "title": "Prototypes, Inheritance & ES6 Classes",
+          "slug": "operators-and-conditional-logic",
+          "title": "Operators & Conditional Logic (if / else / switch)",
           "duration": 25
+        },
+        {
+          "slug": "loops-and-iteration",
+          "title": "Loops & Iteration: for, while & for...of",
+          "duration": 20
         }
       ]
     },
     {
-      "title": "Phase 2: Asynchronous Event Loop & Web APIs",
+      "title": "Chapter 2: Functions, Objects & DOM Manipulation (Mastery)",
       "lessons": [
         {
-          "slug": "event-loop-and-microtasks",
-          "title": "The Event Loop, Microtasks & Macrotasks",
+          "slug": "functions-and-scope",
+          "title": "Functions, Parameters, Arrow Functions & Scope",
+          "duration": 25
+        },
+        {
+          "slug": "arrays-and-objects-data-structures",
+          "title": "Arrays, Objects & Modern Array Methods",
           "duration": 30
         },
         {
-          "slug": "async-await-and-fetch",
-          "title": "Promises, Async/Await & Modern Fetch API",
-          "duration": 25
+          "slug": "dom-manipulation-and-event-listeners",
+          "title": "DOM Manipulation & Event Listeners",
+          "duration": 30
+        },
+        {
+          "slug": "asynchronous-javascript-and-fetch",
+          "title": "Asynchronous JavaScript: Promises, Async/Await & Fetch",
+          "duration": 30
         }
       ]
     }
@@ -1535,34 +1614,69 @@ export const javascriptMeta: TutorialMeta = {
 
 export const nestjsMeta: TutorialMeta = {
   "slug": "nestjs",
-  "title": "NestJS Enterprise: Architecture, Microservices & APIs",
+  "title": "NestJS Enterprise Architecture: Microservices & DI",
   "shortTitle": "NestJS",
-  "description": "Master enterprise backend architecture with NestJS: Modular design, Controllers, Providers, Dependency Injection, Pipes, Guards, and Microservices.",
+  "description": "A complete, beginner-to-mastery path covering enterprise TypeScript backend architecture with NestJS: Dependency Injection, Controllers, Providers, Modules, DTO validation, Guards, and Exception Filters.",
   "category": "Web Development",
   "difficulty": "advanced",
   "icon": "code",
   "tags": [
     "NestJS",
     "TypeScript",
-    "Microservices",
     "Dependency Injection",
     "Backend",
-    "Architecture"
+    "Microservices",
+    "Enterprise"
   ],
   "color": "#e0234e",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Modular Architecture & Controllers",
+      "title": "Chapter 1: Enterprise Architecture & Dependency Injection (Beginner)",
       "lessons": [
         {
-          "slug": "modules-controllers-and-providers",
-          "title": "Modular Architecture, Controllers & Providers",
+          "slug": "what-is-nestjs-and-enterprise-architecture",
+          "title": "What is NestJS & Enterprise Architecture?",
+          "duration": 20
+        },
+        {
+          "slug": "nestjs-project-structure-and-cli",
+          "title": "NestJS Project Structure & Nest CLI",
+          "duration": 20
+        },
+        {
+          "slug": "controllers-and-http-routing",
+          "title": "Controllers & HTTP Routing (@Get, @Post, @Param)",
           "duration": 25
         },
         {
-          "slug": "pipes-guards-and-interceptors",
-          "title": "Pipes (Validation), Guards (Auth) & Interceptors",
+          "slug": "providers-and-dependency-injection-in-nest",
+          "title": "Providers & Dependency Injection (@Injectable)",
+          "duration": 30
+        }
+      ]
+    },
+    {
+      "title": "Chapter 2: Modules, Validation & Enterprise Security (Mastery)",
+      "lessons": [
+        {
+          "slug": "modules-and-modular-architecture",
+          "title": "Modules & Modular Architecture (@Module)",
+          "duration": 25
+        },
+        {
+          "slug": "data-transfer-objects-and-validation-pipes",
+          "title": "DTOs & Validation with class-validator",
+          "duration": 30
+        },
+        {
+          "slug": "guards-and-role-based-authorization-in-nest",
+          "title": "Guards, ExecutionContext & Role-Based Access (RBAC)",
+          "duration": 30
+        },
+        {
+          "slug": "exception-filters-and-interceptors",
+          "title": "Exception Filters & Interceptors",
           "duration": 25
         }
       ]
@@ -1572,50 +1686,70 @@ export const nestjsMeta: TutorialMeta = {
 
 export const nextjsMeta: TutorialMeta = {
   "slug": "nextjs",
-  "title": "Next.js & React Server Components: Full-Stack Web",
+  "title": "Next.js & React Server Components: Zero to Mastery",
   "shortTitle": "Next.js",
-  "description": "Master full-stack React with Next.js App Router, React Server Components (RSC), Server Actions, dynamic routing, caching, and Vercel edge deployment.",
+  "description": "A complete, beginner-to-mastery path covering full-stack React with Next.js App Router, React Server Components (RSC), file-based routing, server data fetching, loading UI, Server Actions, and SEO metadata.",
   "category": "Web Development",
   "difficulty": "intermediate",
-  "icon": "sparkles",
+  "icon": "code",
   "tags": [
     "Next.js",
+    "React Server Components",
     "App Router",
-    "RSC",
     "Server Actions",
     "SSR",
-    "Full-Stack"
+    "Edge"
   ],
   "color": "#000000",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: App Router & Server Components",
+      "title": "Chapter 1: Full-Stack React & App Router Foundations (Beginner)",
       "lessons": [
         {
-          "slug": "app-router-and-rsc-architecture",
-          "title": "App Router & React Server Components (RSC)",
+          "slug": "what-is-nextjs-and-server-rendering",
+          "title": "What is Next.js & Why Server-Side Rendering (SSR)?",
+          "duration": 20
+        },
+        {
+          "slug": "file-based-routing-and-layouts",
+          "title": "File-Based Routing, Pages & Nested Layouts",
           "duration": 25
         },
         {
-          "slug": "server-actions-and-data-mutations",
-          "title": "Server Actions, Forms & Revalidation",
+          "slug": "server-components-vs-client-components",
+          "title": "Server Components vs Client Components (\"use client\")",
           "duration": 25
+        },
+        {
+          "slug": "server-data-fetching-and-caching",
+          "title": "Server Data Fetching & Caching Strategies",
+          "duration": 30
         }
       ]
     },
     {
-      "title": "Phase 2: Caching, Middleware & Edge Deployment",
+      "title": "Chapter 2: Mutations, Streaming & Production Mastery",
       "lessons": [
         {
-          "slug": "caching-and-data-fetching",
-          "title": "Next.js Caching Architecture & Data Fetching",
+          "slug": "loading-ui-and-error-boundaries",
+          "title": "Instant Loading UI, Suspense & Error Boundaries",
           "duration": 25
         },
         {
-          "slug": "middleware-and-edge-routes",
-          "title": "Middleware, Route Handlers & Edge Execution",
-          "duration": 20
+          "slug": "server-actions-and-form-mutations",
+          "title": "Server Actions: Zero-API Data Mutations",
+          "duration": 30
+        },
+        {
+          "slug": "dynamic-routes-and-route-handlers",
+          "title": "Dynamic Routes ([slug]) & REST Route Handlers (route.ts)",
+          "duration": 25
+        },
+        {
+          "slug": "metadata-images-and-seo-optimization",
+          "title": "SEO Metadata, Image Optimization & Deployment",
+          "duration": 25
         }
       ]
     }
@@ -1624,9 +1758,9 @@ export const nextjsMeta: TutorialMeta = {
 
 export const nodejsMeta: TutorialMeta = {
   "slug": "nodejs",
-  "title": "Node.js & Express: Backend Architecture & APIs",
+  "title": "Node.js & Express Architecture: REST APIs to Mastery",
   "shortTitle": "Node.js",
-  "description": "Master backend web development: Node.js runtime, Event Loop, Streams, Buffers, Express REST APIs, middleware pipelines, JWT auth, and database ORMs.",
+  "description": "A complete, beginner-to-mastery path covering JavaScript on the server with Node.js, npm package management, file systems, HTTP servers, Express.js REST APIs, middleware, and database integration.",
   "category": "Web Development",
   "difficulty": "intermediate",
   "icon": "code",
@@ -1635,40 +1769,60 @@ export const nodejsMeta: TutorialMeta = {
     "Express",
     "Backend",
     "REST API",
-    "JWT",
-    "PostgreSQL",
-    "Prisma"
+    "Streams",
+    "Libuv",
+    "JWT"
   ],
   "color": "#339933",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Node.js Runtime & Express Foundations",
+      "title": "Chapter 1: Node.js Internals & Core Server APIs (Beginner)",
       "lessons": [
         {
-          "slug": "nodejs-runtime-and-streams",
-          "title": "Node.js Runtime, Event Loop & Streams",
+          "slug": "what-is-nodejs-and-running-scripts",
+          "title": "What is Node.js & Running Server JavaScript?",
+          "duration": 20
+        },
+        {
+          "slug": "module-system-and-npm-package-manager",
+          "title": "Node Module System (ESM vs CommonJS) & npm",
           "duration": 25
         },
         {
-          "slug": "express-rest-api-architecture",
-          "title": "Express Server, Middleware & REST Architecture",
+          "slug": "working-with-files-and-paths",
+          "title": "File System & Paths (node:fs/promises & node:path)",
+          "duration": 25
+        },
+        {
+          "slug": "http-fundamentals-and-native-server",
+          "title": "HTTP Fundamentals & Creating a Native Web Server",
           "duration": 25
         }
       ]
     },
     {
-      "title": "Phase 2: Authentication, Security & Database ORM",
+      "title": "Chapter 2: Express.js REST APIs & Backend Architecture (Mastery)",
       "lessons": [
         {
-          "slug": "jwt-authentication-and-security",
-          "title": "JWT Authentication, Password Hashing & Security",
+          "slug": "introduction-to-expressjs",
+          "title": "Introduction to Express.js Framework & Routing",
+          "duration": 25
+        },
+        {
+          "slug": "express-middleware-and-request-body",
+          "title": "Express Middleware & Request Parsing (req.body, req.params)",
           "duration": 30
         },
         {
-          "slug": "database-integration-prisma",
-          "title": "Database Persistence with PostgreSQL & Prisma ORM",
-          "duration": 25
+          "slug": "building-a-crud-rest-api",
+          "title": "Building a Complete CRUD REST API",
+          "duration": 30
+        },
+        {
+          "slug": "database-orm-and-jwt-security",
+          "title": "Database Integration with Prisma ORM & JWT Security",
+          "duration": 30
         }
       ]
     }
@@ -1955,7 +2109,7 @@ export const reactMeta: TutorialMeta = {
   "slug": "react",
   "title": "React Architecture: Components, Hooks & State",
   "shortTitle": "React",
-  "description": "Master modern React architecture: JSX, custom hooks, reconciliation, concurrent rendering, Context API, state management, and performance optimization.",
+  "description": "A complete, beginner-to-mastery path covering component thinking, JSX syntax rules, props, state with useState, event handling, conditional rendering, useEffect, and custom hooks.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
@@ -1969,35 +2123,55 @@ export const reactMeta: TutorialMeta = {
     "Performance"
   ],
   "color": "#61dafb",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Component Fundamentals & State Reactivity",
+      "title": "Chapter 1: Component Fundamentals & State (Beginner)",
       "lessons": [
         {
-          "slug": "components-props-and-state",
-          "title": "Component Architecture, Props & useState",
+          "slug": "what-is-react-and-component-thinking",
+          "title": "What is React & Component-Based Architecture?",
+          "duration": 20
+        },
+        {
+          "slug": "jsx-syntax-and-rules",
+          "title": "JSX Syntax Rules: Writing HTML in JavaScript",
+          "duration": 20
+        },
+        {
+          "slug": "components-and-props",
+          "title": "Components & Props: Passing Data to Children",
           "duration": 25
         },
         {
-          "slug": "useeffect-and-lifecycle-synchronization",
-          "title": "useEffect, Lifecycles & Synchronization",
-          "duration": 25
+          "slug": "state-with-usestate",
+          "title": "State with useState: Component Memory & Reactivity",
+          "duration": 30
         }
       ]
     },
     {
-      "title": "Phase 2: Advanced Hooks, Context & Performance",
+      "title": "Chapter 2: Events, Effects & Advanced Patterns (Mastery)",
       "lessons": [
         {
-          "slug": "custom-hooks-usememo-usecallback",
-          "title": "Custom Hooks, useMemo & useCallback",
+          "slug": "event-handling-and-controlled-forms",
+          "title": "Event Handling & Controlled Form Inputs",
+          "duration": 25
+        },
+        {
+          "slug": "conditional-rendering-and-rendering-lists",
+          "title": "Conditional Rendering & Rendering Lists with Keys",
+          "duration": 25
+        },
+        {
+          "slug": "useeffect-and-side-effects",
+          "title": "Side Effects & Data Fetching with useEffect",
           "duration": 30
         },
         {
-          "slug": "context-api-and-global-state",
-          "title": "Context API & Scalable State Architecture",
-          "duration": 25
+          "slug": "custom-hooks-and-context-api",
+          "title": "Custom Hooks & Global State with Context API",
+          "duration": 30
         }
       ]
     }
@@ -2226,34 +2400,69 @@ export const stockMarketMeta: TutorialMeta = {
 
 export const svelteMeta: TutorialMeta = {
   "slug": "svelte",
-  "title": "Svelte & SvelteKit: Compiler-Driven Web Architecture",
+  "title": "Svelte 5 & SvelteKit: Compiler Reactivity",
   "shortTitle": "Svelte",
-  "description": "Master Svelte and SvelteKit: Compiler philosophy, Runes reactivity ($state, $derived), Stores, component slots, and full-stack SvelteKit SSR.",
+  "description": "A complete, beginner-to-mastery path covering Svelte compiler architecture, Svelte 5 Runes ($state, $derived, $effect), component props, two-way bindings, transitions, SvelteKit routing, and form actions.",
   "category": "Web Development",
   "difficulty": "intermediate",
   "icon": "code",
   "tags": [
     "Svelte",
-    "SvelteKit",
+    "Svelte 5",
     "Runes",
+    "SvelteKit",
     "Reactivity",
-    "Compiler",
-    "SSR"
+    "Compiler"
   ],
   "color": "#ff3e00",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Svelte Reactivity & Component Architecture",
+      "title": "Chapter 1: Svelte 5 Runes & Component Architecture (Beginner)",
       "lessons": [
         {
-          "slug": "compiler-philosophy-and-runes",
-          "title": "Compiler Philosophy & Svelte Runes Reactivity",
+          "slug": "what-is-svelte-and-compiler-philosophy",
+          "title": "What is Svelte & The Compiler Philosophy?",
+          "duration": 20
+        },
+        {
+          "slug": "svelte-5-runes-state-and-derived",
+          "title": "Svelte 5 Runes: Reactive State ($state & $derived)",
           "duration": 25
         },
         {
-          "slug": "sveltekit-full-stack-architecture",
-          "title": "SvelteKit: File-Based Routing, SSR & Form Actions",
+          "slug": "effects-and-props-in-svelte-5",
+          "title": "Side Effects ($effect) & Component Props ($props)",
+          "duration": 25
+        },
+        {
+          "slug": "conditionals-loops-and-bindings",
+          "title": "Conditionals ({#if}), Loops ({#each}) & Two-Way Binding (bind:)",
+          "duration": 25
+        }
+      ]
+    },
+    {
+      "title": "Chapter 2: Transitions, SvelteKit & Full-Stack Architecture (Mastery)",
+      "lessons": [
+        {
+          "slug": "native-css-transitions-and-animations",
+          "title": "Built-in Transitions & Animation Directives",
+          "duration": 25
+        },
+        {
+          "slug": "sveltekit-routing-and-pages",
+          "title": "SvelteKit Routing: +page.svelte & +layout.svelte",
+          "duration": 25
+        },
+        {
+          "slug": "sveltekit-server-load-functions",
+          "title": "SvelteKit Server Load Functions (+page.server.ts)",
+          "duration": 30
+        },
+        {
+          "slug": "sveltekit-form-actions-and-enhancement",
+          "title": "SvelteKit Form Actions & Progressive Enhancement",
           "duration": 25
         }
       ]
@@ -2263,35 +2472,70 @@ export const svelteMeta: TutorialMeta = {
 
 export const tailwindcssMeta: TutorialMeta = {
   "slug": "tailwindcss",
-  "title": "Tailwind CSS: Modern Design Systems & Styling",
+  "title": "Tailwind CSS & Design Systems: Zero to Mastery",
   "shortTitle": "Tailwind CSS",
-  "description": "Master utility-first styling: Responsive design, Dark mode, custom theme tokens, typography, CSS grid utilities, and scalable component architecture.",
+  "description": "A complete, beginner-to-mastery path covering utility-first CSS architecture, spacing tokens, typography, flexbox and grid utilities, responsive breakpoints, interactive state variants, and dark mode.",
   "category": "Web Development",
   "difficulty": "beginner",
-  "icon": "palette",
+  "icon": "code",
   "tags": [
     "TailwindCSS",
     "CSS",
     "Design Systems",
     "Responsive",
-    "Dark Mode",
-    "UI"
+    "UI/UX",
+    "JIT"
   ],
-  "color": "#38bdf8",
-  "updated": "2026-08-17",
+  "color": "#06b6d4",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Utility-First Fundamentals & Layouts",
+      "title": "Chapter 1: Utility-First Architecture & Design Tokens (Beginner)",
       "lessons": [
         {
-          "slug": "utility-first-philosophy-and-layout",
-          "title": "Utility-First Philosophy, Flexbox & Spacing",
+          "slug": "what-is-tailwind-and-utility-first-philosophy",
+          "title": "What is Tailwind CSS & Utility-First Philosophy?",
           "duration": 20
         },
         {
-          "slug": "responsive-variants-and-dark-mode",
-          "title": "Responsive Breakpoints, Dark Mode & Theme Tokens",
+          "slug": "spacing-sizing-and-layout-utilities",
+          "title": "Spacing, Sizing & Layout Scales",
           "duration": 20
+        },
+        {
+          "slug": "typography-and-color-palette",
+          "title": "Typography & Curated Color Systems",
+          "duration": 20
+        },
+        {
+          "slug": "borders-radii-and-shadow-effects",
+          "title": "Borders, Border Radii & Elevation Shadows",
+          "duration": 20
+        }
+      ]
+    },
+    {
+      "title": "Chapter 2: Layouts, Responsive Design & Dark Mode (Mastery)",
+      "lessons": [
+        {
+          "slug": "flexbox-utilities-in-tailwind",
+          "title": "Flexbox Utilities: Alignment, Justification & Gap",
+          "duration": 25
+        },
+        {
+          "slug": "css-grid-utilities-in-tailwind",
+          "title": "CSS Grid Utilities: grid-cols & Column Spanning",
+          "duration": 25
+        },
+        {
+          "slug": "mobile-first-responsive-design-breakpoints",
+          "title": "Mobile-First Responsive Design & Breakpoints",
+          "duration": 25
+        },
+        {
+          "slug": "interactive-states-and-dark-mode",
+          "title": "Interactive States (hover, focus) & Dark Mode",
+          "duration": 25
         }
       ]
     }
@@ -2300,50 +2544,70 @@ export const tailwindcssMeta: TutorialMeta = {
 
 export const typescriptMeta: TutorialMeta = {
   "slug": "typescript",
-  "title": "TypeScript Mastery: Type Systems & Advanced Generics",
+  "title": "TypeScript Mastery: Type Systems & Generics",
   "shortTitle": "TypeScript",
-  "description": "Master strict TypeScript engineering: utility types, conditional types, mapped types, template literal types, narrowing, and type-safe architecture.",
+  "description": "A complete, beginner-to-mastery path covering why TypeScript exists, primitive type annotations, interfaces, union types, type narrowing, generics, and tsconfig architecture.",
   "category": "Web Development",
   "difficulty": "intermediate",
   "icon": "code",
   "tags": [
     "TypeScript",
     "Generics",
-    "Type Safety",
-    "Utility Types",
-    "AST",
-    "Architecture"
+    "Type System",
+    "Interfaces",
+    "Meta-Programming",
+    "Strict"
   ],
   "color": "#3178c6",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Type Primitives, Interfaces & Narrowing",
+      "title": "Chapter 1: Type System Foundations (Beginner to Intermediate)",
       "lessons": [
         {
-          "slug": "type-annotations-and-discriminated-unions",
-          "title": "Discriminated Unions, Narrowing & Type Guards",
+          "slug": "why-typescript-and-the-compiler",
+          "title": "Why TypeScript? Static Typing vs Dynamic JavaScript",
+          "duration": 20
+        },
+        {
+          "slug": "primitive-types-and-type-annotations",
+          "title": "Primitive Types & Explicit Annotations",
           "duration": 25
         },
         {
-          "slug": "interfaces-vs-type-aliases",
-          "title": "Interfaces, Types & Declaration Merging",
+          "slug": "arrays-tuples-and-enums",
+          "title": "Arrays, Readonly Arrays & Tuples",
           "duration": 20
+        },
+        {
+          "slug": "interfaces-and-type-aliases",
+          "title": "Interfaces & Type Aliases for Object Shapes",
+          "duration": 25
         }
       ]
     },
     {
-      "title": "Phase 2: Generics, Conditional Types & Mapped Types",
+      "title": "Chapter 2: Advanced Types, Generics & Architecture (Mastery)",
       "lessons": [
         {
-          "slug": "generics-and-type-constraints",
-          "title": "Generics, Constraints & Utility Types",
+          "slug": "union-types-and-type-narrowing",
+          "title": "Union Types, Literal Types & Type Narrowing",
+          "duration": 25
+        },
+        {
+          "slug": "function-types-and-signatures",
+          "title": "Function Signatures, Callbacks & Overloads",
+          "duration": 25
+        },
+        {
+          "slug": "generics-from-first-principles",
+          "title": "Generics from First Principles: Reusable Type Safety",
           "duration": 30
         },
         {
-          "slug": "conditional-and-mapped-types",
-          "title": "Conditional Types, infer & Template Literals",
-          "duration": 30
+          "slug": "utility-types-and-tsconfig-mastery",
+          "title": "Utility Types (Partial, Pick, Omit) & tsconfig Setup",
+          "duration": 25
         }
       ]
     }
@@ -2352,9 +2616,9 @@ export const typescriptMeta: TutorialMeta = {
 
 export const vueMeta: TutorialMeta = {
   "slug": "vue",
-  "title": "Vue 3 & Composition API: Reactive UI Architecture",
-  "shortTitle": "Vue.js",
-  "description": "Master Vue 3: Composition API, ref/reactive, computed, watchers, component props/emits, Pinia state management, and Vue Router.",
+  "title": "Vue 3 & Composition API: Architecture & State",
+  "shortTitle": "Vue 3",
+  "description": "A complete, beginner-to-mastery path covering Vue 3 Single-File Components (.vue), <script setup>, Composition API, ref & reactive, computed properties, watchers, Pinia state stores, and Vue Router.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
@@ -2362,39 +2626,59 @@ export const vueMeta: TutorialMeta = {
     "Vue 3",
     "Composition API",
     "Pinia",
+    "Reactivity",
     "Vite",
-    "Vue Router",
-    "Reactivity"
+    "Frontend"
   ],
   "color": "#42b883",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "chapters": [
     {
-      "title": "Phase 1: Composition API & Reactivity Core",
+      "title": "Chapter 1: Composition API & Reactivity Foundations (Beginner)",
       "lessons": [
         {
-          "slug": "composition-api-and-reactivity",
-          "title": "Vue 3 Composition API: ref, reactive & computed",
+          "slug": "what-is-vue-and-single-file-components",
+          "title": "What is Vue.js & Single-File Components (.vue)?",
+          "duration": 20
+        },
+        {
+          "slug": "template-syntax-and-directives",
+          "title": "Template Syntax & Core Directives (v-bind, v-on, v-model)",
           "duration": 25
         },
         {
-          "slug": "components-props-and-emits",
-          "title": "Component Architecture: Props, Emits & Slots",
+          "slug": "reactivity-with-ref-and-reactive",
+          "title": "Reactivity with ref() and reactive()",
+          "duration": 25
+        },
+        {
+          "slug": "conditionals-and-list-rendering",
+          "title": "Conditionals (v-if / v-show) & Lists (v-for)",
           "duration": 25
         }
       ]
     },
     {
-      "title": "Phase 2: State Management with Pinia & Vue Router",
+      "title": "Chapter 2: Computed Properties, Pinia & Full-Stack Vue (Mastery)",
       "lessons": [
         {
-          "slug": "pinia-state-management",
-          "title": "Global State Management with Pinia",
+          "slug": "computed-properties-and-watchers",
+          "title": "Computed Properties & Watchers (computed, watch, watchEffect)",
           "duration": 25
         },
         {
-          "slug": "vue-router-and-composables",
-          "title": "Vue Router, Navigation Guards & Custom Composables",
+          "slug": "component-props-and-custom-events",
+          "title": "Component Props & Custom Events (defineProps & defineEmits)",
+          "duration": 25
+        },
+        {
+          "slug": "pinia-state-management-stores",
+          "title": "Global State Management with Pinia Stores",
+          "duration": 30
+        },
+        {
+          "slug": "vue-router-and-single-page-apps",
+          "title": "Vue Router 4 & Client-Side Navigation",
           "duration": 25
         }
       ]

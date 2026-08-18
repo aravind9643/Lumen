@@ -4,7 +4,7 @@ export const htmlCourse: Tutorial = {
   "slug": "html",
   "title": "HTML5 & Modern Web Semantics: Zero to Mastery",
   "shortTitle": "HTML5",
-  "description": "Master semantic markup, modern document structure, accessible forms, audio/video integration, and SEO best practices from first principles.",
+  "description": "A complete, beginner-to-mastery path covering how the web works, HTML document structure, text formatting, links, lists, media, accessible forms, and modern semantic architecture.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
@@ -17,7 +17,7 @@ export const htmlCourse: Tutorial = {
     "Semantic Web"
   ],
   "color": "#e34f26",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "prerequisites": [
     "Zero prior experience required — built from first principles."
   ],
@@ -28,172 +28,396 @@ export const htmlCourse: Tutorial = {
   ],
   "chapters": [
     {
-      "title": "Phase 1: Foundations & Document Structure",
+      "title": "Chapter 1: Web Foundations & Document Structure (Beginner)",
       "lessons": [
         {
-          "slug": "document-structure-and-metadata",
-          "title": "HTML5 Document Structure & Metadata",
-          "description": "Master HTML5 Document Structure & Metadata with practical examples, architectural deep dives, and key concepts.",
+          "slug": "how-the-web-works-and-html-basics",
+          "title": "How the Web Works & What is HTML?",
+          "description": "Learn what the Internet is, how browsers request web pages, and the role of HTML as the foundational language of the web.",
           "duration": 20,
           "blocks": [
             {
+              "type": "callout",
+              "kind": "info",
+              "text": "Level: Beginner | Prerequisites: Zero prior experience"
+            },
+            {
               "type": "paragraph",
-              "text": "HTML5 is the universal declarative language of the World Wide Web. Understanding document structure, the DOM hierarchy, and viewport metadata is essential for building fast, accessible web applications."
+              "text": "The World Wide Web is a global network of interconnected computers. When you type a website address into your browser, your computer (the client) sends an HTTP request across the internet to a server. The server replies with three primary files: HTML (the structure), CSS (the style), and JavaScript (the interactivity)."
             },
             {
               "type": "definition",
-              "term": "DOM (Document Object Model)",
-              "plain": "A tree representation of HTML elements that browsers construct in memory to render and script the page.",
-              "formal": "W3C Document Object Model Level 3 Core Specification"
+              "term": "HTML (HyperText Markup Language)",
+              "plain": "The standard declarative language used to create the structure and content of web pages.",
+              "formal": "W3C / WHATWG HTML5 Living Standard"
+            },
+            {
+              "type": "analogy",
+              "title": "The House Metaphor",
+              "text": "Think of building a website like building a house. HTML is the concrete foundation, wooden framing, and brick walls. CSS is the interior paint, floor tiles, and wallpaper. JavaScript is the electrical wiring, water plumbing, and automated garage door opener."
+            },
+            {
+              "type": "definition",
+              "term": "HTML Tag & Element",
+              "plain": "A tag is a keyword enclosed in angle brackets like <p> (opening) and </p> (closing). An element is the entire combination of opening tag, content, and closing tag.",
+              "formal": "HTML Element = Opening Tag + Text/Children + Closing Tag"
             },
             {
               "type": "code",
               "language": "html",
-              "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Modern Application</title>\n  </head>\n  <body>\n    <header>\n      <h1>Welcome to Lumen</h1>\n    </header>\n  </body>\n</html>",
-              "filename": "index.html"
+              "code": "<!-- An HTML Element consists of an opening tag, content, and closing tag -->\n<p>Hello, World! This is my first web page.</p>\n\n<!-- Some elements are self-closing (void elements) because they do not wrap text -->\n<img src=\"logo.png\" alt=\"Company Logo\">\n<br>\n<hr>",
+              "filename": "basics.html"
             },
             {
               "type": "keyPoints",
               "points": [
-                "The DOCTYPE declaration triggers modern standards rendering mode.",
-                "meta charset UTF-8 prevents encoding vulnerabilities.",
-                "Viewport meta enables responsive layout scaling on mobile devices."
+                "HTML provides structure; CSS provides style; JavaScript provides behavior.",
+                "Tags usually come in pairs: opening <tag> and closing </tag>.",
+                "Void tags like <img> and <input> do not have closing tags."
               ]
             },
             {
               "type": "quiz",
-              "question": "Why is the <!DOCTYPE html> declaration required at the very start of an HTML document?",
+              "question": "What is the primary role of HTML in a website?",
               "options": [
-                "It tells the browser to render the page in standard modern mode rather than legacy quirks mode.",
-                "It compiles the HTML into WebAssembly bytecode.",
-                "It enables synchronous multi-threaded socket communication.",
-                "It forces the browser to disable stylesheet caching."
+                "To define the structure, content, and meaning of the web page.",
+                "To style colors, borders, and animations.",
+                "To run backend database queries on the server.",
+                "To compile C++ code into machine instructions."
               ],
               "answer": 0,
-              "explanation": "The DOCTYPE switches the browser layout engine into strict standards compliance."
+              "explanation": "HTML is the structural markup language that defines headings, paragraphs, images, and page content."
             }
           ]
         },
         {
-          "slug": "semantic-elements-and-hierarchy",
-          "title": "Semantic Elements & Content Hierarchy",
-          "description": "Master Semantic Elements & Content Hierarchy with practical examples, architectural deep dives, and key concepts.",
-          "duration": 25,
+          "slug": "html-document-skeleton-and-head-metadata",
+          "title": "Document Skeleton & Head Metadata",
+          "description": "Understand <!DOCTYPE html>, the <html> root element, the <head> metadata container, and the visible <body>.",
+          "duration": 20,
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Semantic tags convey meaning to search engines and assistive screen readers, improving SEO and web accessibility without extra code."
+              "text": "Every valid HTML5 document follows a strict global skeleton. It starts with the doctype declaration, followed by the root <html> element containing two mandatory children: <head> (metadata not visible to users) and <body> (everything visible in the browser window)."
             },
             {
-              "type": "analogy",
-              "text": "Using generic divs for everything is like writing a book without chapters, headings, or index — readers and search tools cannot distinguish the header from the footer."
+              "type": "definition",
+              "term": "<!DOCTYPE html>",
+              "plain": "A declaration at the very top of a document that instructs the browser to render the page in modern standards compliance mode.",
+              "formal": "HTML5 Standards Mode Document Type Trigger"
+            },
+            {
+              "type": "definition",
+              "term": "<head> vs <body>",
+              "plain": "<head> contains machine-readable metadata like title, charset, and stylesheets. <body> contains all visible text, images, and interactive UI.",
+              "formal": "HTML Document Hierarchy Specification"
             },
             {
               "type": "code",
               "language": "html",
-              "code": "<main>\n  <article>\n    <header>\n      <h2>Understanding Web Semantics</h2>\n      <time datetime=\"2026-08-17\">Aug 17, 2026</time>\n    </header>\n    <p>Semantic markup provides structural meaning to browsers and search crawlers.</p>\n  </article>\n  <aside>\n    <h3>Related Topics</h3>\n  </aside>\n</main>",
-              "filename": "article.html"
+              "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Character encoding so special symbols & emojis render correctly -->\n  <meta charset=\"UTF-8\">\n  <!-- Viewport meta tag: required for responsive mobile scaling -->\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>My First Website</title>\n</head>\n<body>\n  <h1>Welcome to Web Engineering</h1>\n  <p>Everything inside the body tag is rendered visually on the screen.</p>\n</body>\n</html>",
+              "filename": "index.html"
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "title": "Mobile Viewport Meta Tag",
+              "text": "Without <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">, mobile browsers assume the site was built for a 980px desktop screen and zoom out, making text unreadably tiny."
             },
             {
               "type": "keyPoints",
               "points": [
-                "Use <main> for primary content and only once per page.",
-                "Articles represent self-contained syndicated content.",
-                "Sections represent thematic groupings of content with a heading."
+                "Always start with <!DOCTYPE html> to prevent legacy quirks mode.",
+                "Set the lang attribute on <html> to assist screen readers and search engines.",
+                "The <title> tag in <head> sets the browser tab title and search engine search result headline."
               ]
             },
             {
               "type": "quiz",
-              "question": "What is the primary benefit of semantic HTML elements like <article>, <nav>, and <aside>?",
+              "question": "What is the purpose of the <meta name=\"viewport\" ...> tag inside the <head> section?",
               "options": [
-                "They automatically apply modern gradient styling to the layout.",
-                "They improve accessibility for assistive technologies and convey structural meaning to search engines.",
-                "They prevent all cross-site scripting (XSS) attacks automatically.",
-                "They bypass the browser JavaScript event loop for faster rendering."
+                "It increases the internet download speed of the webpage.",
+                "It instructs mobile browsers to scale the webpage to the device physical screen width.",
+                "It encrypts the HTML file with SSL certificates.",
+                "It connects the webpage to a SQL database."
               ],
               "answer": 1,
-              "explanation": "Semantic tags provide machine-readable intent to browsers, search engines, and screen readers."
+              "explanation": "The viewport meta tag ensures responsive mobile scaling so pages render at mobile screen width without desktop zoom-out."
+            }
+          ]
+        },
+        {
+          "slug": "headings-paragraphs-and-text-formatting",
+          "title": "Headings, Paragraphs & Text Formatting",
+          "description": "Master headings <h1> through <h6>, paragraphs <p>, bold <strong>, italic <em>, line breaks, and blockquotes.",
+          "duration": 20,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "HTML text formatting elements organize unstructured text into meaningful outlines. Search engines like Google rely on heading hierarchy (h1 through h6) to understand what your page is about."
+            },
+            {
+              "type": "definition",
+              "term": "Heading Hierarchy (h1 - h6)",
+              "plain": "A 6-level ranking system for section titles. <h1> is the main topic of the page, <h2> represents major sections, and <h3> represents subsections.",
+              "formal": "Heading Level Rank 1 through 6"
+            },
+            {
+              "type": "definition",
+              "term": "<strong> vs <em>",
+              "plain": "<strong> indicates strong importance (rendered bold). <em> indicates emphasized stress (rendered italic). Both convey meaning to screen readers, unlike generic <b> and <i>.",
+              "formal": "Semantic Text Emphasis Level"
+            },
+            {
+              "type": "code",
+              "language": "html",
+              "code": "<h1>Software Engineering from First Principles</h1>\n\n<h2>Introduction</h2>\n<p>Software is written by humans to instruct computers how to solve problems.</p>\n\n<p>It is <strong>critical</strong> to understand fundamentals before using frameworks.</p>\n\n<blockquote>\n  <p>\"Simplicity is prerequisite for reliability.\" — Edsger W. Dijkstra</p>\n</blockquote>",
+              "filename": "text.html"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Use only one <h1> per page representing the main subject.",
+                "Never skip heading levels (e.g. going from <h1> directly to <h3>).",
+                "Use <strong> for semantic importance and <em> for semantic vocal stress."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Why should you use <strong> instead of <b> when you want to emphasize important text?",
+              "options": [
+                "<strong> uses less computer memory than <b>.",
+                "<b> is deprecated and deleted in modern browsers.",
+                "<strong> conveys semantic importance to screen readers and search engines, while <b> only changes visual appearance.",
+                "<strong> automatically translates text into multiple languages."
+              ],
+              "answer": 2,
+              "explanation": "<strong> provides semantic meaning to assistive technologies and search crawlers, not just visual bold styling."
+            }
+          ]
+        },
+        {
+          "slug": "links-lists-and-navigation",
+          "title": "Hyperlinks, Lists & Web Navigation",
+          "description": "Connect pages with anchor tags <a>, relative vs absolute URLs, ordered lists <ol>, and unordered lists <ul>.",
+          "duration": 25,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The defining feature of the web is the \"hyperlink\" — the ability to click text or images and navigate to another page or external website. Links are created using the anchor element <a> with the href attribute."
+            },
+            {
+              "type": "definition",
+              "term": "Anchor Tag <a> & href",
+              "plain": "<a> creates a clickable hyperlink. href (Hypertext Reference) specifies the destination URL where the browser should navigate.",
+              "formal": "HTML Anchor Element Specification"
+            },
+            {
+              "type": "definition",
+              "term": "Relative URL vs Absolute URL",
+              "plain": "An absolute URL includes the full domain (https://example.com/page). A relative URL points to a file within the same website (/about.html).",
+              "formal": "URI Reference Specification RFC 3986"
+            },
+            {
+              "type": "code",
+              "language": "html",
+              "code": "<!-- Absolute link to external website -->\n<a href=\"https://developer.mozilla.org\" target=\"_blank\" rel=\"noopener noreferrer\">\n  MDN Web Docs\n</a>\n\n<!-- Relative link to internal page -->\n<a href=\"/tutorials/css\">Learn CSS</a>\n\n<!-- Unordered List (Bullet points) -->\n<ul>\n  <li>HTML5 Foundations</li>\n  <li>CSS3 Styling</li>\n  <li>JavaScript Logic</li>\n</ul>\n\n<!-- Ordered List (Numbered steps) -->\n<ol>\n  <li>Install a code editor</li>\n  <li>Create an index.html file</li>\n  <li>Open the file in a browser</li>\n</ol>",
+              "filename": "links-and-lists.html"
+            },
+            {
+              "type": "callout",
+              "kind": "warning",
+              "title": "Security with target=\"_blank\"",
+              "text": "When opening links in a new tab with target=\"_blank\", always add rel=\"noopener noreferrer\" to prevent the newly opened page from controlling your page via window.opener."
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "<a> tag href specifies destination URLs.",
+                "Use <ul> for items where order does not matter; use <ol> for sequential numbered steps.",
+                "Always use rel=\"noopener noreferrer\" on target=\"_blank\" links for security."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "When should you use an ordered list <ol> instead of an unordered list <ul>?",
+              "options": [
+                "When the list contains more than 100 items.",
+                "When the list items contain image thumbnails.",
+                "When the list is rendered on a mobile device.",
+                "When the sequence and numerical order of the items matters (such as recipe steps or tutorials)."
+              ],
+              "answer": 3,
+              "explanation": "<ol> renders sequential numbers for steps where order is important, whereas <ul> renders bullet points."
             }
           ]
         }
       ]
     },
     {
-      "title": "Phase 2: Forms, Media & Web Accessibility",
+      "title": "Chapter 2: Semantic Layout, Media & Forms (Mastery)",
       "lessons": [
         {
-          "slug": "modern-forms-and-validation",
-          "title": "Modern Forms, Input Types & Native Validation",
-          "description": "Master Modern Forms, Input Types & Native Validation with practical examples, architectural deep dives, and key concepts.",
+          "slug": "images-audio-and-video-media",
+          "title": "Images, Audio & Video Media Elements",
+          "description": "Embed images with <img>, descriptive alt text, responsive <picture>, and native HTML5 <video> and <audio>.",
           "duration": 25,
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Modern HTML5 forms provide native input types, constraint validation attributes, and accessible labeling without relying on JavaScript libraries."
+              "text": "Media elements enrich web content. To ensure fast performance and accessibility, images must include alt descriptions and explicit dimensions, while video and audio provide native playback controls."
+            },
+            {
+              "type": "definition",
+              "term": "alt Attribute",
+              "plain": "A text alternative describing an image for blind users with screen readers and shown if the image fails to load.",
+              "formal": "W3C Accessible Rich Internet Image Alternative Text"
             },
             {
               "type": "code",
               "language": "html",
-              "code": "<form action=\"/api/register\" method=\"POST\">\n  <label for=\"email\">Work Email</label>\n  <input id=\"email\" type=\"email\" required placeholder=\"name@company.com\" />\n\n  <label for=\"age\">Age</label>\n  <input id=\"age\" type=\"number\" min=\"18\" max=\"100\" required />\n\n  <button type=\"submit\">Create Account</button>\n</form>",
+              "code": "<!-- Responsive Image with Accessibility Description -->\n<img \n  src=\"/images/server-rack.webp\" \n  alt=\"High-density data center server rack with blinking blue activity LEDs\" \n  width=\"800\" \n  height=\"450\" \n  loading=\"lazy\"\n>\n\n<!-- Native HTML5 Video with Controls -->\n<video controls width=\"640\" height=\"360\" poster=\"/images/poster.jpg\">\n  <source src=\"/videos/intro.mp4\" type=\"video/mp4\">\n  <source src=\"/videos/intro.webm\" type=\"video/webm\">\n  <track kind=\"captions\" src=\"/captions/intro-en.vtt\" srclang=\"en\" label=\"English\" default>\n  <p>Your browser does not support HTML5 video.</p>\n</video>",
+              "filename": "media.html"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Always provide descriptive alt text for images.",
+                "Include width and height attributes to prevent layout shifts (CLS).",
+                "Use loading=\"lazy\" to defer downloading offscreen images until the user scrolls near them."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Why is the alt attribute required on every <img> element?",
+              "options": [
+                "It allows screen readers to read the image description to visually impaired users and displays fallback text if images fail.",
+                "It changes the image resolution to 4K.",
+                "It compresses the image file size by 50%.",
+                "It converts JPG images into PNG format."
+              ],
+              "answer": 0,
+              "explanation": "The alt attribute is essential for accessibility so screen readers can describe images to users."
+            }
+          ]
+        },
+        {
+          "slug": "html-tables-and-data-presentation",
+          "title": "Tables & Structured Data Presentation",
+          "description": "Create tabular data with <table>, <thead>, <tbody>, table rows <tr>, headers <th>, and cells <td>.",
+          "duration": 20,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "HTML tables represent two-dimensional data matrices (like spreadsheets). Never use tables for page layouts — tables are strictly for structured tabular datasets."
+            },
+            {
+              "type": "code",
+              "language": "html",
+              "code": "<table>\n  <caption>Engineering Course Curriculum</caption>\n  <thead>\n    <tr>\n      <th scope=\"col\">Course</th>\n      <th scope=\"col\">Level</th>\n      <th scope=\"col\">Duration</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th scope=\"row\">HTML5 Fundamentals</th>\n      <td>Beginner</td>\n      <td>4 Hours</td>\n    </tr>\n    <tr>\n      <th scope=\"row\">TypeScript Mastery</th>\n      <td>Intermediate</td>\n      <td>8 Hours</td>\n    </tr>\n  </tbody>\n</table>",
+              "filename": "table.html"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Use <thead>, <tbody>, and <tfoot> to segment table sections.",
+                "Use <th> for header cells with scope=\"col\" or scope=\"row\".",
+                "Tables must only be used for tabular data, never for general page layout."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Which HTML tag should be used for column and row headers inside a table to provide accessible headings?",
+              "options": [
+                "<td>",
+                "<th>",
+                "<head>",
+                "<header>"
+              ],
+              "answer": 1,
+              "explanation": "<th> defines header cells that screen readers associate with data cells in the same row or column."
+            }
+          ]
+        },
+        {
+          "slug": "html5-forms-and-input-validation",
+          "title": "HTML5 Forms, Inputs & Native Validation",
+          "description": "Build user input forms with <form>, <input>, <label>, <select>, <textarea>, and native constraint validation.",
+          "duration": 25,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Forms collect user input and submit data to web servers. Accessible forms require explicit pairing of inputs with <label> tags and native validation rules."
+            },
+            {
+              "type": "definition",
+              "term": "<form> Element",
+              "plain": "A container that groups interactive input controls and submits their values to a server endpoint via GET or POST.",
+              "formal": "HTML Form Submission Specification"
+            },
+            {
+              "type": "code",
+              "language": "html",
+              "code": "<form action=\"/api/register\" method=\"POST\">\n  <div class=\"form-group\">\n    <label for=\"full-name\">Full Name</label>\n    <input type=\"text\" id=\"full-name\" name=\"name\" required minlength=\"2\" placeholder=\"John Doe\">\n  </div>\n\n  <div class=\"form-group\">\n    <label for=\"user-email\">Email Address</label>\n    <input type=\"email\" id=\"user-email\" name=\"email\" required placeholder=\"john@example.com\">\n  </div>\n\n  <div class=\"form-group\">\n    <label for=\"role\">Engineering Role</label>\n    <select id=\"role\" name=\"role\">\n      <option value=\"frontend\">Frontend Engineer</option>\n      <option value=\"backend\">Backend Engineer</option>\n      <option value=\"ai\">AI / ML Engineer</option>\n    </select>\n  </div>\n\n  <button type=\"submit\">Submit Registration</button>\n</form>",
               "filename": "form.html"
             },
             {
               "type": "keyPoints",
               "points": [
-                "Always pair inputs with explicit <label for=\"id\"> tags for screen readers.",
-                "Use native types (email, number, url, date) for automatic mobile keyboard optimization.",
-                "Constraint validation attributes (required, min, max, pattern) validate before submission."
+                "Always connect labels to inputs using matching id and for attributes.",
+                "Choose the right input type (email, number, tel, date) for automatic mobile keyboard selection.",
+                "Use required, minlength, maxlength, and pattern for native client-side validation."
               ]
             },
             {
               "type": "quiz",
-              "question": "How does pairing an <input> with a <label for=\"...\"> improve UX and accessibility?",
+              "question": "How do you connect a <label> tag to its corresponding <input> field?",
               "options": [
-                "It converts the text input into an encrypted cryptographic stream.",
-                "It automatically submits the form via WebSocket.",
-                "It establishes a programmatic association for screen readers and allows users to click the label to focus the input.",
-                "It disables autocomplete across all third-party password managers."
+                "By giving both the same class name.",
+                "By putting them in the same CSS file.",
+                "By giving the input an id and matching it in the label for attribute.",
+                "By writing a JavaScript onClick handler."
               ],
               "answer": 2,
-              "explanation": "Explicit label association assists assistive devices and expands the clickable hit target."
+              "explanation": "Setting <label for=\"my-id\"> and <input id=\"my-id\"> creates a programmatic link recognized by browsers and screen readers."
             }
           ]
         },
         {
-          "slug": "multimedia-and-canvas",
-          "title": "Responsive Images, Video & Canvas Graphics",
-          "description": "Master Responsive Images, Video & Canvas Graphics with practical examples, architectural deep dives, and key concepts.",
-          "duration": 20,
+          "slug": "semantic-html5-layout-and-seo",
+          "title": "Semantic HTML5 Layout, SEO & Accessibility",
+          "description": "Build complete semantic page layouts using <header>, <nav>, <main>, <article>, <section>, <aside>, and <footer> for top SEO ranking.",
+          "duration": 25,
           "blocks": [
             {
               "type": "paragraph",
-              "text": "Responsive media tags (<picture>, srcset, video, audio) allow browsers to download optimal image resolutions based on device DPI and network speed."
+              "text": "Semantic HTML gives meaning to the structure of your page. Search engines reward semantically well-structured websites with higher search rankings because crawlers can instantly index headings, articles, and navigation."
             },
             {
               "type": "code",
               "language": "html",
-              "code": "<picture>\n  <source srcset=\"hero-large.webp\" media=\"(min-width: 1024px)\" type=\"image/webp\" />\n  <source srcset=\"hero-medium.webp\" media=\"(min-width: 640px)\" type=\"image/webp\" />\n  <img src=\"hero-fallback.jpg\" alt=\"Engineering Team Collaboration\" loading=\"lazy\" />\n</picture>",
-              "filename": "responsive-image.html"
+              "code": "<body>\n  <header>\n    <nav aria-label=\"Main Navigation\">\n      <a href=\"/\">Home</a>\n      <a href=\"/tutorials\">Tutorials</a>\n    </nav>\n  </header>\n\n  <main>\n    <article>\n      <header>\n        <h1>Understanding Semantic HTML</h1>\n        <p>Published on <time datetime=\"2026-08-18\">August 18, 2026</time></p>\n      </header>\n      <section>\n        <h2>Why Semantics Matter</h2>\n        <p>Semantic tags improve accessibility, readability, and search rankings.</p>\n      </section>\n    </article>\n    <aside>\n      <h3>Related Courses</h3>\n    </aside>\n  </main>\n\n  <footer>\n    <p>&copy; 2026 Lumen. All rights reserved.</p>\n  </footer>\n</body>",
+              "filename": "semantic-page.html"
             },
             {
               "type": "keyPoints",
               "points": [
-                "loading=\"lazy\" delays off-screen image loading until near the viewport.",
-                "The <picture> element enables art direction and format negotiation (AVIF/WebP).",
-                "Always supply descriptive alt attributes for non-decorative images."
+                "Use <main> for the central content of the page (only one <main> per document).",
+                "<article> is for standalone content; <section> is for thematic groups with a heading.",
+                "Semantic HTML is the single biggest factor for on-page SEO and screen reader accessibility."
               ]
             },
             {
               "type": "quiz",
-              "question": "What is the purpose of the loading=\"lazy\" attribute on <img> tags?",
+              "question": "Which semantic tag should contain the primary, unique content of a web page?",
               "options": [
-                "It renders low-resolution vector placeholders permanently.",
-                "It converts animated GIF files into static SVG graphics.",
-                "It restricts image rendering to background Web Workers.",
-                "It defers image fetching until the image is close to scrolling into the viewport, saving bandwidth and improving load speed."
+                "<section>",
+                "<div>",
+                "<aside>",
+                "<main>"
               ],
               "answer": 3,
-              "explanation": "Lazy loading reduces initial page payload and improves Core Web Vitals."
+              "explanation": "<main> represents the dominant content unique to that specific document, excluding headers, sidebars, and footers."
             }
           ]
         }

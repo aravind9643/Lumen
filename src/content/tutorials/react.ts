@@ -4,7 +4,7 @@ export const reactCourse: Tutorial = {
   "slug": "react",
   "title": "React Architecture: Components, Hooks & State",
   "shortTitle": "React",
-  "description": "Master modern React architecture: JSX, custom hooks, reconciliation, concurrent rendering, Context API, state management, and performance optimization.",
+  "description": "A complete, beginner-to-mastery path covering component thinking, JSX syntax rules, props, state with useState, event handling, conditional rendering, useEffect, and custom hooks.",
   "category": "Web Development",
   "difficulty": "beginner",
   "icon": "code",
@@ -18,7 +18,7 @@ export const reactCourse: Tutorial = {
     "Performance"
   ],
   "color": "#61dafb",
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "prerequisites": [
     "Zero prior experience required — built from first principles."
   ],
@@ -29,162 +29,359 @@ export const reactCourse: Tutorial = {
   ],
   "chapters": [
     {
-      "title": "Phase 1: Component Fundamentals & State Reactivity",
+      "title": "Chapter 1: Component Fundamentals & State (Beginner)",
       "lessons": [
         {
-          "slug": "components-props-and-state",
-          "title": "Component Architecture, Props & useState",
-          "description": "Master Component Architecture, Props & useState with practical examples, architectural deep dives, and key concepts.",
-          "duration": 25,
+          "slug": "what-is-react-and-component-thinking",
+          "title": "What is React & Component-Based Architecture?",
+          "description": "Learn why React was created by Facebook/Meta, the problems with manual DOM manipulation, and how reusable UI components work.",
+          "duration": 20,
           "blocks": [
             {
+              "type": "callout",
+              "kind": "info",
+              "text": "Level: Beginner | Prerequisites: JavaScript Basics"
+            },
+            {
               "type": "paragraph",
-              "text": "React components are pure functions that take props and state to render virtual DOM descriptions of UI."
+              "text": "In traditional vanilla JavaScript, when data changes, you must manually find DOM elements and update their text. In large applications with dozens of screens, this creates messy, bug-prone \"spaghetti code\". React is a declarative UI library where you describe what the UI should look like for a given state, and React automatically updates the DOM efficiently."
+            },
+            {
+              "type": "definition",
+              "term": "React Component",
+              "plain": "A self-contained, reusable JavaScript function that returns JSX (describing a piece of the user interface).",
+              "formal": "Declarative Component-Based User Interface Library"
+            },
+            {
+              "type": "analogy",
+              "title": "The LEGO Brick Metaphor",
+              "text": "Building a React application is like building a castle with LEGO bricks. Instead of molding one giant slab of plastic, you snap together small, reusable bricks (Button, Navbar, Card, Avatar) to assemble complex screens."
             },
             {
               "type": "code",
               "language": "tsx",
-              "code": "import { useState } from 'react';\n\ninterface ButtonProps {\n  label: string;\n  onPress: (count: number) => void;\n}\n\nexport function CounterButton({ label, onPress }: ButtonProps) {\n  const [count, setCount] = useState(0);\n\n  const handleClick = () => {\n    const next = count + 1;\n    setCount(next);\n    onPress(next);\n  };\n\n  return <button onClick={handleClick}>{label}: {count}</button>;\n}",
+              "code": "// A minimal React Component is just a JavaScript function that returns UI\nexport function WelcomeBanner() {\n  return (\n    <div className=\"banner\">\n      <h1>Welcome to React Mastery</h1>\n      <p>Build reusable, composable user interfaces effortlessly.</p>\n    </div>\n  );\n}",
+              "filename": "WelcomeBanner.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "React components are pure JavaScript functions returning JSX.",
+                "React follows a declarative paradigm (you describe the desired state; React handles DOM updates).",
+                "Always name React component functions with PascalCase (e.g. WelcomeBanner)."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "What is the primary architectural concept behind React?",
+              "options": [
+                "Decomposing complex user interfaces into small, reusable, declarative component functions.",
+                "Replacing HTML files with SQLite database tables.",
+                "Running Python scripts directly inside the browser.",
+                "Compiling JavaScript into C++ desktop software."
+              ],
+              "answer": 0,
+              "explanation": "React structures applications as trees of modular, reusable component functions."
+            }
+          ]
+        },
+        {
+          "slug": "jsx-syntax-and-rules",
+          "title": "JSX Syntax Rules: Writing HTML in JavaScript",
+          "description": "Master JSX syntax: embedding JavaScript expressions with curly braces {}, className instead of class, self-closing tags, and React Fragments.",
+          "duration": 20,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "JSX (JavaScript XML) is a syntax extension for JavaScript that allows you to write HTML-like markup directly inside your JavaScript files."
+            },
+            {
+              "type": "definition",
+              "term": "JSX (JavaScript XML)",
+              "plain": "A syntax extension that lets you write HTML markup inside JavaScript, which Vite or Babel compiles down to React.createElement() calls.",
+              "formal": "ECMAScript Syntax Extension for XML-like Trees"
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "export function UserBadge() {\n  const username = \"Aravind\";\n  const unreadMessages = 3;\n\n  return (\n    // React Fragment <> </> groups elements without adding extra <div> nodes to the DOM\n    <>\n      {/* Embedding JS expressions inside curly braces {} */}\n      <h2 className=\"user-title\">Hello, {username}!</h2>\n      <p className={unreadMessages > 0 ? \"badge-unread\" : \"badge-read\"}>\n        You have {unreadMessages} unread messages.\n      </p>\n    </>\n  );\n}",
+              "filename": "UserBadge.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Use className instead of class in JSX because class is a reserved JS keyword.",
+                "Embed any dynamic JavaScript expression inside single curly braces {expression}.",
+                "Use React Fragments (<> ... </>) to return multiple elements without adding unnecessary wrapper divs."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Why do we use className instead of class when assigning CSS classes in React JSX?",
+              "options": [
+                "Because className makes CSS render 50% faster.",
+                "Because class is a reserved keyword in JavaScript for defining ES6 classes.",
+                "Because class only works on mobile devices.",
+                "Because className is required by the SQL standard."
+              ],
+              "answer": 1,
+              "explanation": "In JSX, attribute names use JavaScript property names, so className is used to avoid collision with the JS class keyword."
+            }
+          ]
+        },
+        {
+          "slug": "components-and-props",
+          "title": "Components & Props: Passing Data to Children",
+          "description": "Learn how to make components dynamic by passing inputs via Props, destructuring props, default props, and the children prop.",
+          "duration": 25,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Props (short for properties) are the inputs passed into React components. Just like you pass arguments into a function to customize its output, you pass props into a component to customize its visual rendering."
+            },
+            {
+              "type": "definition",
+              "term": "Props (Properties)",
+              "plain": "Read-only input data passed from a parent component down to a child component.",
+              "formal": "Component Input Properties Contract"
+            },
+            {
+              "type": "analogy",
+              "title": "Function Arguments Analogy",
+              "text": "If a component is a function (UI = f(props)), then props are the input parameters passed into that function. The same <Button /> component can render with label=\"Sign In\" or label=\"Delete Account\" based on props."
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "interface ButtonProps {\n  label: string;\n  variant?: 'primary' | 'secondary';\n  disabled?: boolean;\n}\n\n// Child component accepting destructured props with default values\nexport function ActionButton({ label, variant = 'primary', disabled = false }: ButtonProps) {\n  return (\n    <button className={`btn btn-${variant}`} disabled={disabled}>\n      {label}\n    </button>\n  );\n}\n\n// Parent component reusing ActionButton with different props\nexport function AuthToolbar() {\n  return (\n    <div>\n      <ActionButton label=\"Log In\" variant=\"primary\" />\n      <ActionButton label=\"Cancel\" variant=\"secondary\" />\n    </div>\n  );\n}",
+              "filename": "ActionButton.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Props flow one-way from parent to child (Unidirectional Data Flow).",
+                "Props are strictly read-only and immutable — a component must never modify its own props.",
+                "Props destructuring ({ label, variant }) keeps component code clean."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Can a child React component directly modify or mutate the props it receives from its parent?",
+              "options": [
+                "Yes, by using the let keyword.",
+                "Yes, but only in development mode.",
+                "No, props are strictly read-only and immutable.",
+                "Yes, if the props are strings."
+              ],
+              "answer": 2,
+              "explanation": "Props are immutable inputs; to modify values over time, a component must use state."
+            }
+          ]
+        },
+        {
+          "slug": "state-with-usestate",
+          "title": "State with useState: Component Memory & Reactivity",
+          "description": "Understand why regular variables do not trigger UI re-renders, master the useState hook, state immutability, and functional updates.",
+          "duration": 30,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Regular JavaScript variables (like let count = 0) do not notify React when their value changes. React provides the `useState` hook to give components persistent memory and automatically re-render the UI when state updates."
+            },
+            {
+              "type": "definition",
+              "term": "React State & useState Hook",
+              "plain": "State is component memory that holds data that changes over time. useState is a React hook that returns an array with [currentValue, updateFunction].",
+              "formal": "React State Hook"
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "import { useState } from 'react';\n\nexport function Counter() {\n  // 1. Declare state variable 'count' initialized to 0\n  const [count, setCount] = useState(0);\n\n  const handleIncrement = () => {\n    // 2. Functional state update: safe against race conditions\n    setCount((prevCount) => prevCount + 1);\n  };\n\n  return (\n    <div className=\"counter-card\">\n      <h3>Current Count: {count}</h3>\n      <button onClick={handleIncrement}>Increment +1</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}",
               "filename": "Counter.tsx"
             },
             {
               "type": "keyPoints",
               "points": [
-                "Components re-render whenever their state or props change.",
-                "State updates should treat values as immutable.",
-                "Keys in lists must be stable, unique identifiers to maintain component identity."
+                "Never mutate state directly (e.g. count = count + 1); always call setCount(newValue).",
+                "State updates trigger a component re-render with the new value.",
+                "Use functional updates (setCount(prev => prev + 1)) when new state depends on previous state."
               ]
             },
             {
               "type": "quiz",
-              "question": "Why must state updates in React treat existing state objects as immutable?",
+              "question": "Why does updating a regular variable (let x = 10) fail to update the UI on the screen in React?",
               "options": [
-                "Because React uses shallow reference equality checks (Object.is) to detect state changes and schedule re-renders.",
-                "Because JavaScript arrays and objects cannot be modified after instantiation.",
-                "Because mutation triggers immediate synchronous browser reloads.",
-                "Because the V8 engine deletes mutated objects from RAM."
+                "Because plain variables are deleted on every frame.",
+                "Because variables cannot hold numbers.",
+                "Because React only reads values from HTML files.",
+                "Because changing a plain variable does not notify React to schedule a component re-render."
               ],
-              "answer": 0,
-              "explanation": "Immutability ensures shallow comparison accurately detects changes."
-            }
-          ]
-        },
-        {
-          "slug": "useeffect-and-lifecycle-synchronization",
-          "title": "useEffect, Lifecycles & Synchronization",
-          "description": "Master useEffect, Lifecycles & Synchronization with practical examples, architectural deep dives, and key concepts.",
-          "duration": 25,
-          "blocks": [
-            {
-              "type": "paragraph",
-              "text": "useEffect synchronizes your component with external systems (timers, subscriptions, DOM mutations, and network fetching)."
-            },
-            {
-              "type": "code",
-              "language": "tsx",
-              "code": "import { useEffect, useState } from 'react';\n\nexport function WindowTracker() {\n  const [width, setWidth] = useState(window.innerWidth);\n\n  useEffect(() => {\n    const onResize = () => setWidth(window.innerWidth);\n    window.addEventListener('resize', onResize);\n    return () => window.removeEventListener('resize', onResize);\n  }, []);\n\n  return <div>Viewport Width: {width}px</div>;\n}",
-              "filename": "WindowTracker.tsx"
-            },
-            {
-              "type": "keyPoints",
-              "points": [
-                "The dependency array tells React when to re-execute the effect.",
-                "Always return a cleanup function to prevent memory leaks and dangling listeners.",
-                "Do not use useEffect for deriving state that can be computed during render."
-              ]
-            },
-            {
-              "type": "quiz",
-              "question": "What is the role of the cleanup function returned inside a useEffect callback?",
-              "options": [
-                "It deletes the component virtual DOM nodes from memory.",
-                "It tears down subscriptions, timers, or listeners before the effect re-runs or when the component unmounts.",
-                "It converts async Promises into synchronous generator calls.",
-                "It forces the parent component to reset its props."
-              ],
-              "answer": 1,
-              "explanation": "Cleanup functions clean up resources when dependencies change or components unmount."
+              "answer": 3,
+              "explanation": "React only tracks state changes made via setter functions returned from useState or other state management hooks."
             }
           ]
         }
       ]
     },
     {
-      "title": "Phase 2: Advanced Hooks, Context & Performance",
+      "title": "Chapter 2: Events, Effects & Advanced Patterns (Mastery)",
       "lessons": [
         {
-          "slug": "custom-hooks-usememo-usecallback",
-          "title": "Custom Hooks, useMemo & useCallback",
-          "description": "Master Custom Hooks, useMemo & useCallback with practical examples, architectural deep dives, and key concepts.",
-          "duration": 30,
-          "blocks": [
-            {
-              "type": "paragraph",
-              "text": "Custom hooks extract stateful logic into reusable functions, while useMemo and useCallback stabilize references across render cycles."
-            },
-            {
-              "type": "code",
-              "language": "tsx",
-              "code": "import { useMemo, useCallback } from 'react';\n\nexport function ProductList({ items, filterText, onSelect }: Props) {\n  const filtered = useMemo(() => {\n    return items.filter(i => i.name.toLowerCase().includes(filterText.toLowerCase()));\n  }, [items, filterText]);\n\n  const handleSelect = useCallback((id: string) => {\n    onSelect(id);\n  }, [onSelect]);\n\n  return <ul>{filtered.map(i => <li key={i.id} onClick={() => handleSelect(i.id)}>{i.name}</li>)}</ul>;\n}",
-              "filename": "ProductList.tsx"
-            },
-            {
-              "type": "keyPoints",
-              "points": [
-                "useMemo caches the result of an expensive calculation.",
-                "useCallback caches a function definition between re-renders.",
-                "Custom hooks must adhere to the Rules of Hooks (call only at the top level)."
-              ]
-            },
-            {
-              "type": "quiz",
-              "question": "When is useCallback most beneficial in React applications?",
-              "options": [
-                "When fetching data from REST endpoints synchronously.",
-                "When defining CSS styling rules inside JSX elements.",
-                "When passing callback functions to memoized child components (React.memo) to prevent unnecessary re-renders.",
-                "When replacing the root ReactDOM rendering container."
-              ],
-              "answer": 2,
-              "explanation": "useCallback preserves callback reference identity across renders."
-            }
-          ]
-        },
-        {
-          "slug": "context-api-and-global-state",
-          "title": "Context API & Scalable State Architecture",
-          "description": "Master Context API & Scalable State Architecture with practical examples, architectural deep dives, and key concepts.",
+          "slug": "event-handling-and-controlled-forms",
+          "title": "Event Handling & Controlled Form Inputs",
+          "description": "Handle user interactions with onClick, onChange, onSubmit, preventDefault(), and manage controlled form inputs.",
           "duration": 25,
           "blocks": [
             {
               "type": "paragraph",
-              "text": "React Context provides a way to pass data through the component tree without manually passing props down at every level."
+              "text": "In React, user interactions (clicks, keyboard input, form submissions) are handled via synthetic event handlers like `onClick` and `onChange`. Controlled inputs bind their value directly to React state."
             },
             {
               "type": "code",
               "language": "tsx",
-              "code": "import { createContext, useContext, useState, ReactNode } from 'react';\n\ninterface ThemeContextType { dark: boolean; toggle: () => void; }\nconst ThemeContext = createContext<ThemeContextType | null>(null);\n\nexport function ThemeProvider({ children }: { children: ReactNode }) {\n  const [dark, setDark] = useState(false);\n  return (\n    <ThemeContext.Provider value={{ dark, toggle: () => setDark(!dark) }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n}\n\nexport const useTheme = () => {\n  const ctx = useContext(ThemeContext);\n  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');\n  return ctx;\n};",
+              "code": "import { useState, FormEvent } from 'react';\n\nexport function SearchForm() {\n  const [query, setQuery] = useState('');\n\n  const handleSubmit = (e: FormEvent) => {\n    e.preventDefault(); // Prevent default full-page browser refresh\n    console.log(\"Searching for:\", query);\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        type=\"text\"\n        value={query}                                // Controlled value from state\n        onChange={(e) => setQuery(e.target.value)}  // Update state on keystroke\n        placeholder=\"Search courses...\"\n      />\n      <button type=\"submit\">Search</button>\n    </form>\n  );\n}",
+              "filename": "SearchForm.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Event handler names are camelCase (onClick, onChange, onSubmit).",
+                "Always call e.preventDefault() in form submissions to stop full page reloads.",
+                "In controlled components, state is the single source of truth for input values."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "What is a \"Controlled Component\" in React form handling?",
+              "options": [
+                "An input whose displayed value is driven directly by React state, updated on every keystroke via onChange.",
+                "A component that cannot be clicked by the user.",
+                "A component that runs on the server.",
+                "A component with a fixed pixel width."
+              ],
+              "answer": 0,
+              "explanation": "In a controlled component, form element data is handled by a React component state rather than the DOM."
+            }
+          ]
+        },
+        {
+          "slug": "conditional-rendering-and-rendering-lists",
+          "title": "Conditional Rendering & Rendering Lists with Keys",
+          "description": "Display UI conditionally using && and ternary operators, and transform arrays into elements with .map() and unique key props.",
+          "duration": 25,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "React allows rendering different UI elements based on state conditions, and transforming JavaScript arrays into lists of JSX components using `.map()`."
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "interface CourseItem {\n  id: string;\n  title: string;\n  isCompleted: boolean;\n}\n\nexport function CourseList({ courses }: { courses: CourseItem[] }) {\n  return (\n    <div className=\"course-list\">\n      <h2>Available Courses ({courses.length})</h2>\n      \n      {/* Conditional Rendering: Show message if list is empty */}\n      {courses.length === 0 && <p>No courses available right now.</p>}\n\n      <ul>\n        {/* Transforming array into list of JSX elements with unique keys */}\n        {courses.map((course) => (\n          <li key={course.id} className={course.isCompleted ? \"completed\" : \"pending\"}>\n            <span>{course.title}</span>\n            {course.isCompleted ? <span>✅ Completed</span> : <span>⏳ In Progress</span>}\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+              "filename": "CourseList.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "Use the logical AND (condition && <UI />) for rendering when true.",
+                "Use ternaries (condition ? <A /> : <B />) for if/else rendering.",
+                "Every item in a .map() list MUST have a unique, stable key prop (like an item id)."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "Why is the key prop strictly required when rendering lists with .map() in React?",
+              "options": [
+                "Keys are used to apply CSS styling.",
+                "Keys provide stable identities so React can efficiently identify which items changed, were added, or were removed during DOM reconciliation.",
+                "Keys encrypt the array items in memory.",
+                "Keys translate the list items into numbers."
+              ],
+              "answer": 1,
+              "explanation": "Keys give elements a stable identity across renders, allowing the reconciliation algorithm to avoid re-rendering entire lists."
+            }
+          ]
+        },
+        {
+          "slug": "useeffect-and-side-effects",
+          "title": "Side Effects & Data Fetching with useEffect",
+          "description": "Synchronize components with external systems, fetch REST API data on mount, manage the dependency array, and write cleanup functions.",
+          "duration": 30,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "A Side Effect is any operation that affects something outside the component (e.g. fetching API data, setting up timers, modifying document title, or adding window event listeners). The `useEffect` hook runs after the browser paints the screen."
+            },
+            {
+              "type": "definition",
+              "term": "useEffect Hook & Dependency Array",
+              "plain": "A hook that runs side-effect logic after render. The dependency array [dep1, dep2] controls when the effect re-runs: [] runs once on mount, omitting it runs after every render.",
+              "formal": "React Lifecycle Synchronization Hook"
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "import { useState, useEffect } from 'react';\n\nexport function UserProfileViewer({ userId }: { userId: string }) {\n  const [user, setUser] = useState<{ name: string } | null>(null);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    let isMounted = true;\n    setLoading(true);\n\n    fetch(`https://api.example.com/users/${userId}`)\n      .then((res) => res.json())\n      .then((data) => {\n        if (isMounted) {\n          setUser(data);\n          setLoading(false);\n        }\n      });\n\n    // Cleanup function: runs before next effect or when component unmounts\n    return () => {\n      isMounted = false;\n    };\n  }, [userId]); // Re-run effect whenever userId prop changes\n\n  if (loading) return <p>Loading user profile...</p>;\n  return <h3>User: {user?.name}</h3>;\n}",
+              "filename": "UserProfileViewer.tsx"
+            },
+            {
+              "type": "keyPoints",
+              "points": [
+                "An empty dependency array [] runs the effect once when the component mounts.",
+                "Including variables in dependencies [id] re-runs the effect whenever those variables change.",
+                "Always return a cleanup function to cancel pending network requests or listeners."
+              ]
+            },
+            {
+              "type": "quiz",
+              "question": "What happens when you pass an empty array [] as the second argument to useEffect?",
+              "options": [
+                "The effect function runs continuously in an infinite loop.",
+                "The effect function is permanently disabled and never runs.",
+                "The effect function executes exactly once after the initial component mount, and its cleanup runs on unmount.",
+                "The component crashes immediately."
+              ],
+              "answer": 2,
+              "explanation": "An empty dependency array tells React that the effect does not depend on any props or state, so it only executes once on mount."
+            }
+          ]
+        },
+        {
+          "slug": "custom-hooks-and-context-api",
+          "title": "Custom Hooks & Global State with Context API",
+          "description": "Extract reusable stateful logic into Custom Hooks (useDebounce, useLocalStorage) and share state globally with the React Context API.",
+          "duration": 30,
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Custom Hooks allow you to package stateful logic into reusable functions. The Context API eliminates \"prop drilling\" by making state available anywhere in the component subtree without manually passing props through intermediate children."
+            },
+            {
+              "type": "code",
+              "language": "tsx",
+              "code": "import { createContext, useContext, useState, ReactNode } from 'react';\n\n// 1. Create Context\ninterface ThemeContextType {\n  theme: 'light' | 'dark';\n  toggleTheme: () => void;\n}\nconst ThemeContext = createContext<ThemeContextType | null>(null);\n\n// 2. Context Provider Component\nexport function ThemeProvider({ children }: { children: ReactNode }) {\n  const [theme, setTheme] = useState<'light' | 'dark'>('dark');\n  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      <div className={`app-theme-${theme}`}>{children}</div>\n    </ThemeContext.Provider>\n  );\n}\n\n// 3. Custom Hook for consuming context cleanly\nexport function useTheme() {\n  const context = useContext(ThemeContext);\n  if (!context) throw new Error('useTheme must be used within ThemeProvider');\n  return context;\n}",
               "filename": "ThemeContext.tsx"
             },
             {
               "type": "keyPoints",
               "points": [
-                "Context prevents prop-drilling across deeply nested component trees.",
-                "Split high-frequency state from static context values to optimize rendering performance.",
-                "Pair context with custom consumer hooks for runtime safety checks."
+                "Custom hook names must start with \"use\" (e.g. useTheme, useAuth).",
+                "Context is ideal for global app state like themes, user authentication, and shopping carts.",
+                "Custom hooks share stateful logic, but each calling component maintains its own state."
               ]
             },
             {
               "type": "quiz",
-              "question": "What happens to all components calling useContext(MyContext) when the Provider value updates?",
+              "question": "What problem does the React Context API solve in large component trees?",
               "options": [
-                "Only the parent component re-renders while children freeze.",
-                "The browser immediately refreshes the webpage.",
-                "The context value is discarded and reset to initial default state.",
-                "All consumer components re-render automatically to reflect the new context value."
+                "It increases the internet bandwidth speed.",
+                "It converts TypeScript code into CSS stylesheets.",
+                "It prevents the browser from using RAM.",
+                "It avoids prop drilling by making state accessible to deeply nested components without passing props manually through every level."
               ],
               "answer": 3,
-              "explanation": "Context value updates trigger re-renders in all subscribed consumers."
+              "explanation": "Context provides a mechanism to broadcast data to child components across the tree without tedious prop drilling."
             }
           ]
         }
