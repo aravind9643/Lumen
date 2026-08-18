@@ -48,6 +48,17 @@ export function CertificateModal({
     window.print()
   }
 
+  const handleShareTwitter = () => {
+    const shareUrl = `${window.location.origin}/tutorials/${courseSlug}`
+    const text = encodeURIComponent(`I just completed the "${courseTitle}" course on Lumen! Master software and AI from first principles. 🎓`)
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`, '_blank')
+  }
+
+  const handleShareLinkedIn = () => {
+    const shareUrl = `${window.location.origin}/tutorials/${courseSlug}`
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank')
+  }
+
   const handleCopyLink = () => {
     const shareUrl = `${window.location.origin}/tutorials/${courseSlug}`
     navigator.clipboard.writeText(`I just completed the "${courseTitle}" course on Lumen! Check it out: ${shareUrl}`)
@@ -121,15 +132,31 @@ export function CertificateModal({
         {/* Action Controls (Hidden when printing) */}
         <div className="no-print mt-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-fg-muted">
-            Tip: Click on the name in the certificate to personalize it before saving.
+            Click your name on the certificate to personalize it before saving.
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleShareTwitter}
+              className="flex items-center gap-1.5 rounded-xl border border-border-token bg-bg px-3 py-2 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+              title="Share on X / Twitter"
+            >
+              <Icon name="sparkles" size={11} className="text-sky-400" />
+              <span>Post on X</span>
+            </button>
+            <button
+              onClick={handleShareLinkedIn}
+              className="flex items-center gap-1.5 rounded-xl border border-border-token bg-bg px-3 py-2 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+              title="Share on LinkedIn"
+            >
+              <Icon name="award" size={11} className="text-blue-500" />
+              <span>LinkedIn</span>
+            </button>
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-1.5 rounded-xl border border-border-token bg-bg px-4 py-2 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
+              className="flex items-center gap-1.5 rounded-xl border border-border-token bg-bg px-3 py-2 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
             >
               <Icon name="copy" size={12} />
-              {copied ? 'Copied to Clipboard!' : 'Share Achievement'}
+              {copied ? 'Copied!' : 'Copy Link'}
             </button>
             <button
               onClick={handlePrint}

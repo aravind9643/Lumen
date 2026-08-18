@@ -90,22 +90,41 @@ export function Lesson() {
     events.lessonStart(tutorialSlug, lessonSlug)
   }, [resolved, tutorialSlug, lessonSlug, visit])
 
-  // Keyboard navigation between lessons — ignored while typing anywhere
-  // (search dialog, a future text input) so single letters don't hijack input.
+  // Keyboard navigation shortcuts:
+  // - ArrowRight / ]: Next lesson
+  // - ArrowLeft / [: Previous lesson
+  // - j / k: Smoothly scroll down / up
+  // - b: Toggle bookmark
+  // - f: Toggle focus mode
+  // - m: Toggle lesson completion
   useEffect(() => {
     if (!resolved) return
     const { prev, next } = resolved
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null
-      if (target && /^(input|textarea|select)$/i.test(target.tagName)) return
-      if (target?.isContentEditable) return
+      const tag = (target?.tagName || '').toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.isContentEditable) return
       if (e.metaKey || e.ctrlKey || e.altKey) return
-      if (e.key === 'ArrowRight' && next) navigate(`/tutorials/${tutorialSlug}/${next.slug}`)
-      if (e.key === 'ArrowLeft' && prev) navigate(`/tutorials/${tutorialSlug}/${prev.slug}`)
+
+      if ((e.key === 'ArrowRight' || e.key === ']') && next) {
+        navigate(`/tutorials/${tutorialSlug}/${next.slug}`)
+      } else if ((e.key === 'ArrowLeft' || e.key === '[') && prev) {
+        navigate(`/tutorials/${tutorialSlug}/${prev.slug}`)
+      } else if (e.key === 'j') {
+        window.scrollBy({ top: 280, behavior: 'smooth' })
+      } else if (e.key === 'k') {
+        window.scrollBy({ top: -280, behavior: 'smooth' })
+      } else if (e.key === 'b' || e.key === 'B') {
+        toggleBookmark(tutorialSlug, lessonSlug)
+      } else if (e.key === 'f' || e.key === 'F') {
+        setReaderPrefs((p) => ({ ...p, focusMode: !p.focusMode }))
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleComplete(tutorialSlug, lessonSlug)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [resolved, tutorialSlug, navigate])
+  }, [resolved, tutorialSlug, lessonSlug, navigate, toggleBookmark, toggleComplete, setReaderPrefs])
 
   // Scroll-depth milestones, each reported at most once per lesson.
   useEffect(() => {
@@ -224,29 +243,6 @@ export function Lesson() {
     const segmentIndex = firstSegmentOfBlock.get(blockIndex)
     if (segmentIndex !== undefined) speak(segments, segmentIndex)
   }
-
-  useEffect(() => {
-    if (!resolved) return
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null
-      const tag = (target?.tagName || '').toLowerCase()
-      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) {
-        return
-      }
-
-      if (e.key === 'ArrowLeft' && resolved.prev) {
-        navigate(`/tutorials/${resolved.tutorial.slug}/${resolved.prev.slug}`)
-      } else if (e.key === 'ArrowRight' && resolved.next) {
-        navigate(`/tutorials/${resolved.tutorial.slug}/${resolved.next.slug}`)
-      } else if (e.key === 'b' || e.key === 'B') {
-        toggleBookmark(tutorialSlug, lessonSlug)
-      } else if (e.key === 'f' || e.key === 'F') {
-        setReaderPrefs((p) => ({ ...p, focusMode: !p.focusMode }))
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [resolved, navigate, toggleBookmark, tutorialSlug, lessonSlug, setReaderPrefs])
 
   if (!resolved) return <Navigate to="/tutorials" replace />
 
