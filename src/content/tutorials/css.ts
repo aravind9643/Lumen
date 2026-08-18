@@ -208,6 +208,13 @@ export const cssCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Style a .card component with a fixed width of 360px, 24px padding, 2px border, 20px bottom margin, and box-sizing: border-box.",
+              "hint": "Declare box-sizing: border-box so the 360px width includes padding and border.",
+              "solution": ".card {\n  box-sizing: border-box;\n  width: 360px;\n  padding: 24px;\n  border: 2px solid #e2e8f0;\n  margin-bottom: 20px;\n  border-radius: 12px;\n}",
+              "language": "css"
+            },
+            {
               "type": "quiz",
               "question": "When box-sizing: border-box is applied, what does the width property represent?",
               "options": [
@@ -301,6 +308,13 @@ export const cssCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write CSS to create a horizontal navigation bar that spaces items evenly across the main axis and vertically centers them with a 16px gap.",
+              "hint": "Use display: flex, justify-content: space-between, align-items: center, and gap: 16px.",
+              "solution": ".navbar {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n  padding: 12px 24px;\n}",
+              "language": "css"
+            },
+            {
               "type": "quiz",
               "question": "Which CSS rule combination effortlessly centers an element both horizontally and vertically inside a Flex container?",
               "options": [
@@ -343,6 +357,13 @@ export const cssCourse: Tutorial = {
                 "repeat(auto-fit, minmax(280px, 1fr)) creates fluidly responsive cards automatically.",
                 "The fr unit shares remaining space proportionally."
               ]
+            },
+            {
+              "type": "exercise",
+              "prompt": "Create a responsive auto-fitting grid of cards that automatically adjusts between 1, 2, and 3 columns without using any media queries.",
+              "hint": "Use grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) and gap: 24px.",
+              "solution": ".card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));\n  gap: 24px;\n}",
+              "language": "css"
             },
             {
               "type": "quiz",

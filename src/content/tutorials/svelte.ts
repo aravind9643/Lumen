@@ -115,6 +115,13 @@ export const svelteCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create a Svelte 5 component using $state() for a reactive score and $derived() to compute a bonusScore.",
+              "hint": "Use let score = $state(100) and let bonusScore = $derived(score * 1.5).",
+              "solution": "<script lang=\"ts\">\n  let score = $state(100);\n  let bonusScore = $derived(score * 1.5);\n</script>\n\n<button onclick={() => score += 10}>\n  Score: {score} (Bonus: {bonusScore})\n</button>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "Which Svelte 5 Rune is used to declare a derived, computed reactive value that updates automatically?",
               "options": [

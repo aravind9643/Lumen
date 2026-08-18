@@ -41,7 +41,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -318,7 +318,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -449,7 +449,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -616,7 +616,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -723,7 +723,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner → Intermediate | ⏱ **Time**: 4 days"
+              "text": "Level: Beginner → Intermediate | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -960,7 +960,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1113,7 +1113,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1218,7 +1218,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1324,7 +1324,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1420,7 +1420,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1515,7 +1515,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1675,7 +1675,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 4 days"
+              "text": "Level: Intermediate | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -1776,7 +1776,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 4 days"
+              "text": "Level: Intermediate | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -1877,7 +1877,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1993,7 +1993,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -2102,7 +2102,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -2257,7 +2257,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -2363,7 +2363,7 @@ export const javaEnterprise: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",

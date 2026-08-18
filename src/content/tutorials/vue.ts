@@ -148,6 +148,13 @@ export const vueCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create a Vue 3 <script setup> component with a reactive ref named count and an increment function.",
+              "hint": "Use const count = ref(0) and count.value++ inside the function.",
+              "solution": "<script setup lang=\"ts\">\nimport { ref } from \"vue\";\n\nconst count = ref(0);\nfunction increment() {\n  count.value++;\n}\n</script>\n\n<template>\n  <button @click=\"increment\">Count: {{ count }}</button>\n</template>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "How do you update the value of a Vue ref() inside a <script setup> block?",
               "options": [

@@ -209,6 +209,13 @@ export const reactCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Build a ToggleTheme component in React with a button that toggles between \"Light Mode ☀️\" and \"Dark Mode 🌙\" on click using useState.",
+              "hint": "Declare const [isDark, setIsDark] = useState(false) and toggle it with setIsDark(prev => !prev).",
+              "solution": "import { useState } from \"react\";\n\nexport function ToggleTheme() {\n  const [isDark, setIsDark] = useState(false);\n\n  return (\n    <button onClick={() => setIsDark((prev) => !prev)}>\n      Current: {isDark ? \"Dark Mode 🌙\" : \"Light Mode ☀️\"}\n    </button>\n  );\n}",
+              "language": "tsx"
+            },
+            {
               "type": "quiz",
               "question": "Why does updating a regular variable (let x = 10) fail to update the UI on the screen in React?",
               "options": [

@@ -11,6 +11,7 @@ import { usePersistentState } from '../lib/storage'
 import { events } from '../lib/analytics'
 import { cn } from '../lib/cn'
 import { card } from '../lib/card'
+import { inline } from '../lib/inline'
 import { BlockRenderer } from '../components/content/BlockRenderer'
 import { VoicePlayer } from '../components/ui/VoicePlayer'
 import { Icon } from '../components/ui/Icon'
@@ -312,7 +313,7 @@ export function Lesson() {
                 {lesson.title}
               </h1>
               <p className="mt-3 text-pretty text-lg leading-relaxed text-fg-muted">
-                {lesson.description}
+                {inline(lesson.description)}
               </p>
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -359,16 +360,6 @@ export function Lesson() {
                 </button>
 
                 <ReaderSettings prefs={readerPrefs} onChange={setReaderPrefs} />
-
-                <button
-                  onClick={() => {
-                    events.lessonPrint(tutorialSlug, lessonSlug)
-                    window.print()
-                  }}
-                  className="no-print flex items-center gap-1.5 rounded-lg border border-border-token px-3 py-1.5 text-xs font-semibold text-fg-muted transition-all hover:border-accent hover:text-accent"
-                >
-                  <Icon name="file" size={12} /> Print / Save PDF
-                </button>
               </div>
             </motion.header>
 

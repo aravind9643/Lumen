@@ -53,8 +53,10 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               {[
-                { to: '/tutorials', label: 'All tutorials' },
-                { to: '/progress', label: 'My progress' },
+                { to: '/tutorials', label: 'All Tutorials' },
+                { to: '/roadmaps', label: 'Career Roadmaps' },
+                { to: '/glossary', label: 'Developer Glossary' },
+                { to: '/progress', label: 'My Progress' },
                 { to: '/about', label: 'About' },
                 { to: '/privacy', label: 'Privacy' },
               ].map(({ to, label }) => (

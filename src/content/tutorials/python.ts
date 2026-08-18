@@ -45,7 +45,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -297,7 +297,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -564,7 +564,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -804,7 +804,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner → Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Beginner → Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1045,6 +1045,13 @@ export const pythonProgramming: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write an arrow function named calculateDiscount that accepts price and discountPercent (defaulting to 10), and returns the discounted total.",
+              "hint": "Use parameter default syntax (discountPercent = 10) and compute price * (1 - discountPercent / 100).",
+              "solution": "const calculateDiscount = (price, discountPercent = 10) => {\n  return price * (1 - discountPercent / 100);\n};\n\nconsole.log(calculateDiscount(200)); // Outputs: 180",
+              "language": "javascript"
+            },
+            {
               "type": "quiz",
               "question": "Why is using a mutable default argument like def append_to(item, target=[]) dangerous in Python?",
               "options": [
@@ -1067,7 +1074,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -1238,7 +1245,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 4 days"
+              "text": "Level: Intermediate | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -1533,7 +1540,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1773,7 +1780,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -1984,7 +1991,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -2098,7 +2105,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -2291,7 +2298,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 4 days"
+              "text": "Level: Advanced | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -2484,7 +2491,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -2670,7 +2677,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -2830,7 +2837,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -2965,7 +2972,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3111,7 +3118,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -3325,7 +3332,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3474,7 +3481,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -3652,7 +3659,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3732,7 +3739,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3782,7 +3789,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3822,7 +3829,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -3862,7 +3869,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -3997,7 +4004,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 1 day"
+              "text": "Level: Intermediate | ⏱ Time: 1 day"
             },
             {
               "type": "list",
@@ -4074,7 +4081,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 1 day"
+              "text": "Level: Intermediate | ⏱ Time: 1 day"
             },
             {
               "type": "list",
@@ -4146,7 +4153,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -4209,7 +4216,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 2 days"
+              "text": "Level: Expert | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -4299,7 +4306,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -4376,7 +4383,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -4444,7 +4451,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 1 day"
+              "text": "Level: Intermediate | ⏱ Time: 1 day"
             },
             {
               "type": "list",
@@ -4512,7 +4519,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -4596,7 +4603,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -4757,7 +4764,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 4 days"
+              "text": "Level: Intermediate | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -4941,7 +4948,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -5178,7 +5185,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -5345,7 +5352,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 4 days"
+              "text": "Level: Advanced | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -5610,7 +5617,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 2 days"
+              "text": "Level: Expert | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -5655,7 +5662,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 2 days"
+              "text": "Level: Expert | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -5690,7 +5697,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -5776,7 +5783,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -5835,7 +5842,7 @@ export const pythonProgramming: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",

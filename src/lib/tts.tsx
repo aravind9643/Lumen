@@ -4,6 +4,8 @@ import {
 import { usePersistentState } from './storage'
 import { events } from './analytics'
 
+import { cleanTextForSpeech, findBestVoice } from './speechSanitizer'
+
 export interface TTSSettings {
   rate: number
   pitch: number
@@ -54,23 +56,16 @@ export function TTSProvider({ children }: { children: ReactNode }) {
 
   const queue = useRef<string[]>([])
   const index = useRef(-1)
-  /**
-   * Incremented on every stop/jump/new-speak. Utterance callbacks capture the
-   * token current at creation and ignore themselves if it has moved on.
-   *
-   * A boolean flag cleared on a timer was not enough: Chrome fires onend and
-   * onerror from cancel() asynchronously and not reliably within one task, so
-   * a late callback could arrive after the flag cleared and restart narration
-   * from the top after the user pressed stop.
-   */
   const session = useRef(0)
-  /** Read inside utterance callbacks, which capture their closure at creation. */
   const settingsRef = useRef(settings)
   settingsRef.current = settings
 
   useEffect(() => {
     if (!supported) return
-    const load = () => setVoices(window.speechSynthesis.getVoices())
+    const load = () => {
+      const allVoices = window.speechSynthesis.getVoices()
+      setVoices(allVoices)
+    }
     load() // Firefox populates synchronously
     window.speechSynthesis.addEventListener('voiceschanged', load) // Chrome, async
     return () => window.speechSynthesis.removeEventListener('voiceschanged', load)
@@ -90,22 +85,22 @@ export function TTSProvider({ children }: { children: ReactNode }) {
       setCurrent(i)
 
       const mySession = session.current
-      const u = new SpeechSynthesisUtterance(queue.current[i])
+      const rawSegment = queue.current[i]
+      const cleanSegment = cleanTextForSpeech(rawSegment)
+      const u = new SpeechSynthesisUtterance(cleanSegment)
       const s = settingsRef.current
       u.rate = s.rate
       u.pitch = s.pitch
       u.volume = s.volume
-      // Read voices at speak time rather than from captured state: Chrome
-      // populates getVoices() asynchronously, so the list can still be empty
-      // on first render and the user's saved voice would be silently ignored.
-      const voice = window.speechSynthesis.getVoices().find((v) => v.voiceURI === s.voiceURI)
+
+      // Read voices at speak time and select the best natural voice
+      const allVoices = window.speechSynthesis.getVoices()
+      const voice = findBestVoice(allVoices, s.voiceURI)
       if (voice) {
         u.voice = voice
         u.lang = voice.lang
       }
 
-      // Advance from the index this utterance owned, not whatever the ref
-      // holds now — a jump mid-utterance would otherwise skip a segment.
       const advance = () => {
         if (session.current !== mySession) return
         speakAt(i + 1)
@@ -113,7 +108,6 @@ export function TTSProvider({ children }: { children: ReactNode }) {
 
       u.onend = advance
       u.onerror = (e) => {
-        // 'interrupted'/'canceled' are expected whenever we cancel on purpose.
         if (e.error === 'interrupted' || e.error === 'canceled') return
         console.warn('[tts] utterance error:', e.error)
         advance()
@@ -126,7 +120,6 @@ export function TTSProvider({ children }: { children: ReactNode }) {
 
   const stop = useCallback(() => {
     if (!supported) return
-    // Invalidate any in-flight callbacks before cancelling.
     session.current++
     window.speechSynthesis.cancel()
     queue.current = []
@@ -143,7 +136,11 @@ export function TTSProvider({ children }: { children: ReactNode }) {
       session.current++
       window.speechSynthesis.cancel()
 
-      queue.current = segments.filter((s) => s.trim().length > 0)
+      const cleanedSegments = segments
+        .map(cleanTextForSpeech)
+        .filter((s) => s.trim().length > 0)
+
+      queue.current = cleanedSegments
       if (!queue.current.length) return
 
       setSpeaking(true)

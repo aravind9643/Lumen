@@ -327,6 +327,13 @@ export const typescriptCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write a generic function wrapInArray<T>(item: T): T[] that takes an item of any type and returns a single-element array of that type.",
+              "hint": "Declare <T> in the function signature and return [item].",
+              "solution": "function wrapInArray<T>(item: T): T[] {\n  return [item];\n}\n\nconst strArray = wrapInArray(\"TypeScript\"); // string[]\nconst numArray = wrapInArray(42);           // number[]",
+              "language": "typescript"
+            },
+            {
               "type": "quiz",
               "question": "What is the main benefit of using a Generic function <T>(arg: T): T instead of (arg: any): any?",
               "options": [

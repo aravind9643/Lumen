@@ -228,6 +228,13 @@ export const tailwindcssCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write an HTML snippet using Tailwind CSS to create a responsive card with horizontal alignment, centering, and rounded corners.",
+              "hint": "Combine flex, items-center, justify-between, p-6, and rounded-2xl.",
+              "solution": "<div class=\"flex items-center justify-between p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md\">\n  <h4 class=\"font-bold text-slate-900 dark:text-white\">Responsive Card</h4>\n  <button class=\"px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-500\">\n    Action\n  </button>\n</div>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "Which Tailwind utility class vertically centers items across the cross axis inside a Flex container?",
               "options": [

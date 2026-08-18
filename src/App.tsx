@@ -18,6 +18,7 @@ const Roadmaps = lazy(() => import('./pages/Roadmaps').then((m) => ({ default: m
 const TutorialDetail = lazy(() => import('./pages/TutorialDetail').then((m) => ({ default: m.TutorialDetail })))
 const Lesson = lazy(() => import('./pages/Lesson').then((m) => ({ default: m.Lesson })))
 const ProgressPage = lazy(() => import('./pages/Progress').then((m) => ({ default: m.ProgressPage })))
+const Glossary = lazy(() => import('./pages/Glossary').then((m) => ({ default: m.Glossary })))
 const About = lazy(() => import('./pages/Static').then((m) => ({ default: m.About })))
 const Privacy = lazy(() => import('./pages/Static').then((m) => ({ default: m.Privacy })))
 const NotFound = lazy(() => import('./pages/Static').then((m) => ({ default: m.NotFound })))
@@ -81,6 +82,7 @@ function AnimatedRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/tutorials" element={<Tutorials />} />
           <Route path="/roadmaps" element={<Roadmaps />} />
+          <Route path="/glossary" element={<Glossary />} />
           <Route path="/tutorials/:tutorialSlug" element={<TutorialDetail />} />
           <Route path="/tutorials/:tutorialSlug/:lessonSlug" element={<Lesson />} />
           <Route path="/progress" element={<ProgressPage />} />

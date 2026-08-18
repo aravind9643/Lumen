@@ -191,6 +191,13 @@ export const angularCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create an Angular component with a count writable signal and a doubled computed signal derived from count.",
+              "hint": "Use count = signal(0) and doubled = computed(() => this.count() * 2).",
+              "solution": "import { Component, signal, computed } from \"@angular/core\";\n\n@Component({\n  selector: \"app-counter\",\n  standalone: true,\n  template: `<button (click)=\"inc()\">Count: {{ count() }} (Doubled: {{ doubled() }})</button>`\n})\nexport class CounterComponent {\n  count = signal(0);\n  doubled = computed(() => this.count() * 2);\n\n  inc() {\n    this.count.update(c => c + 1);\n  }\n}",
+              "language": "typescript"
+            },
+            {
               "type": "quiz",
               "question": "How do you read the current value of an Angular Signal in TypeScript or templates?",
               "options": [

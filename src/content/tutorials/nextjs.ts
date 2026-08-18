@@ -266,6 +266,13 @@ export const nextjsCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write a Next.js Server Action in app/actions.ts named addBookmark that extracts a courseSlug from FormData and calls revalidatePath(\"/courses\").",
+              "hint": "Add \"use server\" at the top of the file and import { revalidatePath } from \"next/cache\".",
+              "solution": "// app/actions.ts\n\"use server\";\nimport { revalidatePath } from \"next/cache\";\n\nexport async function addBookmark(formData: FormData) {\n  const courseSlug = formData.get(\"courseSlug\") as string;\n  console.log(\"Bookmarked:\", courseSlug);\n  revalidatePath(\"/courses\");\n}",
+              "language": "typescript"
+            },
+            {
               "type": "quiz",
               "question": "What directive is written at the top of an action file or function to declare a Next.js Server Action?",
               "options": [

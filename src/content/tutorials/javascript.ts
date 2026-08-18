@@ -120,6 +120,13 @@ export const javascriptCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Declare a const variable named siteName set to \"Lumen\", and a let variable named userScore set to 0. Increment userScore by 50 and log both.",
+              "hint": "Use const for siteName and let for userScore since its value will change.",
+              "solution": "const siteName = \"Lumen\";\nlet userScore = 0;\n\nuserScore += 50;\n\nconsole.log(siteName, \"Current Score:\", userScore);",
+              "language": "javascript"
+            },
+            {
               "type": "quiz",
               "question": "When should you declare a variable using const instead of let?",
               "options": [
@@ -251,6 +258,13 @@ export const javascriptCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write an arrow function named calculateDiscount that accepts price and discountPercent (defaulting to 10), and returns the discounted total.",
+              "hint": "Use parameter default syntax (discountPercent = 10) and compute price * (1 - discountPercent / 100).",
+              "solution": "const calculateDiscount = (price, discountPercent = 10) => {\n  return price * (1 - discountPercent / 100);\n};\n\nconsole.log(calculateDiscount(200)); // Outputs: 180",
+              "language": "javascript"
+            },
+            {
               "type": "quiz",
               "question": "What is the difference between a function parameter and a function argument?",
               "options": [
@@ -369,6 +383,13 @@ export const javascriptCourse: Tutorial = {
                 "await pauses function execution until the Promise resolves without blocking the browser thread.",
                 "Always wrap await statements in try/catch blocks for bulletproof error handling."
               ]
+            },
+            {
+              "type": "exercise",
+              "prompt": "Write an async function loadData(url) that uses fetch and await to retrieve and return JSON data with try/catch error handling.",
+              "hint": "Check if response.ok is true, then return await response.json().",
+              "solution": "async function loadData(url) {\n  try {\n    const response = await fetch(url);\n    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);\n    return await response.json();\n  } catch (err) {\n    console.error(\"Fetch failed:\", err.message);\n  }\n}",
+              "language": "javascript"
             },
             {
               "type": "quiz",

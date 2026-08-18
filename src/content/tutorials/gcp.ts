@@ -41,7 +41,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 1 day"
+              "text": "Level: Beginner | ⏱ Time: 1 day"
             },
             {
               "type": "list",
@@ -133,7 +133,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 1 day"
+              "text": "Level: Beginner | ⏱ Time: 1 day"
             },
             {
               "type": "list",
@@ -228,7 +228,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -330,7 +330,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 days"
+              "text": "Level: Beginner | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -449,7 +449,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -556,7 +556,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -644,7 +644,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 4 days"
+              "text": "Level: Advanced | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -750,7 +750,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -847,7 +847,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -936,7 +936,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -1022,7 +1022,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 days"
+              "text": "Level: Advanced | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -1094,7 +1094,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 2 days"
+              "text": "Level: Expert | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -1174,7 +1174,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1247,7 +1247,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1341,7 +1341,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1427,7 +1427,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1508,7 +1508,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 3 days"
+              "text": "Level: Expert | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -1588,7 +1588,7 @@ export const googleCloud: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Expert | ⏱ **Time**: 4 days"
+              "text": "Level: Expert | ⏱ Time: 4 days"
             },
             {
               "type": "list",

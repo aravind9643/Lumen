@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '../../lib/cn'
 import { events } from '../../lib/analytics'
@@ -13,10 +13,6 @@ interface CodeBlockProps {
 
 /**
  * Lightweight syntax highlighting.
- *
- * A full grammar-based highlighter (Shiki, Prism) would add 300kB+ for what is
- * a reading surface, not an editor. This token pass covers the languages used
- * in the content well enough and ships in a couple of kilobytes.
  */
 const PATTERNS: { re: RegExp; cls: string }[] = [
   { re: /(#.*$|\/\/.*$)/gm, cls: 'text-fg-muted italic' },
@@ -33,8 +29,6 @@ const escapeHtml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 function highlightLine(line: string): string {
-  // Tokenise into protected spans first so later patterns can't match inside
-  // strings or comments already claimed by an earlier one.
   const tokens: { text: string; cls: string | null }[] = [{ text: line, cls: null }]
 
   for (const { re, cls } of PATTERNS) {
@@ -50,7 +44,7 @@ function highlightLine(line: string): string {
         if (m.index > last) parts.push({ text: token.text.slice(last, m.index), cls: null })
         parts.push({ text: m[0], cls })
         last = m.index + m[0].length
-        if (m[0].length === 0) re.lastIndex++ // guard against zero-width matches
+        if (m[0].length === 0) re.lastIndex++
       }
       if (!parts.length) continue
       if (last < token.text.length) parts.push({ text: token.text.slice(last), cls: null })
@@ -63,15 +57,29 @@ function highlightLine(line: string): string {
     .join('')
 }
 
-export function CodeBlock({ code, language, filename, highlight = [] }: CodeBlockProps) {
+export function CodeBlock({ code: initialCode, language, filename, highlight = [] }: CodeBlockProps) {
+  const [code, setCode] = useState(initialCode)
   const [copied, setCopied] = useState(false)
   const [running, setRunning] = useState(false)
   const [output, setOutput] = useState<string[] | null>(null)
   const [showConsole, setShowConsole] = useState(false)
+  const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code')
+  const [isEditing, setIsEditing] = useState(false)
 
-  // Highlighting is five regex passes per line with a splice loop — far too
-  // costly to redo whenever the parent re-renders. `code` is static content,
-  // so this computes exactly once per snippet.
+  useEffect(() => {
+    setCode(initialCode)
+  }, [initialCode])
+
+  const lang = language.toLowerCase()
+  const isPreviewable =
+    lang === 'html' ||
+    lang === 'xml' ||
+    lang === 'css' ||
+    (filename && (filename.endsWith('.html') || filename.endsWith('.css'))) ||
+    code.includes('<div') ||
+    code.includes('<button') ||
+    code.includes('<form')
+
   const lines = useMemo(
     () => code.replace(/\n$/, '').split('\n').map((line) => highlightLine(line) || '&nbsp;'),
     [code],
@@ -85,13 +93,11 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
       events.codeCopy(language)
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
-      /* clipboard blocked — silently ignore */
+      /* clipboard blocked */
     }
   }
 
-  const isExecutable = ['javascript', 'js', 'typescript', 'ts', 'py', 'python'].includes(
-    language.toLowerCase(),
-  )
+  const isExecutable = ['javascript', 'js', 'typescript', 'ts', 'py', 'python'].includes(lang)
 
   const runCode = () => {
     setRunning(true)
@@ -100,8 +106,6 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
 
     setTimeout(() => {
       const logs: string[] = []
-      const lang = language.toLowerCase()
-
       if (lang === 'js' || lang === 'javascript' || lang === 'ts' || lang === 'typescript') {
         try {
           const originalLog = console.log
@@ -113,7 +117,6 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
             logs.push('[Error] ' + args.map((a) => String(a)).join(' '))
           }
 
-          // Strip type annotations for basic TS compatibility if needed
           const cleanCode = code.replace(/:\s*[A-Z][a-zA-Z0-9<>[\]|&\s]*(\s*=|\s*;|\s*\))/g, '$1')
           const result = new Function(cleanCode)()
           if (result !== undefined && logs.length === 0) {
@@ -127,7 +130,6 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
           setOutput([`[Runtime Exception]: ${(err as Error).message}`])
         }
       } else {
-        // Python / General syntax simulation runner
         const mockLines = code.split('\n')
         const printStatements = mockLines
           .filter((l) => l.trim().startsWith('print(') || l.includes('System.out.println') || l.includes('Console.WriteLine'))
@@ -149,6 +151,13 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
     }, 250)
   }
 
+  const previewDocument = useMemo(() => {
+    if (lang === 'css') {
+      return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${code}</style></head><body style="font-family:system-ui,-apple-system,sans-serif;padding:1.5rem;background:#f8fafc;color:#0f172a;"><div class="card"><div class="badge">Preview Element</div><h3>CSS Styled Card</h3><p>Live CSS styling rendered below.</p><button class="btn-primary">Action Button</button></div></body></html>`
+    }
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:system-ui,-apple-system,sans-serif;padding:1.5rem;background:#f8fafc;color:#0f172a;margin:0;} button{cursor:pointer;} .card{padding:1.5rem;background:#fff;border-radius:12px;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);max-width:360px;}</style></head><body>${code}</body></html>`
+  }, [code, lang])
+
   return (
     <motion.figure
       initial={{ opacity: 0, y: 12 }}
@@ -167,11 +176,49 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
           {filename && (
             <span className="truncate font-mono text-xs text-fg-muted">{filename}</span>
           )}
+          {isPreviewable && (
+            <div className="ml-2 flex items-center rounded-lg bg-bg p-0.5 text-xs">
+              <button
+                type="button"
+                onClick={() => setActiveTab('code')}
+                className={cn(
+                  'rounded-md px-2 py-0.5 font-medium transition-colors',
+                  activeTab === 'code' ? 'bg-bg-elev font-semibold text-accent shadow-sm' : 'text-fg-muted hover:text-fg',
+                )}
+              >
+                Code
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('preview')}
+                className={cn(
+                  'rounded-md px-2 py-0.5 font-medium transition-colors flex items-center gap-1',
+                  activeTab === 'preview' ? 'bg-bg-elev font-semibold text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-fg-muted hover:text-fg',
+                )}
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live Preview
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <span className="rounded-md bg-bg px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-fg-muted">
             {language}
           </span>
+          {isPreviewable && (
+            <button
+              onClick={() => setIsEditing((v) => !v)}
+              className={cn(
+                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors',
+                isEditing ? 'bg-accent-soft text-accent' : 'text-fg-muted hover:bg-bg hover:text-fg',
+              )}
+              title="Toggle interactive code editor"
+            >
+              <Icon name="code" size={12} />
+              <span className="hidden sm:inline">{isEditing ? 'Done' : 'Edit'}</span>
+            </button>
+          )}
           {isExecutable && (
             <button
               onClick={runCode}
@@ -198,36 +245,68 @@ export function CodeBlock({ code, language, filename, highlight = [] }: CodeBloc
         </div>
       </figcaption>
 
-      <div className="overflow-x-auto">
-        <pre
-          className="min-w-full py-4 font-mono leading-relaxed"
-          style={{ fontSize: 'calc(13px * var(--font-scale, 1))' }}
-        >
-          <code>
-            {lines.map((html, i) => (
-              <div
-                key={i}
-                className={cn(
-                  'flex px-1',
-                  marked.has(i + 1) &&
-                    'bg-accent-soft/60 shadow-[inset_3px_0_0_0_var(--accent)]',
-                )}
+      {/* Code Editor or Highlighting Mode */}
+      {activeTab === 'code' && (
+        <>
+          {isEditing ? (
+            <div className="p-3 bg-bg-subtle">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-accent">
+                Interactive Sandbox Editor (Live updates preview)
+              </p>
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="w-full h-48 p-3 font-mono text-xs bg-code-bg border border-border-token rounded-lg text-fg focus:outline-none focus:border-accent"
+                spellCheck={false}
+              />
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <pre
+                className="min-w-full py-4 font-mono leading-relaxed"
+                style={{ fontSize: 'calc(13px * var(--font-scale, 1))' }}
               >
-                <span className="w-11 shrink-0 select-none pr-4 text-right text-fg-muted/40">
-                  {i + 1}
-                </span>
-                {/* Safe: highlightLine escapes all token text via escapeHtml,
-                    and class names come from the fixed PATTERNS table — no
-                    author-supplied string reaches the markup unescaped. */}
-                <span
-                  className="whitespace-pre pr-6"
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
-              </div>
-            ))}
-          </code>
-        </pre>
-      </div>
+                <code>
+                  {lines.map((html, i) => (
+                    <div
+                      key={i}
+                      className={cn(
+                        'flex px-1',
+                        marked.has(i + 1) &&
+                          'bg-accent-soft/60 shadow-[inset_3px_0_0_0_var(--accent)]',
+                      )}
+                    >
+                      <span className="w-11 shrink-0 select-none pr-4 text-right text-fg-muted/40">
+                        {i + 1}
+                      </span>
+                      <span
+                        className="whitespace-pre pr-6"
+                        dangerouslySetInnerHTML={{ __html: html }}
+                      />
+                    </div>
+                  ))}
+                </code>
+              </pre>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Live Preview Mode */}
+      {activeTab === 'preview' && (
+        <div className="bg-white p-4 min-h-[220px] overflow-hidden flex flex-col">
+          <div className="mb-2 flex items-center justify-between border-b pb-2 text-[11px] text-slate-500 font-sans">
+            <span className="font-semibold text-slate-700">Sandboxed HTML/CSS Output</span>
+            <span>Isolated IFrame Container</span>
+          </div>
+          <iframe
+            srcDoc={previewDocument}
+            title="Live Preview"
+            sandbox="allow-scripts allow-modals"
+            className="w-full h-56 border-0 rounded-lg bg-slate-50"
+          />
+        </div>
+      )}
 
       {/* Terminal Output Console */}
       {showConsole && (

@@ -96,6 +96,7 @@ const routes = [
   { path: '/about', title: 'About', description: `About ${site.name} — why it exists and how it is written.` },
   { path: '/privacy', title: 'Privacy', description: 'What data this site stores and what it does not.' },
   { path: '/roadmaps', title: 'Career Roadmaps', description: 'Structured step-by-step career learning paths from fundamentals to advanced enterprise systems and AI engineering.' },
+  { path: '/glossary', title: 'Developer Glossary & Term Index', description: 'A comprehensive, searchable index of core software engineering, web development, AI, and cloud computing terms defined from first principles.' },
   { path: '/progress', title: 'My Progress', description: 'Track completed lessons, saved bookmarks, and your study streak.' },
 ]
 

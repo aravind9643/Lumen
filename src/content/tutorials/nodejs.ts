@@ -273,6 +273,13 @@ export const nodejsCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Write an Express middleware that logs the request method and path, and attaches a timestamp to the request object.",
+              "hint": "Create a middleware function (req, res, next) => { ... next(); }.",
+              "solution": "import express from \"express\";\n\nconst app = express();\n\napp.use((req, res, next) => {\n  req.requestTime = Date.now();\n  console.log(`[${req.method}] ${req.url} at ${req.requestTime}`);\n  next();\n});",
+              "language": "javascript"
+            },
+            {
               "type": "quiz",
               "question": "What happens if a custom Express middleware does not call next() and does not send a response with res.send()/res.json()?",
               "options": [

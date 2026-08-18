@@ -1,4 +1,4 @@
-import { Fragment, memo, type ReactNode } from 'react'
+import { Fragment, memo } from 'react'
 import { motion } from 'framer-motion'
 import type { Block, CalloutKind } from '../../content/types'
 import { slugifyHeading } from '../../content'
@@ -33,33 +33,7 @@ const fade = {
   transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
 }
 
-/**
- * Renders lightweight inline markup: `code`, **bold**, *italic*.
- * Deliberately not full markdown — content is structured, so inline syntax
- * only needs to cover emphasis inside prose.
- */
-function inline(text: string): ReactNode {
-  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g)
-  return parts.map((part, i) => {
-    if (part.startsWith('`') && part.endsWith('`') && part.length > 1) {
-      return (
-        <code
-          key={i}
-          className="rounded-md border border-border-token bg-code-bg px-1.5 py-0.5 font-mono text-[0.87em] text-accent"
-        >
-          {part.slice(1, -1)}
-        </code>
-      )
-    }
-    if (part.startsWith('**') && part.endsWith('**') && part.length > 3) {
-      return <strong key={i} className="font-semibold text-fg">{part.slice(2, -2)}</strong>
-    }
-    if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
-      return <em key={i}>{part.slice(1, -1)}</em>
-    }
-    return <Fragment key={i}>{part}</Fragment>
-  })
-}
+import { inline } from '../../lib/inline'
 
 interface BlockRendererProps {
   blocks: Block[]

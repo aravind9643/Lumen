@@ -65,7 +65,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -191,7 +191,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -307,7 +307,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -398,7 +398,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -490,7 +490,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate → Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate → Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -589,7 +589,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 days"
+              "text": "Level: Intermediate | ⏱ Time: 2 days"
             },
             {
               "type": "list",
@@ -677,7 +677,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 4 days"
+              "text": "Level: Advanced | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -775,7 +775,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate → Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Intermediate → Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",
@@ -862,7 +862,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 4 days"
+              "text": "Level: Advanced | ⏱ Time: 4 days"
             },
             {
               "type": "list",
@@ -946,7 +946,7 @@ export const reactNative: Tutorial = {
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 days"
+              "text": "Level: Advanced | ⏱ Time: 3 days"
             },
             {
               "type": "list",

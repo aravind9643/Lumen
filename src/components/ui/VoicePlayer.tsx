@@ -125,12 +125,25 @@ export function VoicePlayer({ segments }: { segments: string[] }) {
                         onChange={(e) => setSettings({ voiceURI: e.target.value || null })}
                         className="w-full rounded-lg border border-border-token bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
                       >
-                        <option value="">System default</option>
-                        {voices.map((v) => (
-                          <option key={v.voiceURI} value={v.voiceURI}>
-                            {v.name} ({v.lang})
-                          </option>
-                        ))}
+                        <option value="">Recommended Natural Voice</option>
+                        {[...voices]
+                          .sort((a, b) => {
+                            const aNat = a.name.includes('Natural') || a.name.includes('Online') || a.name.includes('Neural') || a.name.includes('Google')
+                            const bNat = b.name.includes('Natural') || b.name.includes('Online') || b.name.includes('Neural') || b.name.includes('Google')
+                            if (aNat && !bNat) return -1
+                            if (!aNat && bNat) return 1
+                            if (a.lang.startsWith('en') && !b.lang.startsWith('en')) return -1
+                            if (!a.lang.startsWith('en') && b.lang.startsWith('en')) return 1
+                            return a.name.localeCompare(b.name)
+                          })
+                          .map((v) => {
+                            const isNat = v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('Neural') || v.name.includes('Google')
+                            return (
+                              <option key={v.voiceURI} value={v.voiceURI}>
+                                {isNat ? '✨ ' : ''}{v.name} ({v.lang})
+                              </option>
+                            )
+                          })}
                       </select>
                     </label>
 

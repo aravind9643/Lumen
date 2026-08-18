@@ -77,6 +77,13 @@ export const htmlCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create a minimal HTML5 document with a level-1 heading saying \"Engineering Principles\" and a paragraph containing text with a strong emphasis.",
+              "hint": "Use <h1> for the title, <p> for the quote, and <strong> to emphasize words.",
+              "solution": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Principles</title>\n</head>\n<body>\n  <h1>Engineering Principles</h1>\n  <p>Software reliability is <strong>essential</strong> for modern systems.</p>\n</body>\n</html>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "What is the primary role of HTML in a website?",
               "options": [
@@ -133,6 +140,13 @@ export const htmlCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Add the mobile viewport meta tag and UTF-8 charset inside the <head> of an HTML document, setting the title to \"Lumen Architecture\".",
+              "hint": "Use <meta charset=\"UTF-8\"> and <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">.",
+              "solution": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Lumen Architecture</title>\n</head>\n<body>\n  <h1>Ready for mobile devices</h1>\n</body>\n</html>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "What is the purpose of the <meta name=\"viewport\" ...> tag inside the <head> section?",
               "options": [
@@ -181,6 +195,13 @@ export const htmlCourse: Tutorial = {
                 "Never skip heading levels (e.g. going from <h1> directly to <h3>).",
                 "Use <strong> for semantic importance and <em> for semantic vocal stress."
               ]
+            },
+            {
+              "type": "exercise",
+              "prompt": "Write an article outline with an <h1> main title, two <h2> subsections, and a <blockquote> quote with an author attribution.",
+              "hint": "Use <h1> for the article title, <h2> for sub-topics, and <blockquote><p>Quote</p></blockquote>.",
+              "solution": "<h1>Frontend Architecture</h1>\n\n<h2>1. Component Modularity</h2>\n<p>Isolating state simplifies maintenance.</p>\n\n<h2>2. Performance Optimization</h2>\n<blockquote>\n  <p>\"Premature optimization is the root of all evil.\" — Donald Knuth</p>\n</blockquote>",
+              "language": "html"
             },
             {
               "type": "quiz",
@@ -239,6 +260,13 @@ export const htmlCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create an accessible navigation bar containing an unordered list of three links (Home, Courses, Roadmaps) with appropriate anchor tags.",
+              "hint": "Wrap a <ul> inside a <nav aria-label=\"Main\"> element with <li><a href=\"...\">Text</a></li>.",
+              "solution": "<nav aria-label=\"Main Navigation\">\n  <ul>\n    <li><a href=\"/\">Home</a></li>\n    <li><a href=\"/courses\">Courses</a></li>\n    <li><a href=\"/roadmaps\">Roadmaps</a></li>\n  </ul>\n</nav>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "When should you use an ordered list <ol> instead of an unordered list <ul>?",
               "options": [
@@ -288,6 +316,13 @@ export const htmlCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Embed a responsive WebP image with explicit width (800) and height (450), a descriptive alt text, and lazy loading.",
+              "hint": "Use loading=\"lazy\" alongside src, alt, width, and height.",
+              "solution": "<img \n  src=\"/images/server-cluster.webp\"\n  alt=\"High availability cloud server cluster in a modern data center\"\n  width=\"800\"\n  height=\"450\"\n  loading=\"lazy\"\n>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "Why is the alt attribute required on every <img> element?",
               "options": [
@@ -324,6 +359,13 @@ export const htmlCourse: Tutorial = {
                 "Use <th> for header cells with scope=\"col\" or scope=\"row\".",
                 "Tables must only be used for tabular data, never for general page layout."
               ]
+            },
+            {
+              "type": "exercise",
+              "prompt": "Construct an accessible 2-column table displaying Course Name and Duration with <thead>, <tbody>, and proper <th> scope attributes.",
+              "hint": "Use scope=\"col\" on table header cells inside <thead>.",
+              "solution": "<table>\n  <caption>Curriculum Breakdown</caption>\n  <thead>\n    <tr>\n      <th scope=\"col\">Course Title</th>\n      <th scope=\"col\">Duration</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>HTML5 Semantics</td>\n      <td>4 Hours</td>\n    </tr>\n  </tbody>\n</table>",
+              "language": "html"
             },
             {
               "type": "quiz",
@@ -370,6 +412,13 @@ export const htmlCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Build an accessible login form with an email input and password input, both explicitly connected to <label> elements with required validation.",
+              "hint": "Match label for=\"email-field\" with input id=\"email-field\".",
+              "solution": "<form action=\"/api/login\" method=\"POST\">\n  <div>\n    <label for=\"user-email\">Email Address</label>\n    <input type=\"email\" id=\"user-email\" name=\"email\" required>\n  </div>\n  <div>\n    <label for=\"user-pwd\">Password</label>\n    <input type=\"password\" id=\"user-pwd\" name=\"password\" required minlength=\"8\">\n  </div>\n  <button type=\"submit\">Sign In</button>\n</form>",
+              "language": "html"
+            },
+            {
               "type": "quiz",
               "question": "How do you connect a <label> tag to its corresponding <input> field?",
               "options": [
@@ -406,6 +455,13 @@ export const htmlCourse: Tutorial = {
                 "<article> is for standalone content; <section> is for thematic groups with a heading.",
                 "Semantic HTML is the single biggest factor for on-page SEO and screen reader accessibility."
               ]
+            },
+            {
+              "type": "exercise",
+              "prompt": "Write a semantic HTML document layout utilizing <header>, <nav>, <main>, <article>, <aside>, and <footer>.",
+              "hint": "Nest the primary content within <main><article>...</article><aside>...</aside></main>.",
+              "solution": "<header>\n  <nav><a href=\"/\">Lumen</a></nav>\n</header>\n<main>\n  <article>\n    <h1>Semantic Layouts</h1>\n    <p>Articles represent self-contained content.</p>\n  </article>\n  <aside>\n    <h3>Related Courses</h3>\n  </aside>\n</main>\n<footer>\n  <p>&copy; 2026 Lumen</p>\n</footer>",
+              "language": "html"
             },
             {
               "type": "quiz",

@@ -7,6 +7,7 @@ import { useSEO } from '../lib/seo'
 import { useProgress } from '../lib/progress'
 import { cn } from '../lib/cn'
 import { card } from '../lib/card'
+import { inline } from '../lib/inline'
 import { AdSlot } from '../components/ads/AdSlot'
 import { Icon } from '../components/ui/Icon'
 import { CertificateModal } from '../components/ui/CertificateModal'
@@ -304,7 +305,7 @@ export function TutorialDetail() {
                             {lesson.title}
                           </h4>
                           <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-fg-muted">
-                            {lesson.description}
+                            {inline(lesson.description)}
                           </p>
                         </div>
 

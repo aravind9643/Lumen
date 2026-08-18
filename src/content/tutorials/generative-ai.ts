@@ -41,13 +41,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "python-and-math-foundations",
           "title": "Module 1: Python & Math Foundations",
-          "description": "**Level**: Beginner | ⏱ **Time**: 2 weeks",
+          "description": "Python is a high-level, general-purpose programming language created by Guido van Rossum in 1991. It is designed to be easy to read and write, almost like writing in plain English.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 weeks"
+              "text": "Level: Beginner | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -780,13 +780,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "machine-learning-basics",
           "title": "Module 2: Machine Learning Basics",
-          "description": "**Level**: Beginner | ⏱ **Time**: 2 weeks",
+          "description": "Learn The model learns from labeled data: The model learns from labeled data — input-output pairs where the correct answer is provided.",
           "duration": 20,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Beginner | ⏱ **Time**: 2 weeks"
+              "text": "Level: Beginner | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -1292,13 +1292,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "deep-learning-and-neural-networks",
           "title": "Module 3: Deep Learning & Neural Networks",
-          "description": "**Level**: Intermediate | ⏱ **Time**: 2 weeks",
+          "description": "Deep Learning is a subset of Machine Learning that uses neural networks with many layers (hence \"deep\") to learn complex patterns from data.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 weeks"
+              "text": "Level: Intermediate | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -1771,13 +1771,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "nlp-fundamentals",
           "title": "Module 4: NLP Fundamentals",
-          "description": "**Level**: Intermediate | ⏱ **Time**: 2 weeks",
+          "description": "NLP (Natural Language Processing) is the branch of AI that deals with enabling computers to understand, interpret, and generate human language.",
           "duration": 20,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 weeks"
+              "text": "Level: Intermediate | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -2179,13 +2179,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "transformer-architecture",
           "title": "Module 5: Transformer Architecture",
-          "description": "**Level**: Intermediate | ⏱ **Time**: 2 weeks",
+          "description": "Master Transformer Architecture with practical examples, architectural deep dives, and core concepts.",
           "duration": 30,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 weeks"
+              "text": "Level: Intermediate | ⏱ Time: 2 weeks"
             },
             {
               "type": "callout",
@@ -2615,13 +2615,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "large-language-models",
           "title": "Module 6: Large Language Models (LLMs)",
-          "description": "**Level**: Intermediate | ⏱ **Time**: 2 weeks",
+          "description": "An LLM is a very large neural network (based on the Transformer architecture) that has been trained on massive amounts of text data to understand and generate human language.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 2 weeks"
+              "text": "Level: Intermediate | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -3134,13 +3134,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "prompt-engineering",
           "title": "Module 7: Prompt Engineering",
-          "description": "**Level**: Intermediate | ⏱ **Time**: 1 week",
+          "description": "Learn Asking the model to perform a task with NO examples: Asking the model to perform a task with NO examples — just instructions.",
           "duration": 20,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Intermediate | ⏱ **Time**: 1 week"
+              "text": "Level: Intermediate | ⏱ Time: 1 week"
             },
             {
               "type": "list",
@@ -3459,13 +3459,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "fine-tuning-llms",
           "title": "Module 8: Fine-Tuning LLMs",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "Learn Update ALL weights in the model during training.: Update ALL weights in the model during training.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -3839,13 +3839,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "rag-and-vector-databases",
           "title": "Module 9: RAG & Vector Databases",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "Master RAG & Vector Databases with practical examples, architectural deep dives, and core concepts.",
           "duration": 30,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "callout",
@@ -4253,13 +4253,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "langchain-and-frameworks",
           "title": "Module 10: LangChain & Frameworks",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "LangChain is the most popular open-source framework for building applications powered by LLMs. It provides modular building blocks that you can compose together.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -4530,13 +4530,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "ai-agents",
           "title": "Module 11: AI Agents",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "Master AI Agents with practical examples, architectural deep dives, and core concepts.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -4836,13 +4836,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "deployment-and-mlops",
           "title": "Module 12: Deployment & MLOps",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "Deployment is the process of making your AI application available for users to access. Instead of running code on your laptop, you put it on a server that's accessible via the internet.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -5162,13 +5162,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "evaluation-and-testing",
           "title": "Module 16: Evaluation Metrics & Testing",
-          "description": "**Level**: Advanced | ⏱ **Time**: 1 week",
+          "description": "Master Evaluation Metrics & Testing with practical examples, architectural deep dives, and core concepts.",
           "duration": 20,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 1 week"
+              "text": "Level: Advanced | ⏱ Time: 1 week"
             },
             {
               "type": "callout",
@@ -5450,13 +5450,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "security-and-guardrails",
           "title": "Module 17: Security & Guardrails",
-          "description": "**Level**: Advanced | ⏱ **Time**: 1 week",
+          "description": "Master Security & Guardrails with practical examples, architectural deep dives, and core concepts.",
           "duration": 20,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 1 week"
+              "text": "Level: Advanced | ⏱ Time: 1 week"
             },
             {
               "type": "callout",
@@ -5775,13 +5775,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "model-serving-and-infrastructure",
           "title": "Module 18: Model Serving & Infrastructure",
-          "description": "**Level**: Advanced | ⏱ **Time**: 1 week",
+          "description": "Ollama is a tool that lets you download and run open-source LLMs locally with a single command. It handles model downloading, quantization, and serving.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 1 week"
+              "text": "Level: Advanced | ⏱ Time: 1 week"
             },
             {
               "type": "list",
@@ -6094,13 +6094,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "advanced-topics",
           "title": "Module 13: Advanced Topics",
-          "description": "**Level**: Advanced | ⏱ **Time**: 2 weeks",
+          "description": "RLHF (Reinforcement Learning from Human Feedback) is the training technique that transforms a raw language model into a helpful, harmless assistant like ChatGPT.",
           "duration": 25,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 2 weeks"
+              "text": "Level: Advanced | ⏱ Time: 2 weeks"
             },
             {
               "type": "list",
@@ -6501,13 +6501,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "capstone-projects",
           "title": "Module 14: Capstone Projects",
-          "description": "**Level**: Advanced | ⏱ **Time**: 3 weeks",
+          "description": "Build these projects for your portfolio. Each demonstrates key GenAI skills.",
           "duration": 30,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: Advanced | ⏱ **Time**: 3 weeks"
+              "text": "Level: Advanced | ⏱ Time: 3 weeks"
             },
             {
               "type": "paragraph",
@@ -6616,13 +6616,13 @@ export const generativeAI: Tutorial = {
         {
           "slug": "interview-preparation",
           "title": "Module 15: Interview Preparation",
-          "description": "**Level**: All Levels | ⏱ **Time**: 1 week",
+          "description": "Q1: What is self-attention and why is it important?",
           "duration": 35,
           "blocks": [
             {
               "type": "callout",
               "kind": "info",
-              "text": "**Level**: All Levels | ⏱ **Time**: 1 week"
+              "text": "Level: All Levels | ⏱ Time: 1 week"
             },
             {
               "type": "list",

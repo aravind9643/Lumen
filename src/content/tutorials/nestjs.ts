@@ -147,6 +147,13 @@ export const nestjsCourse: Tutorial = {
               ]
             },
             {
+              "type": "exercise",
+              "prompt": "Create a NestJS CoursesController with a GET /courses/:id route that extracts the id parameter using @Param(\"id\").",
+              "hint": "Use @Controller(\"courses\"), @Get(\":id\"), and @Param(\"id\") id: string.",
+              "solution": "import { Controller, Get, Param } from \"@nestjs/common\";\n\n@Controller(\"courses\")\nexport class CoursesController {\n  @Get(\":id\")\n  findOne(@Param(\"id\") id: string) {\n    return { courseId: id, status: \"active\" };\n  }\n}",
+              "language": "typescript"
+            },
+            {
               "type": "quiz",
               "question": "Which NestJS decorator is used to extract the JSON request payload from an incoming HTTP POST request?",
               "options": [
